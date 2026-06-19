@@ -1,0 +1,53 @@
+<svg width="144" height="91" viewBox="0 0 144 91" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_24_37)">
+        <g opacity="0.2">
+            <path d="M63.0042 -10.8704C45.6993 10.676 13.6342 85.8338 63.0043 152C81.8361 127.909 109.32 58.8584 63.0042 -10.8704Z" fill="url(#paint0_radial_24_37)"/>
+            <path d="M-18.8701 70.1257C2.67621 87.4306 77.834 119.496 144 70.1256C119.909 51.2937 50.8587 23.8096 -18.8701 70.1257Z" fill="url(#paint1_radial_24_37)"/>
+            <path d="M4.67188 127.837C32.1439 124.838 107.962 94.367 119.838 12.6707C89.4873 16.3896 21.2272 45.7812 4.67188 127.837Z" fill="url(#paint2_radial_24_37)"/>
+            <path d="M120.458 127.837C92.9861 124.838 17.1681 94.367 5.2915 12.6707C35.6428 16.3896 103.903 45.7812 120.458 127.837Z" fill="url(#paint3_radial_24_37)"/>
+        </g>
+        <g opacity="0.2">
+            <path d="M62.8693 14.1301C50.8768 29.0619 28.6555 81.1467 62.8693 127C75.9199 110.305 94.9666 62.4526 62.8693 14.1301Z" fill="url(#paint4_radial_24_37)"/>
+            <path d="M6.12988 70.261C21.0617 82.2534 73.1465 104.475 119 70.2609C102.305 57.2103 54.4524 38.1637 6.12988 70.261Z" fill="url(#paint5_radial_24_37)"/>
+            <path d="M22.4443 110.255C41.4825 108.177 94.0249 87.0601 102.256 30.4441C81.2218 33.0213 33.9172 53.3899 22.4443 110.255Z" fill="url(#paint6_radial_24_37)"/>
+            <path d="M102.686 110.255C83.6472 108.177 31.1049 87.0601 22.8743 30.4441C43.9079 33.0213 91.2126 53.3899 102.686 110.255Z" fill="url(#paint7_radial_24_37)"/>
+        </g>
+    </g>
+    <defs>
+        <radialGradient id="paint0_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(64.4003 59.3674) rotate(90) scale(92.1234 32.9389)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint1_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(51.3676 68.7296) scale(92.1234 32.9389)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint2_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(53.3503 77.1846) rotate(-45) scale(92.1234 32.9389)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint3_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(71.7797 77.1845) rotate(-135) scale(92.1234 32.9389)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint4_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(63.8367 62.8053) rotate(90) scale(63.8421 22.8269)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint5_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(54.8051 69.2935) scale(63.8421 22.8269)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint6_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(56.1787 75.1526) rotate(-45) scale(63.8421 22.8269)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <radialGradient id="paint7_radial_24_37" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(68.951 75.1526) rotate(-135) scale(63.8421 22.8269)">
+            <stop stop-color="#FEDF30"/>
+            <stop offset="1" stop-color="white"/>
+        </radialGradient>
+        <clipPath id="clip0_24_37">
+            <rect width="144" height="91" fill="white"/>
+        </clipPath>
+    </defs>
+</svg>

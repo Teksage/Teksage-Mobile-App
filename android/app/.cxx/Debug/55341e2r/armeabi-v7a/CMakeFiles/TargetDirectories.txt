@@ -1,0 +1,2 @@
+/Users/elamparithibalakrishnan/AndroidStudioProjects/astro_prompt/android/app/.cxx/Debug/55341e2r/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/elamparithibalakrishnan/AndroidStudioProjects/astro_prompt/android/app/.cxx/Debug/55341e2r/armeabi-v7a/CMakeFiles/rebuild_cache.dir

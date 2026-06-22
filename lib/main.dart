@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'package:astro_prompt/Components/AskAstrologer/ask_answer_ready_prompt.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
-import 'package:astro_prompt/Screens/auth/login_with_email.dart';
+import 'package:astro_prompt/Screens/auth/login_page.dart';
 import 'package:astro_prompt/Screens/intro/splashScreen.dart';
 import 'package:astro_prompt/Services/NotificationService/notificationService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -142,15 +143,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           getPages: [
             GetPage(name: '/splash', page: () => SplashScreen()),
             GetPage(name: '/home', page: () => BottomNavigationScreen()),
-            GetPage(name: '/login', page: () => LoginPageEmail()),
+            GetPage(name: '/login', page: () => const LoginPage()),
           ],
           initialRoute: '/splash',
+          routingCallback: (_) => AskAnswerReadyScheduler.notifyRouteChanged(),
           builder: (context, child) {
-            return Stack(
-              children: [
-                child!,
-                if (isConnected == false) const FullScreenNoInternet(),
-              ],
+            return AskAnswerReadyPrompt(
+              child: Stack(
+                children: [
+                  child!,
+                  if (isConnected == false) const FullScreenNoInternet(),
+                ],
+              ),
             );
           },
           // home: SplashScreen(),

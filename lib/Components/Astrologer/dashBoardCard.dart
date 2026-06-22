@@ -1,5 +1,6 @@
 import 'package:astro_prompt/Components/Common/customAnimationImage.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
+import 'package:astro_prompt/Screens/Astrologer/astrologerAskRequestsPage.dart';
 import 'package:astro_prompt/Screens/Astrologer/myAvailabilityPage.dart';
 import 'package:astro_prompt/Screens/Astrologer/myMeetingsPage.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -64,35 +65,97 @@ class _DashboardCardsState extends State<DashboardCards> {
 
     return SizedBox(
       width: util.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Expanded(
-            child: _buildCard(
-                title: 'Meetings',
-                subtitle: 'View your scheduled appointments & completed ones',
-                imagePath: astroMeeting,
-                context: context,
-                onTap: () {
-                  Get.to(() => MyMeetingsPage(
-                        eventData: widget.eventData,
-                      ));
-                }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _buildCard(
+                    title: 'Meetings',
+                    subtitle:
+                        'View your scheduled appointments & completed ones',
+                    imagePath: astroMeeting,
+                    context: context,
+                    onTap: () {
+                      Get.to(() => MyMeetingsPage(
+                            eventData: widget.eventData,
+                          ));
+                    }),
+              ),
+              SizedBox(
+                width: MyUtility(context).width20,
+              ),
+              Expanded(
+                child: _buildCard(
+                    title: 'My Availability',
+                    subtitle: 'Set your available time slots.',
+                    imagePath: astroCalender,
+                    context: context,
+                    onTap: () {
+                      Get.to(() => MyAvailabilityPage());
+                    }),
+              ),
+            ],
           ),
-          SizedBox(
-            width: MyUtility(context).width20,
-          ),
-          Expanded(
-            child: _buildCard(
-                title: 'My Availability',
-                subtitle: 'Set your available time slots.',
-                imagePath: astroCalender,
-                context: context,
-                onTap: () {
-                  Get.to(() => MyAvailabilityPage());
-                }),
+          SizedBox(height: util.height20),
+          _buildWideCard(
+            context: context,
+            title: 'Ask Requests',
+            subtitle:
+                'Review client details and submit text or voice answers.',
+            onTap: () => Get.to(() => const AstrologerAskRequestsPage()),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWideCard({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xffFAFFDE),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: blackColor.withValues(alpha: 0.06)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title.tr,
+                    style: TextStyle(
+                      fontFamily: AppFont.get(FontType.bold),
+                      fontSize: MyUtility(context).fontSize16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    subtitle.tr,
+                    style: TextStyle(
+                      fontFamily: AppFont.get(FontType.semiBold),
+                      fontSize: MyUtility(context).fontSize13,
+                      height: 1.3,
+                      color: blackColor.withValues(alpha: 0.4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: mainColor),
+          ],
+        ),
       ),
     );
   }

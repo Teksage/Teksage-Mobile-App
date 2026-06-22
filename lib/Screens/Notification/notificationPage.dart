@@ -1,5 +1,10 @@
 import 'dart:ui';
+import 'package:astro_prompt/Components/AskAstrologer/ask_astrologer_answer_dialog.dart';
+import 'package:astro_prompt/Components/AskAstrologer/ask_astrologer_notification_card.dart';
+import 'package:astro_prompt/Components/Notification/notification_card_shell.dart';
 import 'package:astro_prompt/Components/Consultation-User/timeConversion.dart';
+import 'package:astro_prompt/Model/ask_astrologer_model.dart';
+import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/notification_model.dart';
 import 'package:astro_prompt/Model/weekly_prediction_model.dart';
@@ -16,6 +21,7 @@ import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
+import 'package:astro_prompt/config/LocallySavedData/askAstrologerFlow.dart';
 import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
 import 'package:astro_prompt/config/LocallySavedData/userId.dart';
 import 'package:astro_prompt/config/launchGoogleMeet.dart';
@@ -29,10 +35,12 @@ import 'package:astro_prompt/config/Helper/appFont.dart';
 class NotificationPage extends StatefulWidget {
   final int selectedTab;
   final bool? userType;
+  final int? openAskRequestId;
   const NotificationPage({
     super.key,
     required this.selectedTab,
     this.userType,
+    this.openAskRequestId,
   });
 
   @override
@@ -42,6 +50,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage>
     with TickerProviderStateMixin {
   List<AstroConsultationEventModel> eventGetData = [];
+  List<AskAstrologerRequest> askRequests = [];
   List<NotificationModel> generalNotifications = [];
   late TabController _tabController;
   int selectedTabIndex = 0;
@@ -59,10 +68,33 @@ class _NotificationPageState extends State<NotificationPage>
       userId = id!;
     });
     fetchAstroUserEventService();
+    fetchAskRequests();
     dailyPredictions = PredictionService.getDailyPrediction();
     weeklyPredictions = PredictionService().getWeeklyPredictions();
     yearlyPredictions = PredictionService().getYearlyPrediction();
     premiumUser = await getUserPremium();
+  }
+
+  Future<void> fetchAskRequests() async {
+    try {
+      final data = await AskAstrologerService().fetchMyRequests();
+      if (!mounted) return;
+      setState(() {
+        askRequests = data;
+      });
+      _maybeOpenAskAnswerDialog();
+    } catch (e) {
+      debugPrint('Error fetching Ask Astrologer requests: $e');
+    }
+  }
+
+  void _maybeOpenAskAnswerDialog() {
+    final requestId = widget.openAskRequestId;
+    if (requestId == null || !mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showAskAstrologerAnswerDialog(context, requestId);
+    });
   }
 
   Future<void> fetchAstroUserEventService() async {
@@ -98,6 +130,9 @@ class _NotificationPageState extends State<NotificationPage>
   void initState() {
     super.initState();
     selectedTabIndex = widget.selectedTab;
+    if (widget.selectedTab == 1 && widget.openAskRequestId != null) {
+      setViewingAskAnswerRequestId(widget.openAskRequestId);
+    }
     fetchUserId();
     fetchGeneralNotifications();
     _tabController =
@@ -113,6 +148,9 @@ class _NotificationPageState extends State<NotificationPage>
 
   @override
   void dispose() {
+    if (widget.openAskRequestId != null) {
+      setViewingAskAnswerRequestId(null);
+    }
     _tabController.dispose();
     super.dispose();
   }
@@ -405,35 +443,73 @@ class _NotificationPageState extends State<NotificationPage>
                           );
                         }
                       },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: util.height10),
-                        padding: EdgeInsets.all(util.width10),
-                        decoration: BoxDecoration(
-                          color: notify.readBy ? whiteColor : Color(0xfff6f6f6),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: Colors.grey.withValues(alpha: 0.2)),
-                        ),
-                        child: Column(
+                      child: NotificationCardShell(
+                        emphasized: !notify.readBy,
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              notifyTitle.tr,
-                              style: TextStyle(
-                                fontFamily: AppFont.get(FontType.semiBold),
-                                fontSize: util.fontSize14,
-                                color: blackColor,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              notifyDesc.tr,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: AppFont.get(FontType.medium),
-                                fontSize: util.fontSize13,
-                                color: blackColor.withValues(alpha: 0.8),
+                            const NotificationCircleAvatar(),
+                            SizedBox(width: 9),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      if (!notify.readBy) ...[
+                                        Container(
+                                          width: 6,
+                                          height: 6,
+                                          decoration: const BoxDecoration(
+                                            color: mainColor,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        SizedBox(width: 6),
+                                      ],
+                                      Expanded(
+                                        child: Text(
+                                          notifyTitle.tr,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: AppFont.get(
+                                                FontType.semiBold),
+                                            fontSize: util.fontSize14,
+                                            height: 1.0,
+                                            color: blackColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    notifyDesc.tr,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily:
+                                          AppFont.get(FontType.medium),
+                                      fontSize: util.fontSize13,
+                                      height: 1.2,
+                                      color:
+                                          blackColor.withValues(alpha: 0.75),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    dateFormatted,
+                                    style: TextStyle(
+                                      fontSize: util.fontSize11,
+                                      height: 1.0,
+                                      color:
+                                          blackColor.withValues(alpha: 0.4),
+                                      fontFamily:
+                                          AppFont.get(FontType.medium),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -442,7 +518,7 @@ class _NotificationPageState extends State<NotificationPage>
                     );
                   },
                 ),
-          eventGetData.isEmpty
+          (eventGetData.isEmpty && askRequests.isEmpty)
               ? Container(
                   margin: EdgeInsets.only(top: util.height50),
                   padding: EdgeInsets.all(util.width20),
@@ -461,8 +537,9 @@ class _NotificationPageState extends State<NotificationPage>
                         horizontal: util.width20, vertical: util.width10),
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: util.height10,
+                        SizedBox(height: util.height10),
+                        ...askRequests.map(
+                          (req) => AskAstrologerNotificationCard(request: req),
                         ),
                         ListView.builder(
                             shrinkWrap: true,
@@ -472,113 +549,53 @@ class _NotificationPageState extends State<NotificationPage>
                               final event = eventGetData[index];
                               final date = DateFormat("dd MMM, yyyy - h:mm a")
                                   .format(parseWithoutOffset(event.startTime));
-                              return Container(
-                                margin: EdgeInsets.only(bottom: util.height10),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: util.width20),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Color(0xfff6f6f6),
-                                    border: Border.all(
-                                        color:
-                                            blackColor.withValues(alpha: 0.04),
-                                        width: 1)),
+                              return NotificationCardShell(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 41,
-                                          height: 41,
-                                          decoration: BoxDecoration(
-                                              color: lightGrey,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: astroUserConsultBG
-                                                      .withValues(alpha: 0.3),
-                                                  width: 2.6)),
-                                          child: ClipOval(
-                                            child: event.profileImage.isNotEmpty
-                                                ? Image.network(
-                                                    event.profileImage,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Center(
-                                                    child: Image.asset(
-                                                      dummyImage,
-                                                      width: 25,
-                                                      height: 25,
-                                                    ),
-                                                  ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 9),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              (widget.userType == true)
-                                                  ? "Astrologer appointment on"
-                                                      .tr
-                                                      .tr
-                                                  : "You have an appointment on"
-                                                      .tr
-                                                      .tr,
-                                              style: TextStyle(
-                                                  fontFamily: AppFont.get(
-                                                      FontType.medium),
-                                                  fontSize: MyUtility(context)
-                                                      .fontSize14,
-                                                  height: 1.0,
-                                                  color: blackColor.withValues(
-                                                      alpha: 0.8)),
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            Text(
-                                              date,
-                                              style: TextStyle(
-                                                  fontFamily: AppFont.get(
-                                                      FontType.semiBold),
-                                                  fontSize: MyUtility(context)
-                                                      .fontSize14,
-                                                  color: blackColor,
-                                                  height: 1.0),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                    NotificationCircleAvatar(
+                                      imageUrl: event.profileImage.isNotEmpty
+                                          ? event.profileImage
+                                          : null,
                                     ),
-                                    GestureDetector(
+                                    SizedBox(width: 9),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            (widget.userType == true)
+                                                ? "Astrologer appointment on".tr
+                                                : "You have an appointment on".tr,
+                                            style: TextStyle(
+                                                fontFamily: AppFont.get(
+                                                    FontType.medium),
+                                                fontSize: util.fontSize14,
+                                                height: 1.0,
+                                                color: blackColor.withValues(
+                                                    alpha: 0.8)),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            date,
+                                            style: TextStyle(
+                                                fontFamily: AppFont.get(
+                                                    FontType.semiBold),
+                                                fontSize: util.fontSize14,
+                                                color: blackColor,
+                                                height: 1.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: util.width8),
+                                    NotificationActionPill(
+                                      label: 'Meeting Link'.tr,
                                       onTap: () {
                                         launchGoogleMeet(event.eventLink);
                                       },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              util.width20),
-                                          color: astroUserConsultBG,
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 9, horizontal: 6),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'Meeting Link'.tr,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppFont.get(FontType.semiBold),
-                                            fontSize: util.fontSize12,
-                                            height: 1.0,
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               );

@@ -5,10 +5,12 @@ import 'package:astro_prompt/Components/Chat/chatAppBar.dart';
 import 'package:astro_prompt/Components/Chat/chatField.dart';
 import 'package:astro_prompt/Components/Chat/iosChatBackground.dart';
 import 'package:astro_prompt/Components/Chat/messageComponent.dart';
+import 'package:astro_prompt/Components/Chat/chatMessageActions.dart';
 import 'package:astro_prompt/Components/Common/typingIndicator.dart';
 import 'package:astro_prompt/Components/Dashboard/subscribeDialog.dart';
 import 'package:astro_prompt/Components/chat/chatBanner.dart';
-import 'package:astro_prompt/Components/chat/successDialog.dart';
+import 'package:astro_prompt/Components/Chat/successDialog.dart';
+import 'package:astro_prompt/Services/FeatureDiscovery/feature_discovery_prompt.dart';
 import 'package:astro_prompt/Model/chat_message_model.dart';
 import 'package:astro_prompt/Model/chat_preference_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
@@ -37,6 +39,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+
 
 class AIChatScreen extends StatefulWidget {
   const AIChatScreen({super.key});
@@ -93,6 +96,7 @@ class _AIChatScreenState extends State<AIChatScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startInitialization();
+      FeatureDiscoveryPrompt.maybeShow(context);
     });
   }
 
@@ -366,26 +370,30 @@ class _AIChatScreenState extends State<AIChatScreen>
   }
 
   void sendMessage() async {
-    // print('MessageCount: $messageCount'); //freeUserLimit
-    // print('freeUserLimit: $freeUserLimit');
+    print('MessageCount: $messageCount');
     final bool isExpired = planStatus.trim().toLowerCase() == 'expired';
     final bool isPremiumActive = premiumUser && !isExpired;
-    // print('premiumUser: $premiumUser');
 
     if (messageController.text.trim().isEmpty) {
       showInfoSnackBarDual(context, 'Kindly enter your question.');
       return;
-    } else {
-      if (!isPremiumActive) {
-        if (messageCount >= freeUserLimit) {
-          showInfoSnackBarDual(context,
-              'You’ve reached your message limit. Subscribe to continue.');
-          return;
-        }
-        setState(() {
-          messageCount++;
-        });
+    }
+
+    if (isExpired && premiumUser) {
+      showInfoSnackBarDual(
+          context, 'Your subscription has expired. Subscribe to continue.');
+      return;
+    }
+
+    if (!isPremiumActive) {
+      if (messageCount >= freeUserLimit) {
+        showInfoSnackBarDual(context,
+            'You’ve reached your message limit. Subscribe to continue.');
+        return;
       }
+      setState(() {
+        messageCount++;
+      });
     }
 
     final queryText = messageController.text.trim();
@@ -740,11 +748,11 @@ class _AIChatScreenState extends State<AIChatScreen>
     final bool isExpired = planStatus.trim().toLowerCase() == 'expired';
     final bool isPremiumActive = premiumUser && !isExpired;
     final bool canUseChatInput =
-        (isPremiumActive || messageCount < freeUserLimit);
-    // print('values,${isPremiumActive},${messageCount},${freeUserLimit}');
+        !isExpired && (isPremiumActive || messageCount < freeUserLimit);
     final bool dataReady = premiumLoaded && chatPrefLoaded;
-    final String subscribeMessage =
-        'You\u2019ve reached your message limit. Subscribe to continue.';
+    final String subscribeMessage = isExpired
+        ? 'Your subscription has expired.\nSubscribe to continue.'
+        : 'You\u2019ve reached your message limit. Subscribe to continue.';
 
     final double statusBar = MediaQuery.of(context).padding.top;
     const double headerBody = 100;
@@ -1178,6 +1186,16 @@ class _AIChatScreenState extends State<AIChatScreen>
                                         ),
                                       ],
                                     ),
+                                  ),
+                                if (isBot &&
+                                    !isStreaming &&
+                                    selectedMessages.isEmpty &&
+                                    index > 0 &&
+                                    messages[index - 1].containsKey('user'))
+                                  ChatMessageActions(
+                                    userQuestion: messages[index - 1]['user']
+                                        .toString(),
+                                    aiResponse: message,
                                   ),
                               ],
                             ),

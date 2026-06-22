@@ -15,6 +15,7 @@ import 'package:astro_prompt/Screens/settings/faq_page.dart';
 import 'package:astro_prompt/Screens/settings/privacy_page.dart';
 import 'package:astro_prompt/Screens/settings/profile_page.dart';
 import 'package:astro_prompt/Screens/settings/pushNotification.dart';
+import 'package:astro_prompt/Screens/settings/whatsapp_updates_page.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/subscription_details_page.dart';
 import 'package:astro_prompt/Screens/settings/support_page.dart';
 import 'package:astro_prompt/Screens/settings/t&c_page.dart';
@@ -34,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -453,6 +455,76 @@ class _SettingsPageState extends State<SettingsPage>
                         ),
                       ],
                     ),
+                  //WhatsApp Updates
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (tokenExist) {
+                            Get.to(() => WhatsAppUpdatesPage());
+                          } else {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierColor: Colors.black.withValues(alpha: 0.5),
+                              builder: (context) =>
+                                  const LoginPromptDialog(reDirectHome: false),
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: util.responsiveHeight(0.0555),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: util.width20),
+                          decoration: BoxDecoration(
+                            color: blackColor.withValues(alpha: 0.03),
+                            borderRadius: BorderRadius.circular(util.width8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: util.width10,
+                                children: [
+                                  SvgPicture.asset(
+                                    settingsWhatsapp,
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  Text(
+                                    'WhatsApp Updates'.tr,
+                                    style: TextStyle(
+                                        fontFamily:
+                                            AppFont.get(FontType.medium),
+                                        fontSize: util.fontSize16,
+                                        height: util.lineHeight19_2 /
+                                            util.fontSize16,
+                                        color: blackColor),
+                                  ),
+                                ],
+                              ),
+                              AnimatedBuilder(
+                                animation: _animation,
+                                builder: (context, child) {
+                                  return Transform.translate(
+                                    offset: Offset(_animation.value, 0),
+                                    child: Transform.rotate(
+                                      angle: 270 * (3.141592653589793 / 180),
+                                      child: SvgPicture.asset(dropDownArrow),
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: util.responsiveHeight(0.0149),
+                      ),
+                    ],
+                  ),
                   //App lang
                   Column(
                     children: [
@@ -522,9 +594,6 @@ class _SettingsPageState extends State<SettingsPage>
                       GestureDetector(
                         onTap: () async {
                           if (Platform.isAndroid) {
-                            // print(
-                            //     'plan expired settings page,$_isPlanExpired');//
-
                             if (!tokenExist) {
                               showDialog(
                                 context: context,
@@ -554,8 +623,6 @@ class _SettingsPageState extends State<SettingsPage>
                                   getProfileData();
                                 }
                               } else {
-                                print(
-                                    'subscriptionData in settings page,$subscriptionData');
                                 if (currency.isEmpty) {
                                   final permissionGranted =
                                       await CurrencyService()

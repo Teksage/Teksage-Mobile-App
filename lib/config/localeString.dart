@@ -39,10 +39,180 @@ class LocalString extends Translations {
           'Rate': 'Rate',
           'Delete Account': 'Delete Account',
           'Logout': 'Logout',
+          'WhatsApp Updates': 'WhatsApp Updates',
+          'Ask Astrologer': 'Ask Astrologer',
+          'Book Consultation': 'Book Consultation',
+          'Your question': 'Your question',
+          'Select your preferred language': 'Select your preferred language',
+          'We will match you with an astrologer who speaks your language.':
+              'We will match you with an astrologer who speaks your language.',
+          'Please select a language': 'Please select a language',
+          'Notes': 'Notes',
+          'Your answer will be delivered within 4 hours.':
+              'Your answer will be delivered within 4 hours.',
+          'An expert astrologer will review your question and horoscope, then reply with a personalized voice message.':
+              'An expert astrologer will review your question and horoscope, then reply with a personalized voice message.',
+          'Continue to Payment': 'Continue to Payment',
+          'Booking Details': 'Booking Details',
+          'Question details': 'Question details',
+          'Language': 'Language',
+          'Answer within': 'Answer within',
+          '4 hours': '4 hours',
+          'Payment summary': 'Payment summary',
+          'Consultation fee': 'Consultation fee',
+          'CGST': 'CGST',
+          'SGST': 'SGST',
+          'Total': 'Total',
+          'Pay & Ask': 'Pay & Ask',
+          'Processing…': 'Processing…',
+          'Could not load pricing. Please try again.':
+              'Could not load pricing. Please try again.',
+          'Could not initiate payment. Please try again.':
+              'Could not initiate payment. Please try again.',
+          'Verification failed. Please contact support.':
+              'Verification failed. Please contact support.',
+          'Get Updates on WhatsApp': 'Get Updates on WhatsApp',
+          'WhatsApp notifications': 'WhatsApp notifications',
+          'Enable WhatsApp status updates': 'Enable WhatsApp status updates',
+          'We\'ll send a confirmation message to your WhatsApp. Reply to opt in for alerts.':
+              'We\'ll send a confirmation message to your WhatsApp. Reply to opt in for alerts.',
+          'Alert when your astrologer\'s answer is ready':
+              'Alert when your astrologer\'s answer is ready',
+          'Updates when your request status changes':
+              'Updates when your request status changes',
+          'Confirm on WhatsApp': 'Confirm on WhatsApp',
+          'Open WhatsApp and reply to our message to turn on alerts.':
+              'Open WhatsApp and reply to our message to turn on alerts.',
+          'Send confirmation message': 'Send confirmation message',
+          'Sending…': 'Sending…',
+          'Skip for now': 'Skip for now',
+          'You are all set!': 'You are all set!',
+          'Your question is with our team. An expert astrologer will answer within 4 hours.':
+              'Your question is with our team. An expert astrologer will answer within 4 hours.',
+          'Status': 'Status',
+          'Received': 'Received',
+          'Track in Notifications → Consultation':
+              'Track in Notifications → Consultation',
+          'Back to Chat': 'Back to Chat',
+          'Your answer is ready': 'Your answer is ready',
+          'An astrologer has replied to your question.':
+              'An astrologer has replied to your question.',
+          'Read or listen to the answer now — or find it later in Notifications.':
+              'Read or listen to the answer now — or find it later in Notifications.',
+          'Open answer': 'Open answer',
+          'Not now': 'Not now',
+          'Ask Requests': 'Ask Requests',
+          'Review client details and submit text or voice answers.':
+              'Review client details and submit text or voice answers.',
+          'Failed to load requests': 'Failed to load requests',
+          'No Ask Astrologer requests yet.': 'No Ask Astrologer requests yet.',
+          'Answer': 'Answer',
+          'Cancel': 'Cancel',
+          'Submit Answer': 'Submit Answer',
+          'Submitting…': 'Submitting…',
+          'AI Answer (for reference)': 'AI Answer (for reference)',
+          'Your Answer': 'Your Answer',
+          'Client details': 'Client details',
+          'Record voice': 'Record voice',
+          'Re-record': 'Re-record',
+          'Tap stop when finished': 'Tap stop when finished',
+          'Pause voice answer': 'Pause voice answer',
+          'Recording voice answer…': 'Recording voice answer…',
+          'Stop': 'Stop',
+          'Remove': 'Remove',
+          'Voice recorded': 'Voice recorded',
+          'Provide an answer (text and/or voice).':
+              'Provide an answer (text and/or voice).',
+          'Submit failed. Please try again.':
+              'Submit failed. Please try again.',
+          'Awaiting answer': 'Awaiting answer',
+          'Answered': 'Answered',
+          'Optional written notes': 'Optional written notes',
+          'Type your answer here…': 'Type your answer here…',
+          'Tap Record voice and share your personalized reply. You may add optional written notes below.':
+              'Tap Record voice and share your personalized reply. You may add optional written notes below.',
+          'Answer submitted': 'Answer submitted',
+          'Never Miss an Important Astrological Opportunity':
+              'Never Miss an Important Astrological Opportunity',
+          'Get timely WhatsApp alerts about important planetary movements, favorable periods, and personalized horoscope updates.':
+              'Get timely WhatsApp alerts about important planetary movements, favorable periods, and personalized horoscope updates.',
+          'Major Planetary Transits': 'Major Planetary Transits',
+          'Important movements that impact your life.':
+              'Important movements that impact your life.',
+          'Favorable Periods': 'Favorable Periods',
+          'Best times for important decisions and activities.':
+              'Best times for important decisions and activities.',
+          'Personalized Horoscope Highlights':
+              'Personalized Horoscope Highlights',
+          'Key insights based on your unique birth chart.':
+              'Key insights based on your unique birth chart.',
+          'WhatsApp alerts enabled': 'WhatsApp alerts enabled',
+          'You will receive astrology updates on WhatsApp.':
+              'You will receive astrology updates on WhatsApp.',
+          'Disable WhatsApp Alerts': 'Disable WhatsApp Alerts',
+          'Disabling…': 'Disabling…',
+          'WhatsApp alerts disabled': 'WhatsApp alerts disabled',
+          'Tap below to enable alerts again.':
+              'Tap below to enable alerts again.',
+          'Resend message': 'Resend message',
+          'Enable WhatsApp Astrology Alerts':
+              'Enable WhatsApp Astrology Alerts',
+          'You can unsubscribe anytime by sending STOP on WhatsApp.':
+              'You can unsubscribe anytime by sending STOP on WhatsApp.',
+          'Could not send WhatsApp message. Try again later.':
+              'Could not send WhatsApp message. Try again later.',
+          'Could not disable WhatsApp alerts. Try again later.':
+              'Could not disable WhatsApp alerts. Try again later.',
+          'Assigned': 'Assigned',
+          'Answer ready': 'Answer ready',
+          'Expected within 4 hours': 'Expected within 4 hours',
+          'Includes voice answer': 'Includes voice answer',
+          'View Answer →': 'View Answer →',
+          'View Answer': 'View Answer',
+          "Astrologer's Answer": "Astrologer's Answer",
+          'Answered by:': 'Answered by:',
+          'Voice answer': 'Voice answer',
+          'Play voice answer': 'Play voice answer',
+          'No answer content available yet.':
+              'No answer content available yet.',
+          'Could not load answer. Please try again.':
+              'Could not load answer. Please try again.',
+          'Session expired. Please try again.':
+              'Session expired. Please try again.',
+          'Never Miss an': 'Never Miss an',
+          'Important Astrological Opportunity':
+              'Important Astrological Opportunity',
+          'Get timely WhatsApp alerts about important planetary movements, favorable periods, and personalized horoscope updates that can help you make better decisions at the right time.':
+              'Get timely WhatsApp alerts about important planetary movements, favorable periods, and personalized horoscope updates that can help you make better decisions at the right time.',
+          'What You\'ll Receive': 'What You\'ll Receive',
+          'Important Alerts': 'Important Alerts',
+          'Special days, events and astrological updates.':
+              'Special days, events and astrological updates.',
+          'Use my verified profile number': 'Use my verified profile number',
+          'Use a different WhatsApp number': 'Use a different WhatsApp number',
+          'Enter a valid mobile number.': 'Enter a valid mobile number.',
+          'Sent to': 'Sent to',
+          'Try again in': 'Try again in',
+          'Please wait a moment before resending':
+              'Please wait a moment before resending',
+          'Message still missing? Try another number or start over below.':
+              'Message still missing? Try another number or start over below.',
+          'Use another number': 'Use another number',
+          'Start over': 'Start over',
+          'Starting over…': 'Starting over…',
+          'Resend message': 'Resend message',
+          'Verify your mobile number': 'Verify your mobile number',
+          'Verify your phone to receive the WhatsApp consent message.':
+              'Verify your phone to receive the WhatsApp consent message.',
+          'We will send a new confirmation message on WhatsApp.':
+              'We will send a new confirmation message on WhatsApp.',
+          'You will no longer receive astrology updates on WhatsApp. Tap the button below to enable alerts again.':
+              'You will no longer receive astrology updates on WhatsApp. Tap the button below to enable alerts again.',
+          ' on WhatsApp.': ' on WhatsApp.',
           'Language Updated': 'Language Updated',
           'App language has been changed successfully':
               'App language has been changed successfully',
-          'Click to view': 'Click to view',
+          'Click to view':'Click to view',
           //Profile
           'First Name': 'First Name',
           'Last Name': 'Last Name',
@@ -118,7 +288,6 @@ class LocalString extends Translations {
           'Still have questions?': 'Still have questions?',
           'Contact Support': 'Contact Support',
           'search_help': 'search_help',
-          'No FAQs found': 'No FAQs found',
           //panchang
           PlatformTextConfig.panchangPageTitle: 'Personalized Panchang',
           'WeekDay': 'WeekDay',
@@ -213,16 +382,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'Enter boy\'s name',
           'Enter girl\'s name': 'Enter girl\'s name',
           //Subscriptions
-          "Auto-renews every month": "Auto-renews every month",
-          "One-Time": "One-Time",
-          "Recurring": "Recurring",
-          "I agree to recurring payments": "I agree to recurring payments",
-          "Recurring Payment Required": "Recurring Payment Required",
-          "Please agree to recurring payments to continue":
-              "Please agree to recurring payments to continue",
-          "Auto-payment, Renews automatically every month":
-              "Auto-payment, Renews automatically every month",
-          "Auto Renews on": "Auto Renews on",
           'Subscription': 'Subscription',
           'Auto Schedule Daily Predictions': 'Auto Schedule Daily Predictions',
           'Auto Schedule Weekly Predictions':
@@ -248,10 +407,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'Try Premium Plans',
           '1 month': '1 month',
           'month': 'month',
-          "month_plan": 'Month',
           'months': 'months',
           'year': 'year',
-          'Year': 'Year',
           'Compare the plans': 'Compare the plans',
           'Welcome to\nTeksage!': 'Welcome to\nTeksage!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -412,9 +569,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'Your message looks empty after removing hidden characters. Try typing or paste plain text.',
           'Error in sending OTP': 'Error in sending OTP',
-          'Network error. Please check your connection and try again.':
-              'Network error. Please check your connection and try again.',
-          'OTP Verified': 'OTP Verified',
+          'Network error. Please check your connection and try again.':'Network error. Please check your connection and try again.',
+          'OTP Verified':'OTP Verified',
           //Astrology consultations
           'What do you\nneed guidance on?': 'What do you\nneed guidance on?',
           'Select the categories and continue':
@@ -604,7 +760,6 @@ class LocalString extends Translations {
           'Verify Phone Number': 'Verify Phone Number',
           'Verify Existing Phone Number': 'Verify Existing Phone Number',
           'Verify Existing Email': 'Verify Existing Email',
-          'Change Phone Number': 'Change Phone Number',
           'For security reasons, kindly verify your existing phone number':
               'For security reasons, kindly verify your phone number',
           'For security reasons, kindly verify your existing email':
@@ -655,7 +810,7 @@ class LocalString extends Translations {
           'Language Updated': 'மொழி மாற்றப்பட்டது',
           'App language has been changed successfully':
               'பயன்பாட்டின் மொழி வெற்றிகரமாக மாற்றப்பட்டது.',
-          'Click to view': 'பார்க்க கிளிக் செய்யவும்',
+               'Click to view':'பார்க்க கிளிக் செய்யவும்',
           //Profile
           'First Name': 'பெயர் (முதல் பகுதி)',
           'Last Name': 'பெயர் (பிற்பகுதி)',
@@ -733,7 +888,6 @@ class LocalString extends Translations {
           'Still have questions?': 'இன்னும் கேள்விகள் உள்ளதா?',
           'Contact Support': 'எங்கள் support டீம்-ஐ தொடர்பு கொள்ளவும்',
           'search_help': 'தேடல் உதவி',
-          'No FAQs found': 'அடிக்கடி கேட்கப்படும் கேள்விகள் எதுவும் இல்லை',
           //panchang
           'WeekDay': 'கிழமை',
           'Thithi': 'திதி',
@@ -828,17 +982,6 @@ class LocalString extends Translations {
           'Enter girl\'s name': 'பெண்ணின் பெயர்',
 
           //Subscriptions
-          "Auto-renews every month": "ஒவ்வொரு மாதமும் தானாக புதுப்பிக்கப்படும்",
-          "One-Time": "ஒருமுறை",
-          "Recurring": "மீண்டும் நடைபெறும்",
-          "I agree to recurring payments":
-              "மீண்டும் நடைபெறும் கட்டணங்களுக்கு\nநான் ஒப்புக்கொள்கிறேன்",
-          "Recurring Payment Required": "மீண்டும் நடைபெறும் கட்டணம் அவசியம்",
-          "Please agree to recurring payments to continue":
-              "தொடர வேண்டுமெனில் மீண்டும் நடைபெறும் கட்டணங்களுக்கு ஒப்புக்கொள்ளவும்",
-          "Auto-payment, Renews automatically every month":
-              "தானியங்கி கட்டணம், ஒவ்வொரு மாதமும் தானாக புதுப்பிக்கப்படும்",
-          "Auto Renews on": "தானாக புதுப்பிக்கும்\nதேதி",
           'Subscription': 'சந்தாக்கள்',
           'Auto Schedule Daily Predictions': 'தானியங்கு தினசரி கணிப்புகள்',
           'Auto Schedule Weekly Predictions': 'தானியங்கு வார கணிப்புகள்',
@@ -862,11 +1005,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'பிரீமியம் திட்டங்கள்',
           '1 month': '1 மாதம்',
           'month': 'மாதம்',
-          // 'Month': 'மாதம்',
-          "month_plan": 'மாத',
           'months': 'மாதங்கள்',
           'year': 'ஆண்டு',
-          'Year': 'ஆண்டு',
           'Compare the plans': 'திட்டங்கள் ஒப்பீடு',
           'Welcome to\nTeksage!': 'Teksage-க்கு வருக!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -1042,9 +1182,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'மறைக்கப்பட்ட எழுத்துக்களை நீக்கிய பிறகு உங்கள் செய்தி காலியாகத் தெரிகிறது. தட்டச்சு செய்யவோ அல்லது சாதாரண உரையை ஒட்டவோ முயற்சிக்கவும்.',
           'Error in sending OTP': 'OTP அனுப்புவதில் பிழை ஏற்பட்டது.',
-          'Network error. Please check your connection and try again.':
-              'இணையப் பிழை. உங்கள் இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
-          'OTP Verified': 'OTP சரிபார்க்கப்பட்டது',
+          'Network error. Please check your connection and try again.':'இணையப் பிழை. உங்கள் இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
+          'OTP Verified':'OTP சரிபார்க்கப்பட்டது',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'உங்களுக்கு\nஎதில் வழிகாட்டுதல் தேவை?',
@@ -1245,7 +1384,6 @@ class LocalString extends Translations {
           'Verify Existing Phone Number':
               'ஏற்கனவே உள்ள தொலைபேசி எண்ணைச் சரிபார்க்கவும்',
           'Verify Existing Email': 'ஏற்கனவே உள்ள மின்னஞ்சலைச் சரிபார்க்கவும்',
-          'Change Phone Number': 'தொலைபேசி எண்ணை மாற்றவும்',
           'Verify Email': 'மின்னஞ்சலைச் சரிபார்க்கவும்',
           'For security reasons, kindly verify your existing phone number':
               'பாதுகாப்புக் காரணங்களுக்காக, தயவுசெய்து உங்கள் தற்போதைய தொலைபேசி எண்ணைச் சரிபார்க்கவும்.',
@@ -1297,7 +1435,7 @@ class LocalString extends Translations {
           'Language Updated': 'భాష మార్చబడింది',
           'App language has been changed successfully':
               'యాప్ భాష విజయవంతంగా మార్చబడింది.',
-          'Click to view': 'చూడటానికి క్లిక్ చేయండి',
+               'Click to view':'చూడటానికి క్లిక్ చేయండి',
           //Profile
           'First Name': 'మొదటి పేరు',
           'Last Name': 'చివరి పేరు',
@@ -1375,7 +1513,6 @@ class LocalString extends Translations {
           'Still have questions?': 'ఇంకా ప్రశ్నలున్నాయా?',
           'Contact Support': 'సపోర్ట్‌ను సంప్రదించండి',
           'search_help': 'సహాయం కోసం శోధించండి',
-          'No FAQs found': 'ఎలాంటి FAQలు కనబడలేదు',
           //panchang
           'WeekDay': 'వారం',
           'Thithi': 'తిథి',
@@ -1470,18 +1607,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'పురుషుడి పేరు',
           'Enter girl\'s name': 'మహిళ పేరు',
           //Subscriptions
-          "Auto-renews every month":
-              "ప్రతి నెల స్వయంచాలకంగా పునరుద్ధరించబడుతుంది",
-          "One-Time": "ఒకసారి",
-          "Recurring": "పునరావృతం",
-          "I agree to recurring payments":
-              "పునరావృత చెల్లింపులకు నేను అంగీకరిస్తున్నాను",
-          "Recurring Payment Required": "పునరావృత చెల్లింపు అవసరం",
-          "Please agree to recurring payments to continue":
-              "కొనసాగించడానికి పునరావృత చెల్లింపులకు అంగీకరించండి",
-          "Auto-payment, Renews automatically every month":
-              "ఆటో చెల్లింపు, ప్రతి నెల స్వయంచాలకంగా పునరుద్ధరించబడుతుంది",
-          "Auto Renews on": "స్వయంచాలక పునరుద్ధరణ తేదీ",
           'Subscription': 'సభ్యత్వాలు',
           'Auto Schedule Daily Predictions':
               'రోజువారీ ఫలితాలను ఆటో షెడ్యూల్ చేయండి',
@@ -1507,10 +1632,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'ప్రీమియం ప్లాన్‌ను ప్రయత్నించండి',
           '1 month': '1 నెల',
           'month': 'నెల',
-          "month_plan": 'నెల',
           'months': 'నెలలు',
           'year': 'సంవత్సరం',
-          'Year': 'సంవత్సరం',
           'Compare the plans': 'ప్లాన్‌లను పోల్చండి',
           'Welcome to\nTeksage!': 'Teksage-కు స్వాగతం!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -1677,9 +1800,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'దాచిన అక్షరాలను తొలగించిన తర్వాత మీ సందేశం ఖాళీగా కనిపిస్తోంది. సాదా వచనాన్ని టైప్ చేయడానికి లేదా అతికించడానికి ప్రయత్నించండి.',
           'Error in sending OTP': 'OTP పంపడంలో లోపం ఏర్పడింది.',
-          'Network error. Please check your connection and try again.':
-              'నెట్‌వర్క్ లోపం. దయచేసి మీ కనెక్షన్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
-          'OTP Verified': 'OTP ధృవీకరించబడింది',
+          'Network error. Please check your connection and try again.':'నెట్‌వర్క్ లోపం. దయచేసి మీ కనెక్షన్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
+          'OTP Verified':'OTP ధృవీకరించబడింది',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'మీకు ఏ విషయంలో మార్గదర్శనం కావాలి?',
@@ -1872,9 +1994,8 @@ class LocalString extends Translations {
           'Verify Existing Phone Number':
               'ఇప్పటికే ఉన్న ఫోన్ నంబర్‌ను ధృవీకరించండి',
           'Verify Existing Email': 'ఉన్న ఇమెయిల్‌ను ధృవీకరించండి',
-          'Change Phone Number': 'ఫోన్ నంబర్ మార్చండి',
           'For security reasons, kindly verify your existing phone number':
-              'భద్రతా కారణాల దృష్ట్యా, దయచేసి మీ ప్రస్తుత ఫోన్ నంబర్‌ను ధృవీకరించండి.',
+              'భద్రతా కారణాల దృష్ట్యా, దయచేసి మీ ప్రస్తుత ఫోన్ నంబర్‌ను ధృవీకరించండి.r',
           'For security reasons, kindly verify your existing email':
               'భద్రతా కారణాల దృష్ట్యా, దయచేసి మీ ఇమెయిల్‌ను ధృవీకరించండి.',
           'We have sent OTP to': 'మేము OTPని దీనికి పంపాము',
@@ -1923,7 +2044,7 @@ class LocalString extends Translations {
           'Language Updated': 'ಭಾಷೆ ಬದಲಾಗಿದೆ',
           'App language has been changed successfully':
               'ಅಪ್ಲಿಕೇಶನ್ ಭಾಷೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ.',
-          'Click to view': 'ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ',
+               'Click to view':'ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ',
           //Profile
           'First Name': 'ಮೊದಲ ಹೆಸರು',
           'Last Name': 'ಕೊನೆಯ ಹೆಸರು',
@@ -2000,7 +2121,6 @@ class LocalString extends Translations {
           'Still have questions?': 'ಇನ್ನೂ ಪ್ರಶ್ನೆಗಳಿವೆಯೇ?',
           'Contact Support': 'ಬೆಂಬಲ ತಂಡವನ್ನು ಸಂಪರ್ಕಿಸಿ',
           'search_help': 'ಸಹಾಯ ಹುಡುಕಿ',
-          'No FAQs found': 'ಯಾವುದೇ FAQಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
           //panchang
           'WeekDay': 'ವಾರ',
           'Thithi': 'ತಿಥಿ',
@@ -2095,18 +2215,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'ಪುರುಷನ ಹೆಸರು',
           'Enter girl\'s name': 'ಮಹಿಳೆಯ ಹೆಸರು',
           //Subscriptions
-          "Auto-renews every month":
-              "ಪ್ರತಿ ತಿಂಗಳು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನವೀಕರಿಸಲಾಗುತ್ತದೆ",
-          "One-Time": "ಒಮ್ಮೆ",
-          "Recurring": "ಪುನರಾವರ್ತಿತ",
-          "I agree to recurring payments":
-              "ಪುನರಾವರ್ತಿತ ಪಾವತಿಗಳಿಗೆ ನಾನು ಒಪ್ಪುತ್ತೇನೆ",
-          "Recurring Payment Required": "ಪುನರಾವರ್ತಿತ ಪಾವತಿ ಅಗತ್ಯ",
-          "Please agree to recurring payments to continue":
-              "ಮುಂದುವರಿಸಲು ಪುನರಾವರ್ತಿತ ಪಾವತಿಗಳಿಗೆ ಒಪ್ಪಿಕೊಳ್ಳಿ",
-          "Auto-payment, Renews automatically every month":
-              "ಸ್ವಯಂ ಪಾವತಿ, ಪ್ರತಿ ತಿಂಗಳು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನವೀಕರಿಸಲಾಗುತ್ತದೆ",
-          "Auto Renews on": "ಸ್ವಯಂಚಾಲಿತ ನವೀಕರಣ ದಿನಾಂಕ",
           'Subscription': 'ಚಂದಾದಾರಿಕೆಗಳು',
           'Auto Schedule Daily Predictions':
               'ದೈನಂದಿನ ಭವಿಷ್ಯವಾಣಿಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ವೇಳಾಪಡಿಸಿ',
@@ -2132,10 +2240,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'ಪ್ರೀಮಿಯಂ ಯೋಜನೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ',
           '1 month': '೧ ತಿಂಗಳು',
           'month': 'ತಿಂಗಳು',
-          "month_plan": 'ತಿಂಗಳು',
           'months': 'ತಿಂಗಳುಗಳು',
           'year': 'ವರ್ಷ',
-          'Year': 'ವರ್ಷ',
           'Compare the plans': 'ಯೋಜನೆಗಳನ್ನು ಹೋಲಿಸಿ',
           'Welcome to\nTeksage!': 'Teksage-ಗೆ ಸುಸ್ವಾಗತ!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -2300,9 +2406,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'ಮರೆಮಾಡಿದ ಅಕ್ಷರಗಳನ್ನು ತೆಗೆದುಹಾಕಿದ ನಂತರ ನಿಮ್ಮ ಸಂದೇಶ ಖಾಲಿಯಾಗಿ ಕಾಣುತ್ತದೆ. ಸರಳ ಪಠ್ಯವನ್ನು ಟೈಪ್ ಮಾಡಲು ಅಥವಾ ಅಂಟಿಸಲು ಪ್ರಯತ್ನಿಸಿ.',
           'Error in sending OTP': 'OTP ಕಳುಹಿಸುವಲ್ಲಿ ದೋಷ',
-          'Network error. Please check your connection and try again.':
-              'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-          'OTP Verified': 'OTP ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
+          'Network error. Please check your connection and try again.':'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+          'OTP Verified':'OTP ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'ನೀವು ಯಾವ ವಿಷಯದಲ್ಲಿ ಮಾರ್ಗದರ್ಶನ ಬಯಸುತ್ತೀರಿ?',
@@ -2500,7 +2605,6 @@ class LocalString extends Translations {
           'Verify Existing Phone Number':
               'ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ',
           'Verify Existing Email': 'ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಇಮೇಲ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ',
-          'Change Phone Number': 'ಫೋನ್ ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ',
           'For security reasons, kindly verify your existing phone number':
               'ಭದ್ರತಾ ಕಾರಣಗಳಿಗಾಗಿ, ದಯವಿಟ್ಟು ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.',
           'For security reasons, kindly verify your existing email':
@@ -2550,7 +2654,7 @@ class LocalString extends Translations {
           'Language Updated': 'ഭാഷ മാറി',
           'App language has been changed successfully':
               'ആപ്പ് ഭാഷ വിജയകരമായി മാറ്റി.',
-          'Click to view': 'കാണാൻ ക്ലിക്ക് ചെയ്യുക',
+               'Click to view':'കാണാൻ ക്ലിക്ക് ചെയ്യുക',
           //Profile
           'First Name': 'പേരിന്റെ ആദ്യഭാഗം',
           'Last Name': 'പേരിന്റെ അവസാന ഭാഗം',
@@ -2573,7 +2677,7 @@ class LocalString extends Translations {
           'Enter place of birth': 'ജനന സ്ഥലം നൽകുക',
           'Enter Current location': 'നിലവിലെ സ്ഥലം നൽകുക',
           'Select a place': 'ഒരു സ്ഥലം തിരഞ്ഞെടുക്കുക',
-          'Select any one Option': 'ഏതെങ്കിലും ഒരു ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക',
+          'Select any one Option': '',
           'How did you first hear about Teksage':
               'Teksageയെക്കുറിച്ച് നിങ്ങൾ ആദ്യമായി എങ്ങനെ അറിഞ്ഞു',
           'How did you first hear about Teksage?':
@@ -2628,7 +2732,6 @@ class LocalString extends Translations {
           'Still have questions?': 'ഇപ്പോഴും ചോദ്യങ്ങളുണ്ടോ?',
           'Contact Support': 'പിന്തുണയ്ക്കായി ബന്ധപ്പെടുക',
           'search_help': 'തിരയൽ സഹായം',
-          'No FAQs found': 'FAQ ഒന്നും കണ്ടെത്താനായില്ല',
           //panchang
           'WeekDay': 'ആഴ്ച',
           'Thithi': 'തിഥി',
@@ -2723,18 +2826,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'പുരുഷ നാമം',
           'Enter girl\'s name': 'സ്ത്രീ നാമം',
           //Subscriptions
-          "Auto-renews every month": "ഓരോ മാസവും സ്വയം പുതുക്കപ്പെടും",
-          "One-Time": "ഒരിക്കൽ",
-          "Recurring": "ആവർത്തനം",
-          "I agree to recurring payments":
-              "ആവർത്തിച്ചുള്ള പേയ്മെന്റുകൾക്ക്\nഞാൻ സമ്മതിക്കുന്നു",
-          "Recurring Payment Required": "ആവർത്തിച്ചുള്ള പേയ്മെന്റ് ആവശ്യമാണ്",
-          "Please agree to recurring payments to continue":
-              "തുടരാൻ ആവർത്തിച്ചുള്ള പേയ്മെന്റുകൾക്ക് സമ്മതിക്കുക",
-          "Auto-payment, Renews automatically every month":
-              "ഓട്ടോ പേയ്മെന്റ്, ഓരോ മാസവും സ്വയം പുതുക്കപ്പെടും",
-          "Auto Renews on": "സ്വയം പുതുക്കുന്ന തീയതി",
-
           'Subscription': 'സബ്സ്ക്രിപ്ഷനുകൾ',
           'Auto Schedule Daily Predictions':
               'ദൈനംദിന പ്രവചനങ്ങൾ സ്വയം ഷെഡ്യൂൾ ചെയ്യുക',
@@ -2761,10 +2852,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'പ്രീമിയം പ്ലാനുകൾ പരീക്ഷിക്കുക',
           '1 month': '1 മാസം',
           'month': 'മാസം',
-          "month_plan": 'മാസം',
           'months': 'മാസങ്ങൾ',
           'year': 'വർഷം',
-          'Year': 'വർഷം',
           'Compare the plans': 'പ്ലാനുകൾ താരതമ്യം ചെയ്യുക',
           'Welcome to\nTeksage!': 'Teksage-ക്ക് സ്വാഗതം!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -2934,9 +3023,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'മറഞ്ഞിരിക്കുന്ന പ്രതീകങ്ങൾ നീക്കം ചെയ്തതിനുശേഷം നിങ്ങളുടെ സന്ദേശം ശൂന്യമായി തോന്നുന്നു. പ്ലെയിൻ ടെക്സ്റ്റ് ടൈപ്പ് ചെയ്യുകയോ ഒട്ടിക്കുകയോ ചെയ്യുക.',
           'Error in sending OTP': 'OTP അയയ്ക്കുന്നതിൽ പിശക്',
-          'Network error. Please check your connection and try again.':
-              'നെറ്റ്‌വർക്ക് പിശക്. നിങ്ങളുടെ കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.',
-          'OTP Verified': 'OTP പരിശോധിച്ചുറപ്പിച്ചു',
+          'Network error. Please check your connection and try again.':'നെറ്റ്‌വർക്ക് പിശക്. നിങ്ങളുടെ കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.',
+          'OTP Verified':'OTP പരിശോധിച്ചുറപ്പിച്ചു',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'നിങ്ങൾക്ക് ഏത് വിഷയത്തിൽ മാർഗനിർദ്ദേശം ആവശ്യമാണ്?',
@@ -3132,7 +3220,6 @@ class LocalString extends Translations {
           'Verify Email': 'ഇമെയിൽ സ്ഥിരീകരിക്കുക',
           'Verify Existing Phone Number': 'നിലവിലുള്ള ഫോൺ നമ്പർ പരിശോധിക്കുക',
           'Verify Existing Email': 'നിലവിലുള്ള ഇമെയിൽ പരിശോധിക്കുക',
-          'Change Phone Number': 'ഫോൺ നമ്പർ മാറ്റുക',
           'For security reasons, kindly verify your existing phone number':
               'സുരക്ഷാ കാരണങ്ങളാൽ, ദയവായി നിങ്ങളുടെ ഫോൺ നമ്പർ പരിശോധിക്കുക.',
           'For security reasons, kindly verify your existing email':
@@ -3182,7 +3269,7 @@ class LocalString extends Translations {
           'Language Updated': 'भाषा बदल गई',
           'App language has been changed successfully':
               'ऐप की भाषा सफलतापूर्वक बदल दी गई है।',
-          'Click to view': 'देखने के लिए क्लिक करें',
+               'Click to view':'देखने के लिए क्लिक करें',
           //Profile
           'First Name': 'पहला नाम',
           'Last Name': 'अंतिम नाम',
@@ -3258,7 +3345,6 @@ class LocalString extends Translations {
           'Still have questions?': 'अभी भी प्रश्न हैं?',
           'Contact Support': 'सपोर्ट से संपर्क करें',
           'search_help': 'सहायता खोजें',
-          'No FAQs found': 'कोई FAQ नहीं मिला',
           //panchang
           'WeekDay': 'वार',
           'Thithi': 'तिथि',
@@ -3353,16 +3439,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'पुरुष का नाम',
           'Enter girl\'s name': 'महिला का नाम',
           //Subscriptions
-          "Auto-renews every month": "हर महीने स्वतः नवीनीकृत होता है",
-          "One-Time": "एक बार",
-          "Recurring": "आवर्ती",
-          "I agree to recurring payments": "मैं आवर्ती भुगतान के लिए सहमत हूँ",
-          "Recurring Payment Required": "आवर्ती भुगतान आवश्यक है",
-          "Please agree to recurring payments to continue":
-              "जारी रखने के लिए आवर्ती भुगतान से सहमत हों",
-          "Auto-payment, Renews automatically every month":
-              "ऑटो-पेमेंट, हर महीने स्वतः नवीनीकृत होता है",
-          "Auto Renews on": "स्वतः नवीनीकरण तिथि",
           'Subscription': 'सदस्यताएँ',
           'Auto Schedule Daily Predictions':
               'दैनिक भविष्यफल को ऑटो शेड्यूल करें',
@@ -3388,10 +3464,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'प्रीमियम प्लान आज़माएँ',
           '1 month': '१ महिना',
           'month': 'महिना',
-          "month_plan": 'महिना',
           'months': 'महीने',
           'year': 'वर्ष',
-          'Year': 'वर्ष',
           'Compare the plans': 'योजनाओं की तुलना करें',
           'Welcome to\nTeksage!': 'Teksage में आपका स्वागत है!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -3544,9 +3618,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'छिपे हुए कैरेक्टर हटाने के बाद आपका मैसेज खाली दिख रहा है। टाइप करने या सादा टेक्स्ट पेस्ट करने की कोशिश करें।',
           'Error in sending OTP': 'OTP भेजते समय एक एरर आ गया।',
-          'Network error. Please check your connection and try again.':
-              'नेटवर्क एरर। कृपया अपना कनेक्शन चेक करें और फिर से कोशिश करें।',
-          'OTP Verified': 'ओटीपी सत्यापित',
+          'Network error. Please check your connection and try again.':'नेटवर्क एरर। कृपया अपना कनेक्शन चेक करें और फिर से कोशिश करें।',
+          'OTP Verified':'ओटीपी सत्यापित',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'आपको किस विषय पर मार्गदर्शन चाहिए?',
@@ -3688,7 +3761,6 @@ class LocalString extends Translations {
               'आपके चुने हुए टाइम स्लॉट',
           'Morning': 'सुबह',
           'Afternoon': 'दोपहर',
-          'Horoscope Details': 'राशिफल की जानकारी ',
           'Horoscope details are not available':
               'राशिफल की जानकारी उपलब्ध नहीं है।',
           'Answer': 'उत्तर',
@@ -3738,7 +3810,6 @@ class LocalString extends Translations {
           'Verify Email': 'ईमेल सत्यापित करें',
           'Verify Existing Phone Number': 'मौजूदा फ़ोन नंबर सत्यापित करें',
           'Verify Existing Email': 'मौजूदा ईमेल सत्यापित करें',
-          'Change Phone Number': 'फ़ोन नंबर बदलें',
           'For security reasons, kindly verify your existing phone number':
               'सुरक्षा कारणों से, कृपया अपना फ़ोन नंबर वेरिफ़ाई करें।',
           'For security reasons, kindly verify your existing email':
@@ -3788,7 +3859,7 @@ class LocalString extends Translations {
           'Language Updated': 'भाषा बदलली',
           'App language has been changed successfully':
               'अ‍ॅपची भाषा यशस्वीरित्या बदलली आहे.',
-          'Click to view': 'पाहण्यासाठी क्लिक करा',
+               'Click to view':'पाहण्यासाठी क्लिक करा',
           //Profile
           'First Name': 'पहिले नाव',
           'Last Name': 'आडनाव',
@@ -3865,7 +3936,6 @@ class LocalString extends Translations {
           'Still have questions?': 'अजूनही काही प्रश्न आहेत का?',
           'Contact Support': 'सहाय्यता कक्षाशी संपर्क साधा',
           'search_help': 'शोध मदत',
-          'No FAQs found': 'कोणतेही FAQ सापडले नाहीत',
           //panchang
           'WeekDay': 'वार',
           'Thithi': 'तिथि',
@@ -3960,17 +4030,6 @@ class LocalString extends Translations {
           'Enter boy\'s name': 'पुरुषाचे नाव',
           'Enter girl\'s name': 'स्त्रीचे नाव',
           //Subscriptions
-          "Auto-renews every month": "प्रत्येक महिन्याला आपोआप नूतनीकरण होते",
-          "One-Time": "एकदाच",
-          "Recurring": "पुनरावृत्ती",
-          "I agree to recurring payments":
-              "मी पुनरावृत्ती होणाऱ्या पेमेंटसाठी सहमत आहे",
-          "Recurring Payment Required": "पुनरावृत्ती पेमेंट आवश्यक आहे",
-          "Please agree to recurring payments to continue":
-              "पुढे जाण्यासाठी पुनरावृत्ती पेमेंटसाठी सहमती द्या",
-          "Auto-payment, Renews automatically every month":
-              "स्वयंचलित पेमेंट, प्रत्येक महिन्याला आपोआप नूतनीकरण होते",
-          "Auto Renews on": "स्वयंचलित नूतनीकरण दिनांक",
           'Subscription': 'सदस्यता',
           'Auto Schedule Daily Predictions':
               'दैनिक राशिभविष्य स्वयंचलितरित्या नियोजित करा',
@@ -3996,10 +4055,8 @@ class LocalString extends Translations {
           'Try Premium Plan': 'प्रीमियम प्लॅन्स वापरून पहा',
           '1 month': '१ महिना',
           'month': 'महिना',
-          "month_plan": 'महिना',
           'months': 'महिने',
           'year': 'वर्ष',
-          'Year': 'वर्ष',
           'Compare the plans': 'योजनांची तुलना करा',
           'Welcome to\nTeksage!': 'Teksage मध्ये आपले स्वागत आहे!',
           'Your 24/7 Personal Astrologer is here\n—now at just':
@@ -4161,9 +4218,8 @@ class LocalString extends Translations {
           'Your message looks empty after removing hidden characters. Try typing or paste plain text.':
               'लपवलेले वर्ण काढून टाकल्यानंतर तुमचा संदेश रिकामा दिसत आहे. टाइप करण्याचा किंवा साधा मजकूर पेस्ट करण्याचा प्रयत्न करा.',
           'Error in sending OTP': 'ओटीपी पाठवताना एक त्रुटी आली.',
-          'Network error. Please check your connection and try again.':
-              'नेटवर्कमध्ये त्रुटी आली आहे. कृपया तुमचे कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.',
-          'OTP Verified': 'ओटीपी सत्यापित झाला',
+          'Network error. Please check your connection and try again.':'नेटवर्कमध्ये त्रुटी आली आहे. कृपया तुमचे कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.',
+          'OTP Verified':'ओटीपी सत्यापित झाला',
           //Astrology consultations
           'What do you\nneed guidance on?':
               'तुम्हाला कोणत्या गोष्टीवर मार्गदर्शनाची गरज आहे?',
@@ -4356,7 +4412,6 @@ class LocalString extends Translations {
           'Verify Email': 'ईमेल सत्यापित करा',
           'Verify Existing Phone Number': 'विद्यमान फोन नंबर सत्यापित करा',
           'Verify Existing Email': 'विद्यमान ईमेलची पडताळणी करा',
-          'Change Phone Number': 'फोन नंबर बदला',
           'For security reasons, kindly verify your existing phone number':
               'सुरक्षिततेच्या कारणास्तव, कृपया तुमचा फोन नंबर सत्यापित करा.',
           'For security reasons, kindly verify your existing email':

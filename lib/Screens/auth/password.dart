@@ -29,6 +29,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/otp_contact_helpers.dart';
 
 class OTPScreen extends StatefulWidget {
   final String userInfo;
@@ -590,7 +591,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       if (widget.countryCode != null &&
                           widget.countryCode!.isNotEmpty)
                         Text(
-                          '+${widget.countryCode!} ',
+                          '${widget.countryCode!} ',
                           style: TextStyle(
                             fontFamily: AppFont.get(FontType.extraBold),
                             fontSize: util.fontSize18,
@@ -601,7 +602,10 @@ class _OTPScreenState extends State<OTPScreen> {
                         ),
                       Flexible(
                         child: Text(
-                          widget.userInfo,
+                          maskOtpContactForDisplay(
+                            contact: widget.userInfo,
+                            isMobile: widget.keyValue != 'email',
+                          ),
                           style: TextStyle(
                             fontFamily: AppFont.get(FontType.extraBold),
                             fontSize: util.fontSize18,

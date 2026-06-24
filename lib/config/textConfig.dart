@@ -113,6 +113,10 @@ class PlatformTextConfig {
         : 'Expert Consultation';
   }
 
+  /// Web parity — `/consultation/astrologers` listing title.
+  static const String astrologerConsultationListingTitle =
+      'Astrologer Consultation';
+
   static String get astrologerUserCTA1 {
     return Platform.isAndroid
         ? 'Find & Consult Astrologers'

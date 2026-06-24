@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
-import 'package:astro_prompt/Screens/auth/login_with_email.dart';
+import 'package:astro_prompt/Screens/auth/login_entry.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -50,7 +50,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       Get.offAll(() => BottomNavigationScreen(),
           transition: Transition.fade, duration: Duration(milliseconds: 500));
     } else {
-      Get.offAll(() => LoginPageEmail(),
+      Get.offAll(() => const LoginEntryPage(offAll: true),
           transition: Transition.fade, duration: Duration(milliseconds: 500));
     }
   }
@@ -78,7 +78,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       Get.offAll(() => BottomNavigationScreen(),
           transition: Transition.fade, duration: Duration(milliseconds: 500));
     } else {
-      Get.offAll(() => LoginPageEmail(),
+      Get.offAll(() => const LoginEntryPage(offAll: true),
           transition: Transition.fade, duration: Duration(milliseconds: 500));
     }
   }

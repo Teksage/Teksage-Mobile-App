@@ -5,8 +5,7 @@ import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/match_making_model.dart';
 import 'package:astro_prompt/Model/rasi_model.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userConsultationHomePage.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
@@ -165,16 +164,7 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
         _toggleOptions();
         if (label == 'Astrology Consultation' ||
             label == 'Expert Consultation') {
-          if (eventGetData.isNotEmpty) {
-            Get.to(() => UserConsultationDetailsHome(
-                  eventData: eventGetData,
-                  backButton: true,
-                ));
-          } else {
-            Get.to(() => UserCategoryPage(
-                  toHome: false,
-                ));
-          }
+          openBookConsultation(context);
         } else {
           Get.to(() => MatchMakingPage(
                 rasiList: rasiList,
@@ -1082,18 +1072,7 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
                         height: 13,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          if (eventGetData.isNotEmpty) {
-                            Get.to(() => UserConsultationDetailsHome(
-                                  eventData: eventGetData,
-                                  backButton: true,
-                                ));
-                          } else {
-                            Get.to(() => UserCategoryPage(
-                                  toHome: false,
-                                ));
-                          }
-                        },
+                        onTap: () => openBookConsultation(context),
                         child: Container(
                           width: util.width,
                           decoration: BoxDecoration(

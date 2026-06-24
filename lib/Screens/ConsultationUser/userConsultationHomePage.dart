@@ -7,8 +7,8 @@ import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model
 import 'package:astro_prompt/Screens/ConsultationUser/UserBookingSummaryHome.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/astrologerDetailpage.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/userBookingComplete.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
@@ -208,10 +208,7 @@ class _UserConsultationDetailsHomeState
                             physics: NeverScrollableScrollPhysics(),
                             child: GestureDetector(
                               onTap: () {
-                                Get.to(() => UserCategoryPage(
-                                      toHome: false,
-                                      // currency: widget.currency,
-                                    ));
+                                openConsultationAstrologerListing(context);
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(

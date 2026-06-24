@@ -12,8 +12,7 @@ import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Model/weekly_prediction_model.dart';
 import 'package:astro_prompt/Screens/Astrologer/homePage.dart';
 import 'package:astro_prompt/Screens/Chat/chat.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userConsultationHomePage.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingDetails.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
 import 'package:astro_prompt/Screens/Notification/notificationPage.dart';
@@ -277,10 +276,12 @@ class _HomePageState extends State<HomePage>
     try {
       var fetchEventData =
           await AstroUserEventService().fetchAstroUserEvents(userId);
-      var data = fetchEventData
-          .where((e) => e.status == 'confirmed' || e.status == 'completed')
-          .toList()
-        ..sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
+      final data = userType
+          ? fetchEventData
+              .where((e) => e.status == 'confirmed' || e.status == 'completed')
+              .toList()
+          : List<AstroConsultationEventModel>.from(fetchEventData);
+      data.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
       if (!mounted) return;
       setState(() {
         eventGetData = data;
@@ -449,16 +450,11 @@ class _HomePageState extends State<HomePage>
   Future<void> handleConsultationNavigation(BuildContext context) async {
     if (!tokenExist) return showLoginDialog(context);
     if (userType) {
-      if (eventGetData.isNotEmpty) {
-        Get.to(() => UserConsultationDetailsHome(
-              backButton: false,
-              eventData: eventGetData,
-            ));
-      } else {
-        Get.to(() => UserCategoryPage(
-              toHome: false,
-            ));
-      }
+      await openBookConsultation(
+        context,
+        backButton: false,
+        eventData: eventGetData,
+      );
     } else {
       Get.to(() => AstrologerHomePage(eventData: eventGetData));
     }

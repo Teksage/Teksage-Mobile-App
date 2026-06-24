@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/consultation_astrologer_listing_page.dart';
+import 'package:astro_prompt/Screens/ConsultationUser/userConsultationHomePage.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/config/Helper/currencyHelper.dart';
@@ -8,7 +10,7 @@ import 'package:astro_prompt/config/consultation_default_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// Opens astrologer listing directly (skips category + language screens).
+/// Opens astrologer listing directly (from Find & Consult card on consultation home).
 Future<void> openConsultationAstrologerListing(
   BuildContext context, {
   bool replaceStack = false,
@@ -41,6 +43,16 @@ Future<void> openConsultationAstrologerListing(
   }
 }
 
-/// Book Consultation entry points — always opens astrologer listing (web parity).
-Future<void> openBookConsultation(BuildContext context) =>
-    openConsultationAstrologerListing(context);
+/// Book Consultation entry points — opens consultation home (Find & Consult + meetings tabs).
+Future<void> openBookConsultation(
+  BuildContext context, {
+  bool backButton = true,
+  List<AstroConsultationEventModel> eventData = const [],
+}) async {
+  Get.to(
+    () => UserConsultationDetailsHome(
+      backButton: backButton,
+      eventData: eventData,
+    ),
+  );
+}

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:astro_prompt/Screens/Chat/chat.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
-import 'package:astro_prompt/Screens/auth/login_with_email.dart';
+import 'package:astro_prompt/Screens/auth/login_entry.dart';
 import 'package:astro_prompt/Screens/intro/onboardingPage.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       } else {
         if (!tokenExist) {
           Get.off(
-            () => const LoginPageEmail(),
+            () => const LoginEntryPage(),
             transition: Transition.fade,
             duration: const Duration(milliseconds: 800),
           );

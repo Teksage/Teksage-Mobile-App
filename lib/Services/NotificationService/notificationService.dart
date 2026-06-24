@@ -8,6 +8,7 @@ import 'package:astro_prompt/Services/NotificationService/firebaseService.dart';
 import 'package:astro_prompt/Services/PredictionService/predictionService.dart';
 import 'package:astro_prompt/Services/RefreshToken/autoRefreshToken.dart';
 import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
+import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/api_endpoints.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -114,8 +115,10 @@ class NotificationService {
           final data = await weeklyPredictions!;
           Get.to(() => WeeklyPrediction(weeklyPrediction: data));
         } else {
+          final isCustomer = await getUserType();
           Get.to(() => NotificationPage(
                 selectedTab: 1,
+                userType: isCustomer,
               ));
         }
       }
@@ -138,8 +141,10 @@ class NotificationService {
         final data = await weeklyPredictions!;
         Get.to(() => WeeklyPrediction(weeklyPrediction: data));
       } else {
+        final isCustomer = await getUserType();
         Get.to(() => NotificationPage(
               selectedTab: 1,
+              userType: isCustomer,
             ));
       }
     });
@@ -170,8 +175,10 @@ class NotificationService {
           Get.to(() => WeeklyPrediction(weeklyPrediction: data));
         } else {
           // NotificationService.shouldRefreshGeneralNotifications = true;
+          final isCustomer = await getUserType();
           Get.to(() => NotificationPage(
                 selectedTab: 1,
+                userType: isCustomer,
               ));
         }
       },

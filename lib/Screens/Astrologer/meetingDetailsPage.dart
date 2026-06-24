@@ -51,12 +51,9 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
       final userId = await getUserId();
       var fetchEventData =
           await AstroUserEventService().fetchAstroUserEvents(userId!);
-      var data = fetchEventData
-          .where((e) => e.status == 'confirmed' || e.status == 'completed')
-          .toList()
-        ..sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
+      fetchEventData.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
       setState(() {
-        eventData = data;
+        eventData = fetchEventData;
       });
     } catch (e) {
       print("Error fetching Astro User Event list: $e");
@@ -161,18 +158,29 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                 final event = snapshot.data!;
                 final questions = event.questions;
                 final horoscope = event.userHoroscope;
-                final customer = event.customer;
                 final hasAnswered =
                     questions.every((q) => (q.answer?.isNotEmpty ?? false));
+                final meetingCompleted = isCompleted ||
+                    event.status == 'completed' ||
+                    widget.meetingStatus == true;
+                final durationMinutes = event.consultationDuration > 0
+                    ? event.consultationDuration
+                    : 30;
+                final meetingLink =
+                    (event.eventLink?.isNotEmpty == true)
+                        ? event.eventLink!
+                        : widget.meetingLink;
 
                 final eventTime = parseWithoutOffset(event.startTime);
-                // final date = DateFormat("dd MMM, yyyy - h:mm a").format(parseWithoutOffset(event.startTime));
                 final meetingStartTime =
                     TimeOfDay.fromDateTime(eventTime).format(context);
-                final meetingEndTime =
-                    TimeOfDay.fromDateTime(eventTime.add(Duration(minutes: 30)))
-                        .format(context);
+                final meetingEndTime = TimeOfDay.fromDateTime(
+                        eventTime.add(Duration(minutes: durationMinutes)))
+                    .format(context);
                 final meetingDate = DateFormat("d MMMM, y").format(eventTime);
+                final feesLabel = event.consultationFee != null
+                    ? '${event.currency ?? '₹'} ${event.consultationFee!.toStringAsFixed(2)}/-'
+                    : '₹ -/-';
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -395,9 +403,7 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                                 Text(':  '),
                                 Expanded(
                                   child: Text(
-                                    event.astrologerShare != null
-                                        ? '₹ ${event.astrologerShare!.toStringAsFixed(2)}/-'
-                                        : '₹ -/-',
+                                    feesLabel,
                                     style: TextStyle(
                                       fontFamily: AppFont.get(FontType.medium),
                                       fontSize: util.fontSize14,
@@ -412,94 +418,114 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                           SizedBox(
                             height: 20,
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              if (!isCompleted) {
-                                if (hasAnswered) {
-                                  final result = await astroService
-                                      .updateAstrologerEvent(widget.meetingId,
-                                          {"status": "completed"});
-                                  if (result == 'Event updated successfully') {
-                                    setState(() {
-                                      isCompleted = true;
-                                    });
-                                    customSnackBar(
-                                      context: context,
-                                      message:
-                                          'Meeting has been updated Successfully',
-                                      backgroundColor: Color(0xffECF4D3),
-                                      indicatorColor: mainColor,
-                                      iconType: 'success',
-                                      // position: SnackBarPosition.top
-                                    );
-                                  } else {
-                                    print('else part');
-                                  }
-                                } else {
-                                  launchGoogleMeet(widget.meetingLink);
-                                }
-                              } else {
-                                print('else part');
-                              }
-                            },
-                            child: Container(
+                          if (meetingCompleted)
+                            Container(
                               width: util.width,
                               padding: EdgeInsets.symmetric(vertical: 9),
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: notEditable,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Submitted'.tr,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily:
+                                            AppFont.get(FontType.semiBold),
+                                        fontSize: util.fontSize16,
+                                        color: astroUserConsultBG,
+                                        height: 1.0),
+                                  ),
+                                  SizedBox(width: 6),
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 14,
+                                    color: astroUserConsultBG,
+                                  )
+                                ],
+                              ),
+                            )
+                          else ...[
+                            GestureDetector(
+                              onTap: () {
+                                if (meetingLink.isNotEmpty) {
+                                  launchGoogleMeet(meetingLink);
+                                }
+                              },
+                              child: Container(
+                                width: util.width,
+                                padding: EdgeInsets.symmetric(vertical: 9),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: (isCompleted ||
-                                          widget.meetingStatus == true)
-                                      ? notEditable
-                                      : (!hasAnswered
+                                  color: meetingLink.isNotEmpty
+                                      ? astroUserConsultBG
+                                      : whiteColor,
+                                  border: meetingLink.isEmpty
+                                      ? Border.all(
+                                          color: Color(0xff87AE0E), width: 1)
+                                      : null,
+                                ),
+                                child: Text(
+                                  meetingLink.isNotEmpty
+                                      ? 'Join Meeting'.tr
+                                      : 'Link not available yet'.tr,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily:
+                                          AppFont.get(FontType.semiBold),
+                                      fontSize: util.fontSize16,
+                                      color: meetingLink.isNotEmpty
                                           ? whiteColor
-                                          : astroUserConsultBG),
-                                  border: (isCompleted ||
-                                          widget.meetingStatus == true)
-                                      ? null
-                                      : Border.all(
-                                          color: Color(0xff87AE0E), width: 1)),
-                              child: (isCompleted ||
-                                      widget.meetingStatus == true)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Submitted'.tr,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: AppFont.get(
-                                                  FontType.semiBold),
-                                              fontSize: util.fontSize16,
-                                              color: astroUserConsultBG,
-                                              height: 1.0),
-                                        ),
-                                        SizedBox(
-                                          width: 6,
-                                        ),
-                                        Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: astroUserConsultBG,
-                                        )
-                                      ],
-                                    )
-                                  : Text(
-                                      hasAnswered
-                                          ? 'Submit & Mark as completed'.tr
-                                          : 'Meeting Link'.tr,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily:
-                                              AppFont.get(FontType.semiBold),
-                                          fontSize: util.fontSize16,
-                                          color: !hasAnswered
-                                              ? Color(0xff87AE0E)
-                                              : whiteColor,
-                                          height: 1.0),
-                                    ),
+                                          : Color(0xff87AE0E),
+                                      height: 1.0),
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () async {
+                                final result = await astroService
+                                    .updateAstrologerEvent(widget.meetingId,
+                                        {"status": "completed"});
+                                if (result == 'Event updated successfully') {
+                                  setState(() {
+                                    isCompleted = true;
+                                  });
+                                  customSnackBar(
+                                    context: context,
+                                    message:
+                                        'Meeting has been updated Successfully',
+                                    backgroundColor: Color(0xffECF4D3),
+                                    indicatorColor: mainColor,
+                                    iconType: 'success',
+                                  );
+                                }
+                              },
+                              child: Container(
+                                width: util.width,
+                                padding: EdgeInsets.symmetric(vertical: 9),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: whiteColor.withValues(alpha: 0.4),
+                                      width: 1),
+                                ),
+                                child: Text(
+                                  'Mark as Completed'.tr,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily:
+                                          AppFont.get(FontType.semiBold),
+                                      fontSize: util.fontSize14,
+                                      color: whiteColor,
+                                      height: 1.0),
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -508,6 +534,7 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                     ),
 
                     ///HoroscopeDetails
+                    if (event.shareHoroscope) ...[
                     Container(
                       width: util.width,
                       padding: EdgeInsets.all(util.width20),
@@ -565,6 +592,7 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                     SizedBox(
                       height: 20,
                     ),
+                    ],
 
                     ///Queries
                     Text(
@@ -627,7 +655,7 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                                       GestureDetector(
                                         onTap: () async {
                                           final DateTime meetingEnd = eventTime
-                                              .add(Duration(minutes: 30));
+                                              .add(Duration(minutes: durationMinutes));
                                           final DateTime now = DateTime.now();
 
                                           if (now.isBefore(meetingEnd)) {

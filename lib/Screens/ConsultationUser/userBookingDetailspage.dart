@@ -3,7 +3,7 @@ import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Components/Consultation-User/timeConversion.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/userBookingSummary.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/userAstrologer.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
@@ -68,10 +68,10 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
   double sgst = 0.0;
   double totalAmount = 0.0;
   String couponId = '';
-  late double originalConsultingFee;
-  late double originalCgst;
-  late double originalSgst;
-  late double originalTotalAmount;
+  late double originalConsultingFee = 0;
+  late double originalCgst = 0;
+  late double originalSgst = 0;
+  late double originalTotalAmount = 0;
   double fee = 0.0;
   bool isLoading = false;
 
@@ -90,6 +90,20 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
   @override
   void initState() {
     super.initState();
+    fee = widget.consultingFee;
+    if (widget.currency == 'INR') {
+      cgst = fee * 0.09;
+      sgst = fee * 0.09;
+      totalAmount = fee + cgst + sgst;
+    } else {
+      cgst = 0;
+      sgst = 0;
+      totalAmount = fee;
+    }
+    originalConsultingFee = fee;
+    originalCgst = cgst;
+    originalSgst = sgst;
+    originalTotalAmount = totalAmount;
     fetchProfileData();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -133,41 +147,40 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     CustomLoader.show(context, loaderColor: astroUserConsultBG);
-   
-    final result = await paymentService.consultationVerifyPayment(
-      orderId: response.orderId!,
-      paymentId: response.paymentId!,
-      signature: response.signature!,
-    );
-    CustomLoader.hide();
-    if (result != null && result.status == 'success') {
-      showSuccessSnackBar(context, 'Payment successful!');
-      Get.to(() => UserConsultationSummary(
-            bookingSummary: result,
-            profilePicture: widget.profileImage,
-            firstName: widget.astrologerFirstName,
-            lastName: widget.astrologerLastName,
-            currency: widget.currency,
-          ));
-    } else {
-      showErrorSnackBar(
-          context, 'Payment verification failed. Please try again.');
-      // Navigator.of(context).pushAndRemoveUntil(
-      //   MaterialPageRoute(builder: (_) => UserCategoryPage()),
-      //   (route) => false,
-      // );
+    try {
+      final result = await paymentService.consultationVerifyPayment(
+        orderId: response.orderId!,
+        paymentId: response.paymentId!,
+        signature: response.signature!,
+      );
+      if (!mounted) return;
+      if (result != null && result.status == 'success') {
+        showSuccessSnackBar(context, 'Payment successful!');
+        Get.to(() => UserConsultationSummary(
+              bookingSummary: result,
+              profilePicture: widget.profileImage,
+              firstName: widget.astrologerFirstName,
+              lastName: widget.astrologerLastName,
+              currency: widget.currency,
+              fallbackConsultationFee: totalAmount,
+            ));
+      } else {
+        showErrorSnackBar(
+            context, 'Payment verification failed. Please try again.');
+      }
+    } catch (e) {
+      if (mounted) {
+        showErrorSnackBar(
+            context, 'Payment verification failed. Please try again.');
+      }
+    } finally {
+      CustomLoader.hide();
     }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     showErrorSnackBar(context, 'Payment failed. Please try again.');
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-          builder: (_) => UserCategoryPage(
-                toHome: true,
-              )),
-      (route) => false,
-    );
+    openConsultationAstrologerListing(context, replaceStack: true);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {

@@ -63,7 +63,7 @@ class ChatMessageActions extends StatelessWidget {
             ),
           ),
           OutlinedButton(
-            onPressed: () => openConsultationAstrologerListing(context),
+            onPressed: () => openBookConsultation(context),
             style: OutlinedButton.styleFrom(
               foregroundColor: blackColor.withValues(alpha: 0.7),
               side: BorderSide(color: blackColor.withValues(alpha: 0.2)),

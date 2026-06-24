@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:astro_prompt/Components/LifePredictions/customCardSwiper.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/life_prediction_model.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userConsultationHomePage.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Services/PredictionService/predictionService.dart';
@@ -347,18 +346,7 @@ class _LifePredictionPageState extends State<LifePredictionPage> {
 
                 ///Consult Astrologer
                 GestureDetector(
-                  onTap: () {
-                    if (eventGetData.isNotEmpty) {
-                      Get.to(() => UserConsultationDetailsHome(
-                            backButton: true,
-                            eventData: eventGetData,
-                          ));
-                    } else {
-                      Get.to(() => UserCategoryPage(
-                            toHome: false,
-                          ));
-                    }
-                  },
+                  onTap: () => openBookConsultation(context),
                   child: Container(
                     width: util.width,
                     decoration: BoxDecoration(

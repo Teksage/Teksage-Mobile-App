@@ -24,6 +24,7 @@ import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/LocallySavedData/askAstrologerFlow.dart';
 import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
 import 'package:astro_prompt/config/LocallySavedData/userId.dart';
+import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/launchGoogleMeet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,14 +62,19 @@ class _NotificationPageState extends State<NotificationPage>
   Future<YearlyPredictionModel?>? yearlyPredictions;
   int userId = 0;
   bool premiumUser = false;
+  bool isAstrologer = false;
 
   Future<void> fetchUserId() async {
     int? id = await getUserId();
+    final isCustomer = widget.userType ?? await getUserType();
     setState(() {
       userId = id!;
+      isAstrologer = !isCustomer;
     });
     fetchAstroUserEventService();
-    fetchAskRequests();
+    if (!isAstrologer) {
+      fetchAskRequests();
+    }
     dailyPredictions = PredictionService.getDailyPrediction();
     weeklyPredictions = PredictionService().getWeeklyPredictions();
     yearlyPredictions = PredictionService().getYearlyPrediction();
@@ -565,7 +571,7 @@ class _NotificationPageState extends State<NotificationPage>
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            (widget.userType == true)
+                                            isAstrologer
                                                 ? "Astrologer appointment on".tr
                                                 : "You have an appointment on".tr,
                                             style: TextStyle(
@@ -590,12 +596,13 @@ class _NotificationPageState extends State<NotificationPage>
                                       ),
                                     ),
                                     SizedBox(width: util.width8),
-                                    NotificationActionPill(
-                                      label: 'Meeting Link'.tr,
-                                      onTap: () {
-                                        launchGoogleMeet(event.eventLink);
-                                      },
-                                    ),
+                                    if (event.eventLink.isNotEmpty)
+                                      NotificationActionPill(
+                                        label: 'Meeting Link'.tr,
+                                        onTap: () {
+                                          launchGoogleMeet(event.eventLink);
+                                        },
+                                      ),
                                   ],
                                 ),
                               );

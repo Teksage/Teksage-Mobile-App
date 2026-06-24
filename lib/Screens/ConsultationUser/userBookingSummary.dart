@@ -26,13 +26,15 @@ class UserConsultationSummary extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String currency;
+  final double fallbackConsultationFee;
   const UserConsultationSummary(
       {super.key,
       required this.bookingSummary,
       required this.profilePicture,
       required this.firstName,
       required this.lastName,
-      required this.currency});
+      required this.currency,
+      this.fallbackConsultationFee = 0});
 
   @override
   State<UserConsultationSummary> createState() =>
@@ -63,7 +65,11 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
   @override
   void initState() {
     super.initState();
-
+    formattedDate =
+        convertDateToReadableFormat(widget.bookingSummary.event.startTime);
+    formattedTime = convertTimeRangeToReadable(
+        widget.bookingSummary.event.startTime,
+        widget.bookingSummary.event.endTime);
     getQuestions();
   }
 
@@ -74,12 +80,14 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
       fetchQuestions = future;
     });
     future.then((questions) {
+      if (!mounted) return;
       setState(() {
         questionCount = questions.length;
       });
 
       if (questionCount < 5) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
           showGeneralDialog(
             context: context,
             barrierDismissible: false,
@@ -113,6 +121,8 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
           );
         });
       }
+    }).catchError((e) {
+      print('Error loading consultation questions: $e');
     });
   }
 
@@ -128,13 +138,9 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
     final util = MyUtility(context);
     final profileImage = widget.profilePicture;
     final isAssetImage = profileImage.startsWith('assets/');
-    setState(() {
-      formattedDate =
-          convertDateToReadableFormat(widget.bookingSummary.event.startTime);
-      formattedTime = convertTimeRangeToReadable(
-          widget.bookingSummary.event.startTime,
-          widget.bookingSummary.event.endTime);
-    });
+    final consultationFee = widget.bookingSummary.event.consultationFee > 0
+        ? widget.bookingSummary.event.consultationFee
+        : widget.fallbackConsultationFee;
 
     return PopScope(
       canPop: false,
@@ -253,8 +259,10 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        launchGoogleMeet(
-                            widget.bookingSummary.event.eventLink!);
+                        final link = widget.bookingSummary.event.eventLink;
+                        if (link != null && link.isNotEmpty) {
+                          launchGoogleMeet(link);
+                        }
                       },
                       child: Container(
                         padding:
@@ -454,7 +462,7 @@ class _UserConsultationSummaryState extends State<UserConsultationSummary> {
                                 Text(':  '),
                                 Expanded(
                                   child: Text(
-                                    '${widget.currency == 'INR' ? '₹ ' : '\$'}${widget.bookingSummary.event.consultationFee.toStringAsFixed(2)}',
+                                    '${widget.currency == 'INR' ? '₹ ' : '\$'}${consultationFee.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       fontFamily: AppFont.get(FontType.medium),
                                       fontSize: util.fontSize14,

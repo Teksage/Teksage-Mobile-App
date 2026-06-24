@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/otp_contact_helpers.dart';
 
 class DeleteOTPScreen extends StatefulWidget {
   final String deleteReason;
@@ -171,7 +172,7 @@ class _DeleteOTPScreenState extends State<DeleteOTPScreen> {
                         color: blackColor.withValues(alpha: 0.6)),
                   ),
                   Text(
-                    widget.email,
+                    maskEmailForOtpDisplay(widget.email),
                     style: TextStyle(
                         fontFamily: AppFont.get(FontType.extraBold),
                         fontSize: util.fontSize18,

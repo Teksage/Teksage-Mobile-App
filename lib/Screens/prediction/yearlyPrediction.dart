@@ -5,8 +5,7 @@ import 'package:astro_prompt/Components/YearlyPredictions/remediesWidget.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/yearly_prediction_model.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userCategory.dart';
-import 'package:astro_prompt/Screens/ConsultationUser/userConsultationHomePage.dart';
+import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Services/PredictionService/predictionService.dart';
@@ -500,18 +499,7 @@ class _YearlyPredictionPageState extends State<YearlyPredictionPage> {
                       height: 20,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        if (eventGetData.isNotEmpty) {
-                          Get.to(() => UserConsultationDetailsHome(
-                                backButton: true,
-                                eventData: eventGetData,
-                              ));
-                        } else {
-                          Get.to(() => UserCategoryPage(
-                                toHome: false,
-                              ));
-                        }
-                      },
+                      onTap: () => openBookConsultation(context),
                       child: Container(
                         width: util.width,
                         decoration: BoxDecoration(

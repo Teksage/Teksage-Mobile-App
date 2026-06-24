@@ -18,7 +18,7 @@ static const String mainUrl ="http://192.168.1.2:8000";
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
 //   static const String chatUrl ="ws://10.122.202.187:8000/chat";
-static const String chatUrl ="ws://192.168.1.2:8000/chat";
+static const String chatUrl ="ws://192.168.1.2:8000/chat";.e
   
 
   ///

@@ -6,6 +6,7 @@ import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/ask_astrologer_answer_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -106,10 +107,10 @@ class _AskAstrologerAnswerDialogState extends State<AskAstrologerAnswerDialog> {
                             durationSec: request!.answerVoiceDurationSec,
                           ),
                         ],
-                        if (request!.answeredByAstrologerName != null &&
-                            request!.answeredByAstrologerProfilePath != null)
+                        if (hasValidAstrologerProfilePath(
+                            request!.answeredByAstrologerProfilePath))
                           AskAstrologerAnswerAttribution(
-                            name: request!.answeredByAstrologerName!,
+                            name: request!.answeredByAstrologerName,
                             profilePath:
                                 request!.answeredByAstrologerProfilePath!,
                           ),

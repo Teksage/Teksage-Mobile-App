@@ -39,7 +39,9 @@ const whatsAppConsentPollMs = 5000;
 class AskAstrologerScreenCopy {
   static const publicSiteOrigin = 'https://www.teksage.app';
   static const publicSiteHost = 'www.teksage.app';
+  static const answeredByPrefix = 'Answered by:';
   static const answeredBySeparator = ', ';
+  static const viewProfileLink = 'View profile';
   static const languageNotes = [
     'Your answer will be delivered within 4 hours.',
     'An expert astrologer will review your question and horoscope, then reply with a personalized voice message.',

@@ -9,20 +9,23 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AskAstrologerAnswerAttribution extends StatelessWidget {
-  final String name;
+  final String? name;
   final String profilePath;
 
   const AskAstrologerAnswerAttribution({
     super.key,
-    required this.name,
+    this.name,
     required this.profilePath,
   });
 
   @override
   Widget build(BuildContext context) {
+    final normalizedPath = normalizeAstrologerProfilePath(profilePath);
+    if (normalizedPath == null) return const SizedBox.shrink();
+
     final util = MyUtility(context);
-    final displayUrl = buildAstrologerPublicProfileDisplayUrl(profilePath);
-    final profileUrl = buildAstrologerPublicProfileUrl(profilePath);
+    final profileUrl = buildAstrologerPublicProfileUrl(normalizedPath);
+    final trimmedName = name?.trim() ?? '';
     final baseStyle = TextStyle(
       fontSize: util.fontSize14,
       color: blackColor.withValues(alpha: 0.7),
@@ -41,11 +44,13 @@ class AskAstrologerAnswerAttribution extends StatelessWidget {
         TextSpan(
           style: baseStyle,
           children: [
-            TextSpan(text: '${'Answered by:'.tr} '),
-            TextSpan(text: name),
-            TextSpan(text: AskAstrologerScreenCopy.answeredBySeparator),
+            TextSpan(text: '${AskAstrologerScreenCopy.answeredByPrefix.tr} '),
+            if (trimmedName.isNotEmpty) ...[
+              TextSpan(text: trimmedName),
+              TextSpan(text: AskAstrologerScreenCopy.answeredBySeparator),
+            ],
             TextSpan(
-              text: displayUrl,
+              text: AskAstrologerScreenCopy.viewProfileLink.tr,
               style: linkStyle,
               recognizer: TapGestureRecognizer()
                 ..onTap = () async {

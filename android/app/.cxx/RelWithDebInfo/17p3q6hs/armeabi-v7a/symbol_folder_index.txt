@@ -1,0 +1,1 @@
+/Users/elamparithibalakrishnan/AndroidStudioProjects/astro_prompt/build/app/intermediates/cxx/RelWithDebInfo/17p3q6hs/obj/armeabi-v7a

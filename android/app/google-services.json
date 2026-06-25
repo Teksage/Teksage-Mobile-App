@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "483755133089",
+    "project_id": "astroprompt-a675c",
+    "storage_bucket": "astroprompt-a675c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483755133089:android:aebc222357d2792d0dc8e0",
+        "android_client_info": {
+          "package_name": "com.venzo.astroPrompt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKmo-a-S7W2-gQr4uFTj9ryyKlEq1kcU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

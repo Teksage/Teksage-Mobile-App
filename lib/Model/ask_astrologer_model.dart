@@ -120,9 +120,10 @@ class AskAstrologerRequest {
       answeredAt: json['answered_at'] as String?,
       paidAt: json['paid_at'] as String?,
       createdAt: json['created_at'] as String?,
-      answeredByAstrologerName: json['answered_by_astrologer_name'] as String?,
+      answeredByAstrologerName:
+          _nullableString(json['answered_by_astrologer_name']),
       answeredByAstrologerProfilePath:
-          json['answered_by_astrologer_profile_path'] as String?,
+          _nullableString(json['answered_by_astrologer_profile_path']),
       answerReadyAcknowledged: json['answer_ready_acknowledged'] == true,
       customerName: json['customer_name'] as String?,
       dateOfBirth: json['date_of_birth'] as String?,
@@ -131,6 +132,12 @@ class AskAstrologerRequest {
       rashi: json['rashi'] as String?,
       nakshatra: json['nakshatra'] as String?,
     );
+  }
+
+  static String? _nullableString(dynamic value) {
+    if (value is! String) return null;
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 }
 

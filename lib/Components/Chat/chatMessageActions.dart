@@ -38,47 +38,62 @@ class ChatMessageActions extends StatelessWidget {
         top: 4,
         bottom: 8,
       ),
-      child: Wrap(
-        spacing: util.width8,
-        runSpacing: util.width8,
+      child: Row(
         children: [
-          OutlinedButton(
-            onPressed: _handleAskAstrologer,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: mainColor,
-              side: BorderSide(color: mainColor),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+          Expanded(
+            child: OutlinedButton(
+              onPressed: _handleAskAstrologer,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: mainColor,
+                side: BorderSide(color: mainColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text(
-              'Ask Astrologer'.tr,
-              style: TextStyle(
-                fontFamily: AppFont.get(FontType.semiBold),
-                fontSize: util.fontSize12,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Ask Astrologer'.tr,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontFamily: AppFont.get(FontType.semiBold),
+                    fontSize: util.fontSize12,
+                    height: 1.15,
+                  ),
+                ),
               ),
             ),
           ),
-          OutlinedButton(
-            onPressed: () => openBookConsultation(context),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: blackColor.withValues(alpha: 0.7),
-              side: BorderSide(color: blackColor.withValues(alpha: 0.2)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+          SizedBox(width: util.width8),
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () => openBookConsultation(context),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: blackColor.withValues(alpha: 0.7),
+                side: BorderSide(color: blackColor.withValues(alpha: 0.2)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text(
-              'Book Consultation'.tr,
-              style: TextStyle(
-                fontFamily: AppFont.get(FontType.medium),
-                fontSize: util.fontSize12,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Book Consultation'.tr,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontFamily: AppFont.get(FontType.medium),
+                    fontSize: util.fontSize12,
+                    height: 1.15,
+                  ),
+                ),
               ),
             ),
           ),

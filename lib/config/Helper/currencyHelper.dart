@@ -10,17 +10,20 @@ class CurrencyHelper {
     required String currentCurrency,
     required void Function(String newCurrency) onCurrencyFetched,
   }) async {
-    if (currentCurrency.isNotEmpty) return;
-    CustomLoader.show(context, loaderColor: loaderColor ?? mainColor);
-    final currencyService = CurrencyService();
-    final countryCode = await currencyService.getCurrency(context);
-    CustomLoader.hide();
+    if (currentCurrency.isNotEmpty) {
+      onCurrencyFetched(currentCurrency);
+      return;
+    }
 
-    if (countryCode != null) {
-      onCurrencyFetched(countryCode);
-    } else {
-      // Get.offAllNamed('/home');
-      // showErrorSnackBar(context, 'Unable to determine your location. Please ensure location is turned on.');
+    CustomLoader.show(context, loaderColor: loaderColor ?? mainColor);
+    try {
+      final currencyService = CurrencyService();
+      final countryCode = await currencyService.getCurrency(context);
+      onCurrencyFetched(countryCode ?? '');
+    } finally {
+      if (context.mounted) {
+        CustomLoader.hide();
+      }
     }
   }
 }

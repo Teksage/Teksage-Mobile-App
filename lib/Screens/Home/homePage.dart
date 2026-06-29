@@ -951,13 +951,10 @@ class _HomePageState extends State<HomePage>
                                                   color: blackColor.withValues(
                                                       alpha: 0.06))),
                                           child: Stack(
+                                            clipBehavior: Clip.hardEdge,
                                             children: [
-                                              Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
+                                              Positioned.fill(
                                                 child: Container(
-                                                  height: util.height250,
                                                   decoration: BoxDecoration(
                                                     gradient: LinearGradient(
                                                       colors: [
@@ -974,174 +971,190 @@ class _HomePageState extends State<HomePage>
                                                   ),
                                                 ),
                                               ),
-                                              Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
+                                              Positioned.fill(
                                                 child: AnimatedBuilder(
                                                   animation: controller,
                                                   builder: (context, child) {
                                                     return CustomPaint(
-                                                      size: Size(
-                                                          util.width,
-                                                          util.responsiveHeight(
-                                                              0.218)),
                                                       painter: ArcPainter(
                                                           controller.value),
                                                     );
                                                   },
                                                 ),
                                               ),
-                                              Positioned(
-                                                top: util
-                                                    .responsiveHeight(0.0235),
-                                                left: 0,
-                                                right: 0,
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      PlatformTextConfig
-                                                          .dailyPrediction.tr,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily: AppFont.get(
-                                                            FontType.bold),
-                                                        fontSize:
-                                                            util.fontSize18,
-                                                        height:
-                                                            util.lineHeight21_6 /
-                                                                util.fontSize18,
-                                                        color: whiteColor,
+                                              Positioned.fill(
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: util
+                                                        .responsiveWidth(
+                                                            0.0215),
+                                                    vertical: util
+                                                        .responsiveHeight(
+                                                            0.012),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                        PlatformTextConfig
+                                                            .dailyTitle.tr,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              AppFont.get(
+                                                                  FontType
+                                                                      .bold),
+                                                          fontSize:
+                                                              util.fontSize14,
+                                                          height: 1.15,
+                                                          color: whiteColor,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(
+                                                      Text(
+                                                        currentTime,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'FontSemiBold',
+                                                          fontSize:
+                                                              util.fontSize10,
+                                                          height: 1.1,
+                                                          color: whiteColor
+                                                              .withValues(
+                                                                  alpha: 0.75),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: double.infinity,
                                                         height: util
                                                             .responsiveHeight(
-                                                                0.0013)),
-                                                    Text(
-                                                      currentTime,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'FontSemiBold',
-                                                        fontSize:
-                                                            util.fontSize14,
-                                                        height:
-                                                            util.lineHeight28 /
-                                                                util.fontSize14,
-                                                        color: whiteColor
-                                                            .withValues(
-                                                                alpha: 0.75),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: util
-                                                            .responsiveHeight(
-                                                                0.0112)),
-                                                    Container(
-                                                      margin: EdgeInsets.symmetric(
+                                                                0.05),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
                                                           horizontal: util
                                                               .responsiveWidth(
-                                                                  0.0215)),
-                                                      width: util.width,
-                                                      height:
-                                                          util.responsiveHeight(
-                                                              0.053),
-                                                      decoration: BoxDecoration(
-                                                        color: whiteColor,
-                                                        borderRadius: BorderRadius
-                                                            .circular(util
-                                                                .responsiveWidth(
-                                                                    0.032)),
+                                                                  0.012),
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: whiteColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            util.responsiveWidth(
+                                                                0.032),
+                                                          ),
+                                                        ),
+                                                        child: snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting
+                                                            ? Center(
+                                                                child: LoadingAnimationWidget
+                                                                    .halfTriangleDot(
+                                                                  color:
+                                                                      mainColor,
+                                                                  size: util
+                                                                      .height20,
+                                                                ),
+                                                              )
+                                                            : snapshot.hasError
+                                                                ? Center(
+                                                                    child: Text(
+                                                                        snapshot
+                                                                            .error
+                                                                            .toString()))
+                                                                : !snapshot.hasData ||
+                                                                        snapshot
+                                                                            .data!
+                                                                            .isEmpty
+                                                                    ? Center(
+                                                                        child: Text(
+                                                                            "Loading ..."))
+                                                                    : Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .spaceEvenly,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment:
+                                                                                  MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Text(
+                                                                                  snapshot.data!['thara_bala'] ?? "N/A",
+                                                                                  textAlign: TextAlign.center,
+                                                                                  style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize10, height: 1.0, color: blackColor),
+                                                                                ),
+                                                                                SizedBox(height: util.responsiveHeight(0.002)),
+                                                                                Text(
+                                                                                  'Thara Bala'.tr,
+                                                                                  textAlign: TextAlign.center,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize8, height: 1.0, color: mainColor),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          SvgPicture.asset(
+                                                                              homeDailyDivider),
+                                                                          Expanded(
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment:
+                                                                                  MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Text(
+                                                                                  snapshot.data!['chandra_bala'] ?? "N/A",
+                                                                                  textAlign: TextAlign.center,
+                                                                                  style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize10, height: 1.0, color: blackColor),
+                                                                                ),
+                                                                                SizedBox(height: util.responsiveHeight(0.002)),
+                                                                                Text(
+                                                                                  'Chandra Bala'.tr,
+                                                                                  textAlign: TextAlign.center,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize8, height: 1.0, color: mainColor),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                       ),
-                                                      child: snapshot
-                                                                  .connectionState ==
-                                                              ConnectionState
-                                                                  .waiting
-                                                          ? Center(
-                                                              child: LoadingAnimationWidget
-                                                                  .halfTriangleDot(
-                                                                color:
-                                                                    mainColor,
-                                                                size: util
-                                                                    .height20,
-                                                              ),
-                                                            )
-                                                          : snapshot.hasError
-                                                              ? Center(
-                                                                  child: Text(
-                                                                      snapshot
-                                                                          .error
-                                                                          .toString()))
-                                                              : !snapshot.hasData ||
-                                                                      snapshot
-                                                                          .data!
-                                                                          .isEmpty
-                                                                  ? Center(
-                                                                      child: Text(
-                                                                          "Loading ..."))
-                                                                  : Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceEvenly,
-                                                                      children: [
-                                                                        Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              snapshot.data!['thara_bala'] ?? "N/A",
-                                                                              style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize10, height: util.lineHeight12 / util.fontSize10, color: blackColor),
-                                                                            ),
-                                                                            Text(
-                                                                              'Thara Bala'.tr,
-                                                                              style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize8, height: util.lineHeight9_6 / util.fontSize8, color: mainColor),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SvgPicture.asset(
-                                                                            homeDailyDivider),
-                                                                        Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              snapshot.data!['chandra_bala'] ?? "N/A",
-                                                                              style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize10, height: util.lineHeight12 / util.fontSize10, color: blackColor),
-                                                                            ),
-                                                                            Text(
-                                                                              'Chandra Bala'.tr,
-                                                                              style: TextStyle(fontFamily: 'FontSemiBold', fontSize: util.fontSize8, height: util.lineHeight9_6 / util.fontSize8, color: mainColor),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: util
-                                                            .responsiveHeight(
-                                                                0.0087)),
-                                                    AnimatedBuilder(
-                                                      animation: controller,
-                                                      builder:
-                                                          (context, child) {
-                                                        return Transform
-                                                            .translate(
-                                                          offset: Offset(
-                                                              0,
-                                                              4 *
-                                                                  sin(controller
-                                                                          .value *
-                                                                      2 *
-                                                                      pi)),
-                                                          child:
-                                                              SvgPicture.asset(
-                                                                  downArrow),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
+                                                      AnimatedBuilder(
+                                                        animation: controller,
+                                                        builder:
+                                                            (context, child) {
+                                                          return Transform
+                                                              .translate(
+                                                            offset: Offset(
+                                                                0,
+                                                                4 *
+                                                                    sin(controller.value *
+                                                                        2 *
+                                                                        pi)),
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                    downArrow),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1168,13 +1181,10 @@ class _HomePageState extends State<HomePage>
                                               color: blackColor.withValues(
                                                   alpha: 0.06))),
                                       child: Stack(
+                                        clipBehavior: Clip.hardEdge,
                                         children: [
-                                          Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
+                                          Positioned.fill(
                                             child: Container(
-                                              height: util.height250,
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
@@ -1188,132 +1198,135 @@ class _HomePageState extends State<HomePage>
                                               ),
                                             ),
                                           ),
-                                          Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
+                                          Positioned.fill(
                                             child: AnimatedBuilder(
                                               animation: controller,
                                               builder: (context, child) {
                                                 return CustomPaint(
-                                                  size: Size(
-                                                      util.width,
-                                                      util.responsiveHeight(
-                                                          0.218)),
                                                   painter: ArcPainter(
                                                       controller.value),
                                                 );
                                               },
                                             ),
                                           ),
-                                          Positioned(
-                                            top: util.responsiveHeight(0.0235),
-                                            left: 0,
-                                            right: 0,
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  PlatformTextConfig
-                                                      .dailyPrediction.tr,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.bold),
-                                                      fontSize: util.fontSize18,
-                                                      height:
-                                                          util.lineHeight21_6 /
-                                                              util.fontSize18,
-                                                      color: whiteColor),
-                                                ),
-                                                SizedBox(
-                                                    height:
-                                                        util.responsiveHeight(
-                                                            0.0013)),
-                                                Text(
-                                                  currentTime,
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          'FontSemiBold',
-                                                      fontSize: util.fontSize14,
-                                                      height:
-                                                          util.lineHeight28 /
-                                                              util.fontSize14,
-                                                      color:
-                                                          whiteColor.withValues(
-                                                              alpha: 0.75)),
-                                                ),
-                                                SizedBox(
-                                                  height: util
-                                                      .responsiveHeight(0.0112),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      barrierDismissible: true,
-                                                      barrierColor: Colors.black
-                                                          .withValues(
-                                                              alpha: 0.5),
-                                                      builder: (context) =>
-                                                          const LoginPromptDialog(
-                                                              reDirectHome:
-                                                                  false),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    margin: EdgeInsets.symmetric(
+                                          Positioned.fill(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    util.responsiveWidth(
+                                                        0.0215),
+                                                vertical: util.responsiveHeight(
+                                                    0.012),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                    PlatformTextConfig
+                                                        .dailyTitle.tr,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily: AppFont.get(
+                                                            FontType.bold),
+                                                        fontSize:
+                                                            util.fontSize14,
+                                                        height: 1.15,
+                                                        color: whiteColor),
+                                                  ),
+                                                  Text(
+                                                    currentTime,
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'FontSemiBold',
+                                                        fontSize:
+                                                            util.fontSize10,
+                                                        height: 1.1,
+                                                        color: whiteColor
+                                                            .withValues(
+                                                                alpha: 0.75)),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            true,
+                                                        barrierColor: Colors
+                                                            .black
+                                                            .withValues(
+                                                                alpha: 0.5),
+                                                        builder: (context) =>
+                                                            const LoginPromptDialog(
+                                                                reDirectHome:
+                                                                    false),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      height: util
+                                                          .responsiveHeight(
+                                                              0.05),
+                                                      padding: EdgeInsets
+                                                          .symmetric(
                                                         horizontal: util
                                                             .responsiveWidth(
-                                                                0.0215)),
-                                                    width: util.width,
-                                                    height:
-                                                        util.responsiveHeight(
-                                                            0.053),
-                                                    decoration: BoxDecoration(
-                                                      color: whiteColor,
-                                                      borderRadius: BorderRadius
-                                                          .circular(util
-                                                              .responsiveWidth(
-                                                                  0.032)),
+                                                                0.012),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: whiteColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(util
+                                                                    .responsiveWidth(
+                                                                        0.032)),
+                                                      ),
+                                                      child: Center(
+                                                          child: Text(
+                                                        'Click to view'.tr,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'FontSemiBold',
+                                                            fontSize: util
+                                                                .fontSize10,
+                                                            height: 1.0,
+                                                            color: mainColor),
+                                                      )),
                                                     ),
-                                                    child: Center(
-                                                        child: Text(
-                                                      'Click to view'.tr,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'FontSemiBold',
-                                                          fontSize:
-                                                              util.fontSize14,
-                                                          height: 1.0,
-                                                          color: mainColor),
-                                                    )),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                    height:
-                                                        util.responsiveHeight(
-                                                            0.0087)),
-                                                AnimatedBuilder(
-                                                  animation: controller,
-                                                  builder: (context, child) {
-                                                    return Transform.translate(
-                                                      offset: Offset(
-                                                          0,
-                                                          4 *
-                                                              sin(controller
-                                                                      .value *
-                                                                  2 *
-                                                                  pi)),
-                                                      child: child,
-                                                    );
-                                                  },
-                                                  child: SvgPicture.asset(
-                                                    downArrow,
+                                                  AnimatedBuilder(
+                                                    animation: controller,
+                                                    builder: (context, child) {
+                                                      return Transform.translate(
+                                                        offset: Offset(
+                                                            0,
+                                                            4 *
+                                                                sin(controller
+                                                                        .value *
+                                                                    2 *
+                                                                    pi)),
+                                                        child: child,
+                                                      );
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      downArrow,
+                                                    ),
                                                   ),
-                                                )
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],

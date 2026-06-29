@@ -64,7 +64,7 @@ class _WhatsAppUpdatesSendSectionState extends State<WhatsAppUpdatesSendSection>
       return;
     }
     if (!isValidWhatsAppMobile(_mobile)) {
-      setState(() => _validationError = 'Enter a valid mobile number.');
+      setState(() => _validationError = 'Enter a valid mobile number.'.tr);
       return;
     }
     setState(() => _validationError = null);

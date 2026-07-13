@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:astro_prompt/Components/Dashboard/LoginDialog.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Components/Dashboard/subscribeDialog.dart';
+import 'package:astro_prompt/Components/Panchang/panchangDatePicker.dart';
+import 'package:astro_prompt/Components/Panchang/panchangDateRibbon.dart';
 import 'package:astro_prompt/Model/panchang_model.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
@@ -39,19 +41,42 @@ class _PanchangPageState extends State<PanchangPage> {
   bool _isCheckingAccess = false;
   String? currency;
   bool _dialogShown = false;
+  DateTime selectedDate = DateTime.now();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   panchangData = PanchangService().getPanchang();
-  //   // Future.microtask(() => checkAccessFlow());
-  // }
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkAccessFlow();
     });
+  }
+
+  void _loadPanchang() {
+    final day = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    setState(() {
+      panchangData = PanchangService().getPanchang(date: day);
+    });
+  }
+
+  Future<void> _openDatePicker() async {
+    final picked = await showPanchangDatePicker(
+      context: context,
+      selectedDate: selectedDate,
+    );
+    if (picked == null || !mounted) return;
+    if (picked.year == selectedDate.year &&
+        picked.month == selectedDate.month &&
+        picked.day == selectedDate.day) {
+      return;
+    }
+    setState(() {
+      selectedDate = picked;
+    });
+    _loadPanchang();
   }
 
   Future<void> checkAccessFlow() async {
@@ -74,8 +99,8 @@ class _PanchangPageState extends State<PanchangPage> {
       if (isPremium) {
         setState(() {
           premiumUser = true;
-          panchangData = PanchangService().getPanchang();
         });
+        _loadPanchang();
         return;
       }
 
@@ -338,9 +363,6 @@ class _PanchangPageState extends State<PanchangPage> {
                                   child: Text("No Panchang available."));
                             }
 
-                            String shortWeekday = snapshot
-                                .data!.panchang.eng_weekday
-                                .substring(0, 3);
                             String nakshatram = 'panchang_single_format'
                                 .tr
                                 .replaceAll('(name)',
@@ -447,82 +469,16 @@ class _PanchangPageState extends State<PanchangPage> {
                                       horizontal: util.width20),
                                   child: Column(
                                     children: [
-                                      ///TimeContainer
-                                      Stack(
-                                        children: [
-                                          Center(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: util.width30),
-                                              child: SvgPicture.asset(
-                                                panchangTimeContainer,
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 40),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: util.width20,
-                                                vertical: util.width10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Text(
-                                                  shortWeekday,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.semiBold),
-                                                      fontSize: util.fontSize14,
-                                                      height: 1.0,
-                                                      color: whiteColor),
-                                                ),
-                                                Text(
-                                                  '-',
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.semiBold),
-                                                      fontSize: util.fontSize14,
-                                                      height: 1.0,
-                                                      color: whiteColor),
-                                                ),
-                                                Text(
-                                                  snapshot.data!.panchang.date,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.semiBold),
-                                                      fontSize: util.fontSize14,
-                                                      height: 1.0,
-                                                      color: whiteColor),
-                                                ),
-                                                Text(
-                                                  '-',
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.semiBold),
-                                                      fontSize: util.fontSize14,
-                                                      height: 1.0,
-                                                      color: whiteColor),
-                                                ),
-                                                Text(
-                                                  snapshot.data!.panchang.time,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: AppFont.get(
-                                                          FontType.semiBold),
-                                                      fontSize: util.fontSize14,
-                                                      height: 1.0,
-                                                      color: whiteColor),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                      /// Date ribbon (multi-date, same as website)
+                                      PanchangDateRibbon(
+                                        weekday: snapshot
+                                            .data!.panchang.eng_weekday,
+                                        date: snapshot.data!.panchang.date,
+                                        time: snapshot.data!.panchang.time,
+                                        onTap: _openDatePicker,
                                       ),
+                                      SizedBox(
+                                          height: util.responsiveHeight(0.015)),
 
                                       ///Details
                                       Container(

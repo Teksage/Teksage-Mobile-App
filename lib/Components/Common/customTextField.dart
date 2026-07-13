@@ -96,7 +96,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return true;
     }
 
-    if (widget.isEmail == true && !isValidEmail(value)) {
+    if (widget.isEmail == true &&
+        value.trim().isNotEmpty &&
+        !isValidEmail(value)) {
       setState(() {
         hasError = true;
         errorMessage = 'Enter a valid Email'.tr;
@@ -105,6 +107,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
     }
 
     if (widget.isMobileNumber == true) {
+      // Website parity: mobile is optional when email login — empty is valid.
+      if (value.trim().isEmpty && !widget.isMandatory) {
+        setState(() {
+          hasError = false;
+        });
+        widget.onPhoneNumberValidationChanged?.call(true);
+        return false;
+      }
+
       if (selectedCountry['dialCode'] == null ||
           selectedCountry['dialCode']!.isEmpty) {
         setState(() {

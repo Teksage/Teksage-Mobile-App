@@ -161,6 +161,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (loginKey == 'mobile_number' && widget.userInfo != null) {
       mobileController.text = widget.userInfo!;
       selectedCountryCode = widget.countryCode;
+      // Prefill bypasses CustomTextField onChange — mark valid so Save isn't blocked.
+      isPhoneNumberValid = true;
     }
   }
 
@@ -184,6 +186,12 @@ class _ProfilePageState extends State<ProfilePage> {
         widget.userData?['isMobileVerified'] == true;
   }
 
+  /// Website: email required only when mobile is not verified.
+  bool get _isEmailMandatory => !_isPhoneVerifiedIdentity;
+
+  /// Website: mobile is never required on profile (optional if email verified).
+  bool get _isMobileMandatory => false;
+
   bool validateInputs() {
     bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
     final phoneOk = _isPhoneVerifiedIdentity;
@@ -202,6 +210,10 @@ class _ProfilePageState extends State<ProfilePage> {
       prefLocError = false;
       emailErrMessage = emailError ? 'Please enter a valid Email' : '';
       mobileErrMessage = '';
+      // Empty optional mobile, or verified login mobile, must not block Save.
+      if (mobileController.text.trim().isEmpty || phoneOk) {
+        isPhoneNumberValid = true;
+      }
     });
 
     bool hasCommonError = firstNameError ||
@@ -636,6 +648,10 @@ class _ProfilePageState extends State<ProfilePage> {
             selectedCountryCode = profileData.countryCode;
           }
         }
+      } else if (mobileController.text.trim().isNotEmpty &&
+          (mobileVerified || isPhoneVerifiedDB || phoneVerifiedFromLogin)) {
+        // Mobile already prefilled from OTP login — don't leave isPhoneNumberValid false.
+        isPhoneNumberValid = true;
       }
       if (!skipIfFilled || chatLanguage.text.isEmpty) {
         chatLanguage.text = profileData.chatLanguage;
@@ -681,6 +697,7 @@ class _ProfilePageState extends State<ProfilePage> {
           showMobileVerify = false;
           mobileVerified = true;
           isPhoneVerifiedDB = true;
+          isPhoneNumberValid = true;
           emailVerified =
               widget.userData?['isEmailVerified'] == true || emailVerified;
         });
@@ -909,7 +926,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Email
                     CustomTextField(
                       title: 'Email',
-                      isMandatory: !_isPhoneVerifiedIdentity,
+                      isMandatory: _isEmailMandatory,
                       controller: emailController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
@@ -940,10 +957,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 10,
                     ),
 
-                    // Mobile Number
+                    // Mobile Number — optional when email login (website parity)
                     CustomTextField(
                       title: 'Phone Number',
-                      isMandatory: false,
+                      isMandatory: _isMobileMandatory,
                       controller: mobileController,
                       keyboardType: TextInputType.phone,
                       readOnly: isPhoneVerifiedDB,
@@ -1231,7 +1248,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ? GestureDetector(
                             onTap: () async {
                               FocusScope.of(context).unfocus();
-                              print('isPhoneNumberValid: $mobileVerified');
+                              print(
+                                  'save check mobileVerified=$mobileVerified isPhoneNumberValid=$isPhoneNumberValid');
                               if (validateInputs()) {
                                 // Website: !isEmailVerified && !isMobileVerified → block.
                                 if (!_isIdentityVerified) {
@@ -1246,15 +1264,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                 if (_isPhoneVerifiedIdentity && !mobileVerified) {
                                   mobileVerified = true;
                                   isPhoneVerifiedDB = true;
+                                  isPhoneNumberValid = true;
                                 }
                                 if (widget.keyValue == 'email' ||
                                     widget.userData?['isEmailVerified'] ==
                                         true) {
                                   emailVerified = true;
                                 }
-                                if (_isIdentityVerified &&
-                                    (mobileController.text.isEmpty ||
-                                        isPhoneNumberValid)) {
+                                final phoneFormatOk =
+                                    mobileController.text.trim().isEmpty ||
+                                        isPhoneNumberValid ||
+                                        _isPhoneVerifiedIdentity;
+                                if (_isIdentityVerified && phoneFormatOk) {
                                   setState(() {
                                     emailError = false;
                                     mobileError = false;
@@ -1271,70 +1292,41 @@ class _ProfilePageState extends State<ProfilePage> {
                                   String formattedTime =
                                       DateFormat("HH:mm").format(parsedTime);
 
-                                  Map<String, dynamic> profileData;
+                                  Map<String, dynamic> profileData = {
+                                    "chat_languages": chatLanguage.text,
+                                    "date_of_birth": formattedDate,
+                                    "time_of_birth": formattedTime,
+                                    "birth_location": birthPlaceFullLocation,
+                                    "first_name": firstNameController.text.trim(),
+                                    "last_name": secondNameController.text.trim(),
+                                  };
 
-                                  if (widget.userData != null) {
-                                    profileData = {
-                                      "chat_languages": chatLanguage.text,
-                                      "date_of_birth": formattedDate,
-                                      "time_of_birth": formattedTime,
-                                      "birth_location": birthPlaceFullLocation,
-                                    };
-
-                                    if (mobileController.text
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["mobile_number"] =
-                                          mobileController.text.trim();
-                                    }
-                                    if (selectedCountryCode != null &&
-                                        selectedCountryCode!
-                                            .trim()
-                                            .isNotEmpty) {
-                                      profileData["country_code"] =
-                                          selectedCountryCode;
-                                    }
-                                    if (preferredPlaceFullLocation
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["preferred_location"] =
-                                          preferredPlaceFullLocation;
-                                    } else {
-                                      profileData["preferred_location"] =
-                                          "Chennai, Tamil Nadu, India";
-                                    }
+                                  if (!widget.isProfileUpdated &&
+                                      howYouKnow.text.trim().isNotEmpty) {
+                                    profileData["referral_source"] =
+                                        howYouKnow.text.trim();
+                                  }
+                                  if (emailController.text.trim().isNotEmpty) {
+                                    profileData["email"] =
+                                        emailController.text.trim();
+                                  }
+                                  if (mobileController.text.trim().isNotEmpty) {
+                                    profileData["mobile_number"] =
+                                        mobileController.text.trim();
+                                  }
+                                  if (selectedCountryCode != null &&
+                                      selectedCountryCode!.trim().isNotEmpty) {
+                                    profileData["country_code"] =
+                                        selectedCountryCode;
+                                  }
+                                  if (preferredPlaceFullLocation
+                                      .trim()
+                                      .isNotEmpty) {
+                                    profileData["preferred_location"] =
+                                        preferredPlaceFullLocation;
                                   } else {
-                                    profileData = {
-                                      "chat_languages": chatLanguage.text,
-                                      "date_of_birth": formattedDate,
-                                      "time_of_birth": formattedTime,
-                                      "birth_location": birthPlaceFullLocation,
-                                      "first_name": firstNameController.text,
-                                      "last_name": secondNameController.text,
-                                      "referral_source": howYouKnow.text,
-                                    };
-                                    if (mobileController.text
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["mobile_number"] =
-                                          mobileController.text.trim();
-                                    }
-                                    if (selectedCountryCode != null &&
-                                        selectedCountryCode!
-                                            .trim()
-                                            .isNotEmpty) {
-                                      profileData["country_code"] =
-                                          selectedCountryCode;
-                                    }
-                                    if (preferredPlaceFullLocation
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["preferred_location"] =
-                                          preferredPlaceFullLocation;
-                                    } else {
-                                      profileData["preferred_location"] =
-                                          "Chennai, Tamil Nadu, India";
-                                    }
+                                    profileData["preferred_location"] =
+                                        "Chennai, Tamil Nadu, India";
                                   }
 
                                   CustomLoader.show(context);

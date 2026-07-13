@@ -191,9 +191,15 @@ class _OTPScreenState extends State<OTPScreen> {
           Get.back(result: true);
         }
 
-        showLoginSuccessSnackBar(context, 'OTP Verified');
+        final isEmail =
+            widget.keyValue == 'email' ||
+            (widget.title?.toLowerCase().contains('email') ?? false);
         showLoginSuccessSnackBar(
-            context, '${widget.title!} Verified Successfully');
+          context,
+          isEmail
+              ? 'Email verified successfully'
+              : 'Phone number verified successfully',
+        );
       } else {
         setState(() {
           errorMessage = "Incorrect OTP";

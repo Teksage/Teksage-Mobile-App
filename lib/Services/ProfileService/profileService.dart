@@ -114,7 +114,9 @@ class ProfileService {
       var responseBody = json.decode(response.body);
       return {
         "success": false,
-        "error": responseBody['error'] ?? 'Unknown error'
+        "error": responseBody['error'] ??
+            responseBody['detail'] ??
+            'Unknown error'
       };
     }
   }

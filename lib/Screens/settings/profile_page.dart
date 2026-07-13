@@ -164,42 +164,53 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  bool validateInputs() {
-    bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
+  /// Same rule as website ProfileDetailsForm:
+  /// `user.isEmailVerified || user.isMobileVerified`
+  bool get _isIdentityVerified {
+    final emailOk = emailVerified ||
+        widget.keyValue == 'email' ||
+        widget.userData?['isEmailVerified'] == true;
     final phoneOk = mobileVerified ||
         isPhoneVerifiedDB ||
         widget.keyValue == 'mobile_number' ||
         widget.userData?['isMobileVerified'] == true;
+    return emailOk || phoneOk;
+  }
+
+  bool get _isPhoneVerifiedIdentity {
+    return mobileVerified ||
+        isPhoneVerifiedDB ||
+        widget.keyValue == 'mobile_number' ||
+        widget.userData?['isMobileVerified'] == true;
+  }
+
+  bool validateInputs() {
+    bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
+    final phoneOk = _isPhoneVerifiedIdentity;
 
     setState(() {
       firstNameError = isEmpty(firstNameController);
       secondNameError = isEmpty(secondNameController);
-      // Email required only when phone is not already verified.
+      // Email required only when phone is not already verified (website parity).
       emailError = phoneOk ? false : isEmpty(emailController);
-      // mobileError = isEmpty(mobileController);
       mobileError = false;
       chatLanguageError = isEmpty(chatLanguage);
       howYouKnowError = isEmpty(howYouKnow);
       dobError = isEmpty(dobController);
       tobError = isEmpty(timeController);
       pobError = isEmpty(placeOfBirth);
-      // prefLocError = isEmpty(preferredLocation);
       prefLocError = false;
       emailErrMessage = emailError ? 'Please enter a valid Email' : '';
-      // mobileErrMessage = mobileError ? 'Please enter a valid Mobile number' : '';
       mobileErrMessage = '';
     });
 
     bool hasCommonError = firstNameError ||
             secondNameError ||
             emailError ||
-            // mobileError ||
             chatLanguageError ||
             dobError ||
             tobError ||
-            pobError
-        // || prefLocError
-        ;
+            pobError;
 
     return !widget.isProfileUpdated
         ? !(hasCommonError || howYouKnowError)
@@ -554,6 +565,19 @@ class _ProfilePageState extends State<ProfilePage> {
         print("Incomplete profile data: ${e.profileData}");
       }
       final UserProfile profile = UserProfile.fromJson(e.profileData);
+      // API includes is_email_verified / is_mobile_verified — apply like website.
+      setState(() {
+        if (e.profileData['is_email_verified'] == true ||
+            profile.emailVerified) {
+          emailVerified = true;
+          showEmailVerify = false;
+        }
+        if (e.profileData['is_mobile_verified'] == true ||
+            profile.mobileVerified) {
+          mobileVerified = true;
+          isPhoneVerifiedDB = true;
+        }
+      });
       updateProfileFields(profile, skipIfFilled: true);
       // Optionally handle or prefill partial data
     } catch (e) {
@@ -573,18 +597,20 @@ class _ProfilePageState extends State<ProfilePage> {
     print(
         'mobileVerified from API: ${profileData.mobileVerified},${widget.phoneNumberChangeData}');
     setState(() {
-      // Keep verification flags from login; sync phone from API.
-      final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number';
-      final emailVerifiedFromLogin = widget.keyValue == 'email';
-      if (emailVerifiedFromLogin) {
-        emailVerified = true;
-      }
+      // Keep verification flags from login + API (website uses server flags).
+      final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number' ||
+          widget.userData?['isMobileVerified'] == true;
+      final emailVerifiedFromLogin = widget.keyValue == 'email' ||
+          widget.userData?['isEmailVerified'] == true;
+      emailVerified = emailVerified ||
+          emailVerifiedFromLogin ||
+          profileData.emailVerified;
       isPhoneVerifiedDB = widget.phoneNumberChangeData != null
           ? false
           : (profileData.mobileVerified || phoneVerifiedFromLogin);
       mobileVerified =
           mobileVerified || isPhoneVerifiedDB || phoneVerifiedFromLogin;
-      print('isPhoneVerifiedDB : $isPhoneVerifiedDB');
+      print('isPhoneVerifiedDB : $isPhoneVerifiedDB emailVerified: $emailVerified');
       showEmailVerify = !emailVerified;
       showMobileVerify = isPhoneVerifiedDB;
       if (!skipIfFilled || firstNameController.text.isEmpty) {
@@ -883,10 +909,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Email
                     CustomTextField(
                       title: 'Email',
-                      isMandatory: !(mobileVerified ||
-                          isPhoneVerifiedDB ||
-                          widget.keyValue == 'mobile_number' ||
-                          widget.userData?['isMobileVerified'] == true),
+                      isMandatory: !_isPhoneVerifiedIdentity,
                       controller: emailController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
@@ -1210,16 +1233,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               FocusScope.of(context).unfocus();
                               print('isPhoneNumberValid: $mobileVerified');
                               if (validateInputs()) {
-                                // Mobile OTP login / verified phone is enough —
-                                // email is optional and must not block Save.
-                                final phoneOk = mobileVerified ||
-                                    isPhoneVerifiedDB ||
-                                    widget.keyValue == 'mobile_number' ||
-                                    widget.userData?['isMobileVerified'] ==
-                                        true;
-                                final identityVerified =
-                                    emailVerified || phoneOk;
-                                if (!identityVerified) {
+                                // Website: !isEmailVerified && !isMobileVerified → block.
+                                if (!_isIdentityVerified) {
                                   setState(() {
                                     emailError = true;
                                     emailErrMessage =
@@ -1228,11 +1243,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   return;
                                 }
                                 // Keep local flags in sync so later edits stay consistent.
-                                if (phoneOk && !mobileVerified) {
+                                if (_isPhoneVerifiedIdentity && !mobileVerified) {
                                   mobileVerified = true;
                                   isPhoneVerifiedDB = true;
                                 }
-                                if (identityVerified &&
+                                if (widget.keyValue == 'email' ||
+                                    widget.userData?['isEmailVerified'] ==
+                                        true) {
+                                  emailVerified = true;
+                                }
+                                if (_isIdentityVerified &&
                                     (mobileController.text.isEmpty ||
                                         isPhoneNumberValid)) {
                                   setState(() {

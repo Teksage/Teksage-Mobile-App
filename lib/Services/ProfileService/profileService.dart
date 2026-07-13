@@ -4,17 +4,34 @@ import 'package:astro_prompt/Services/RefreshToken/autoRefreshToken.dart';
 import 'package:astro_prompt/config/api_endpoints.dart';
 
 class ProfileService {
-  ///Verify Email/Mobile
+  /// Send OTP for profile email/mobile verify — same as website `sendAuthenticatedOtp`.
   Future<Map<String, dynamic>> profileVerify(
-      String keyValue, String variable) async {
-    var body = {keyValue: variable};
+      String keyValue, String variable,
+      {String? countryCode}) async {
+    Map<String, dynamic> body = {keyValue: variable};
+    if (keyValue == 'mobile_number') {
+      final cc = (countryCode ?? '91').replaceAll('+', '').trim();
+      if (cc.isNotEmpty) {
+        body['country_code'] = cc;
+      }
+    }
+    print('profileVerify body: $body');
     var response =
         await APIRequest.postRequest(ApiEndpoint.profileVerify, body);
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      return {"error": response.reasonPhrase};
+      try {
+        final decoded = json.decode(response.body);
+        return {
+          "error": decoded['detail'] ??
+              decoded['error'] ??
+              response.reasonPhrase
+        };
+      } catch (_) {
+        return {"error": response.reasonPhrase};
+      }
     }
   }
 
@@ -24,7 +41,7 @@ class ProfileService {
     Map<String, dynamic> body = {keyValue: variable};
 
     if (keyValue == 'mobile_number') {
-      body['country_code'] = countryCode;
+      body['country_code'] = (countryCode ?? '91').replaceAll('+', '');
     }
 
     var response = await APIRequest.postRequest(
@@ -37,30 +54,31 @@ class ProfileService {
     }
   }
 
-  ///Verify Email/Mobile OTP verification
+  /// Verify OTP — same as website `verifyAuthenticatedOtp`.
+  /// [updateContact] maps to `?update=` (false = profile verify, true = change/link new contact).
   Future<String> profileVerifyOtp(
-      String keyValue, String variable, String otp, bool newUser,
+      String keyValue, String variable, String otp, bool updateContact,
       {String? countryCode}) async {
     Map<String, dynamic> body = {
       keyValue: variable,
       "otp": otp,
       "login": false
     };
-    if (keyValue == 'mobile_number' &&
-        countryCode != null &&
-        countryCode.isNotEmpty) {
-      body['country_code'] = countryCode;
+    if (keyValue == 'mobile_number') {
+      final cc = (countryCode ?? '91').replaceAll('+', '').trim();
+      if (cc.isNotEmpty) {
+        body['country_code'] = cc;
+      }
     }
-    print('body:$body');
-    var url = newUser
-        ? '${ApiEndpoint.profileVerifyOtp}?update=$newUser'
-        : ApiEndpoint.profileVerifyOtp;
-    print('url:$url$newUser');
+    print('profileVerifyOtp body:$body update=$updateContact');
+    // Website ProfilePhoneRow: update=false; ChangeContactView: update=true
+    final url = '${ApiEndpoint.profileVerifyOtp}?update=$updateContact';
+    print('url:$url');
     var response = await APIRequest.postRequest(url, body);
     var responseBody = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      print('Stauts: $responseBody');
+      print('Status: $responseBody');
       if (responseBody.containsKey("status")) {
         return "success";
       } else if (responseBody.containsKey("error")) {
@@ -69,7 +87,6 @@ class ProfileService {
         return "Unexpected response: $responseBody";
       }
     } else {
-      var responseBody = json.decode(response.body);
       return responseBody.containsKey("detail")
           ? responseBody["detail"]
           : "Something went wrong. Please try again.";

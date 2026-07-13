@@ -115,8 +115,12 @@ class _ChangeButtonState extends State<ChangeButton> {
 
               try {
                 CustomLoader.show(context);
-                var response =
-                    await profileService.profileVerify(keyValue!, rawText);
+                final dialForApi = dialCode.replaceAll('+', '');
+                var response = await profileService.profileVerify(
+                  keyValue!,
+                  rawText,
+                  countryCode: widget.title == 'Phone Number' ? dialForApi : null,
+                );
                 CustomLoader.hide();
                 if (response['message'] == 'OTP sent successfully') {
                   showLoginSuccessSnackBar(
@@ -133,14 +137,18 @@ class _ChangeButtonState extends State<ChangeButton> {
                         verifyScreen: true,
                         isChange: false,
                         newVerify: true,
+                        updateContact: false,
                         countryCode: widget.title == 'Phone Number'
-                            ? dialCode.replaceAll('+', '')
+                            ? dialForApi
                             : null,
                       ));
                   widget.onResult?.call(result);
                 } else {
                   showErrorSnackBar(
-                      context, response['message'] ?? 'Error in sending OTP');
+                      context,
+                      response['error'] ??
+                          response['message'] ??
+                          'Error in sending OTP');
                 }
               } catch (e) {
                 CustomLoader.hide();
@@ -168,8 +176,12 @@ class _ChangeButtonState extends State<ChangeButton> {
 
               try {
                 CustomLoader.show(context);
-                var response =
-                    await profileService.profileVerify(keyValue!, rawText);
+                final dialForApi = dialCode.replaceAll('+', '');
+                var response = await profileService.profileVerify(
+                  keyValue!,
+                  rawText,
+                  countryCode: widget.title == 'Phone Number' ? dialForApi : null,
+                );
                 CustomLoader.hide();
                 if (response['message'] == 'OTP sent successfully') {
                   showLoginSuccessSnackBar(
@@ -186,14 +198,18 @@ class _ChangeButtonState extends State<ChangeButton> {
                         verifyScreen: true,
                         isChange: true,
                         newVerify: true,
+                        updateContact: false,
                         countryCode: widget.title == 'Phone Number'
-                            ? dialCode.replaceAll('+', '')
+                            ? dialForApi
                             : null,
                       ));
                   widget.onResult?.call(result);
                 } else {
                   showErrorSnackBar(
-                      context, response['message'] ?? 'Error in sending OTP');
+                      context,
+                      response['error'] ??
+                          response['message'] ??
+                          'Error in sending OTP');
                 }
               } catch (e) {
                 CustomLoader.hide();

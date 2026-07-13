@@ -170,6 +170,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
       if (result == 'success') {
         if (isChange && widget.newVerify == true) {
+          // Changing an already-saved contact: continue to enter the new value.
           print('inside if');
           Get.to(() => ChangeEmailMobile(
                 verifyScreen: widget.verifyScreen,
@@ -177,21 +178,10 @@ class _OTPScreenState extends State<OTPScreen> {
                 countries: countries,
               ));
         } else if (widget.newVerify == true) {
+          // Profile-form verify (email or phone): pop back so unsaved fields
+          // on the existing ProfilePage are preserved.
           print('else if');
-          // Phone Number verification from profile completion form: just go back
-          // so the onResult callback marks the field verified and the user stays
-          // on the same form. Email change still needs the ProfilePage redirect.
-          if (widget.title != null &&
-              widget.title!.toLowerCase().contains('phone')) {
-            Get.back(result: true);
-          } else {
-            print('else');
-            Get.to(() => ProfilePage(
-                  title: 'Profile Details',
-                  isProfileUpdated: true,
-                  fromChangePage: true,
-                ));
-          }
+          Get.back(result: true);
         } else {
           Get.back(result: true);
         }
@@ -422,23 +412,16 @@ class _OTPScreenState extends State<OTPScreen> {
         }
       } else {
         print('⚠️ Profile incomplete - navigating to Complete Profile screen');
-        if (userType) {
-          Get.offAll(() => ProfilePage(
-                title: 'Complete Profile',
-                isProfileUpdated: profileUpdated,
-                userInfo: widget.userInfo,
-                keyValue: widget.keyValue,
-                fromChangePage: false,
-                countryCode: result['countryCode'],
-              ));
-        } else {
-          Get.offAll(() => ProfilePage(
-                title: 'Complete Profile',
-                isProfileUpdated: profileUpdated,
-                fromChangePage: false,
-                userData: userData,
-              ));
-        }
+        Get.offAll(() => ProfilePage(
+              title: 'Complete Profile',
+              isProfileUpdated: profileUpdated,
+              userInfo: widget.userInfo,
+              keyValue: widget.keyValue,
+              fromChangePage: false,
+              countryCode: result['countryCode'],
+              userData: userData,
+              userType: userType,
+            ));
       }
 
       showLoginSuccessSnackBar(context, 'OTP Verified');

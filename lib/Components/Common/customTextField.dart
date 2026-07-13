@@ -159,7 +159,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     showVerified = (widget.mobileVerifiedDB ?? false) &&
         widget.isMobileNumber == true;
     if (widget.isEmail == true) {
-      showChangeButton = widget.isExist == true;
+      // Unverified email → show Verify; verified → Change/tick handled in build.
+      showVerified = widget.isExist == true && !widget.enableEdit;
+      showChangeButton = widget.isExist != true || widget.enableEdit;
     } else {
       showChangeButton = (widget.isExist == true || !(widget.mobileVerifiedDB ?? false)) &&
           widget.isMobileNumber == true;
@@ -224,12 +226,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
     }
 
     if (oldWidget.isExist != widget.isExist ||
-        oldWidget.mobileVerifiedDB != widget.mobileVerifiedDB) {
+        oldWidget.mobileVerifiedDB != widget.mobileVerifiedDB ||
+        oldWidget.enableEdit != widget.enableEdit) {
       setState(() {
         showVerified = (widget.mobileVerifiedDB ?? false) &&
             widget.isMobileNumber == true;
         if (widget.isEmail == true) {
-          showChangeButton = widget.isExist == true;
+          showVerified = widget.isExist == true && !widget.enableEdit;
+          showChangeButton = widget.isExist != true || widget.enableEdit;
         } else {
           showChangeButton = (widget.isExist == true || !(widget.mobileVerifiedDB ?? false)) &&
               widget.isMobileNumber == true;
@@ -290,8 +294,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
         showVerifyOption = true;
 
         if (widget.isEmail == true || widget.isMobileNumber == true) {
+          // Unverified contact: show action button (Verify), not a tick.
           showChangeButton = true;
           showVerifyOption = false;
+          if (widget.isEmail == true && widget.isExist == true) {
+            showVerified = !widget.enableEdit;
+            showChangeButton = widget.enableEdit;
+          }
         }
       }
     }

@@ -55,7 +55,8 @@ class _ChangeButtonState extends State<ChangeButton> {
         if (widget.title == "Phone Number") {
           buttonText = "Verify";
         } else if (widget.title == "Email") {
-          buttonText = "Change";
+          // isExist == already verified → Change; otherwise Verify.
+          buttonText = widget.isExist ? "Change" : "Verify";
         } else {
           buttonText = "Verify";
         }

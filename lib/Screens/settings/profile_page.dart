@@ -121,6 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void updateEmailVerification(bool isVerified) {
     setState(() {
       emailVerified = isVerified;
+      showEmailVerify = !isVerified;
       emailError = false;
     });
   }
@@ -128,17 +129,53 @@ class _ProfilePageState extends State<ProfilePage> {
   void updateMobileVerification(bool isVerified) {
     setState(() {
       mobileVerified = isVerified;
+      isPhoneVerifiedDB = isVerified || isPhoneVerifiedDB;
       mobileError = false;
     });
   }
 
+  /// Sync login channel into flags before the first frame paints.
+  void _applyLoginIdentity() {
+    final loginKey = widget.keyValue;
+    final data = widget.userData;
+    final mobileFromData = data?['isMobileVerified'] == true;
+    final emailFromData = data?['isEmailVerified'] == true;
+
+    if (loginKey == 'mobile_number' || mobileFromData) {
+      mobileVerified = true;
+      isPhoneVerifiedDB = true;
+      showMobileVerify = false;
+      // Email not verified yet → optional field + Verify button.
+      if (!emailFromData) {
+        emailVerified = false;
+        showEmailVerify = true;
+      }
+    }
+    if (loginKey == 'email' || emailFromData) {
+      emailVerified = true;
+      showEmailVerify = false;
+      if (widget.userInfo != null && loginKey == 'email') {
+        emailController.text = widget.userInfo!;
+      }
+    }
+    if (loginKey == 'mobile_number' && widget.userInfo != null) {
+      mobileController.text = widget.userInfo!;
+      selectedCountryCode = widget.countryCode;
+    }
+  }
+
   bool validateInputs() {
     bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
+    final phoneOk = mobileVerified ||
+        isPhoneVerifiedDB ||
+        widget.keyValue == 'mobile_number' ||
+        widget.userData?['isMobileVerified'] == true;
 
     setState(() {
       firstNameError = isEmpty(firstNameController);
       secondNameError = isEmpty(secondNameController);
-      emailError = isEmpty(emailController);
+      // Email required only when phone is not already verified.
+      emailError = phoneOk ? false : isEmpty(emailController);
       // mobileError = isEmpty(mobileController);
       mobileError = false;
       chatLanguageError = isEmpty(chatLanguage);
@@ -326,7 +363,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // fetchProfileData();
+    // Apply before first build so email has no * and shows Verify (not Change).
+    _applyLoginIdentity();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchProfileData();
     });
@@ -535,10 +573,17 @@ class _ProfilePageState extends State<ProfilePage> {
     print(
         'mobileVerified from API: ${profileData.mobileVerified},${widget.phoneNumberChangeData}');
     setState(() {
-      emailVerified = (profileData.email.isNotEmpty);
+      // Keep verification flags from login; sync phone from API.
+      final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number';
+      final emailVerifiedFromLogin = widget.keyValue == 'email';
+      if (emailVerifiedFromLogin) {
+        emailVerified = true;
+      }
       isPhoneVerifiedDB = widget.phoneNumberChangeData != null
           ? false
-          : profileData.mobileVerified;
+          : (profileData.mobileVerified || phoneVerifiedFromLogin);
+      mobileVerified =
+          mobileVerified || isPhoneVerifiedDB || phoneVerifiedFromLogin;
       print('isPhoneVerifiedDB : $isPhoneVerifiedDB');
       showEmailVerify = !emailVerified;
       showMobileVerify = isPhoneVerifiedDB;
@@ -598,11 +643,45 @@ class _ProfilePageState extends State<ProfilePage> {
   checkLoginInfo() async {
     print('country code:${widget.countryCode}');
     if (widget.isProfileUpdated == false) {
-      // countries = await CountryCodeService().fetchCountries();
-      if (widget.userType != null && widget.userType == true) {
+      setState(() {
+        enableEdit = true;
+      });
+      // Mobile OTP login → phone is verified, email is optional (no *).
+      if (widget.keyValue == 'mobile_number' && widget.userInfo != null) {
         setState(() {
-          enableEdit = true;
+          mobileController.text = widget.userInfo!;
+          selectedCountryCode = widget.countryCode;
+          showEmailVerify = true;
+          showMobileVerify = false;
+          mobileVerified = true;
+          isPhoneVerifiedDB = true;
+          emailVerified =
+              widget.userData?['isEmailVerified'] == true || emailVerified;
         });
+      } else if (widget.keyValue == 'email' && widget.userInfo != null) {
+        setState(() {
+          emailController.text = widget.userInfo!;
+          showEmailVerify = false;
+          showMobileVerify = true;
+          emailVerified = true;
+          mobileVerified =
+              widget.userData?['isMobileVerified'] == true || mobileVerified;
+        });
+      } else if (widget.userData != null) {
+        setState(() {
+          firstNameController.text = widget.userData!['name'] ?? '';
+          secondNameController.text = widget.userData!['lastName'] ?? '';
+          emailController.text = widget.userData!['email'] ?? '';
+          mobileController.text = widget.userData!['mobile'] ?? '';
+          emailVerified = widget.userData!['isEmailVerified'] == true;
+          mobileVerified = widget.userData!['isMobileVerified'] == true;
+          isPhoneVerifiedDB = mobileVerified;
+          if (widget.userData!['countryCode'] != null) {
+            selectedCountryCode = widget.userData!['countryCode'];
+          }
+        });
+      } else if (widget.userType != null && widget.userType == true) {
+        // Legacy admin/customer flag path (kept for compatibility).
         if (widget.keyValue == 'email') {
           setState(() {
             emailController.text = widget.userInfo!;
@@ -610,28 +689,7 @@ class _ProfilePageState extends State<ProfilePage> {
             showMobileVerify = true;
             emailVerified = true;
           });
-        } else if (widget.keyValue == 'mobile_number') {
-          // String formattedNumber = formatPhoneNumber(widget.userInfo!);
-          setState(() {
-            mobileController.text = widget.userInfo!;
-            selectedCountryCode = widget.countryCode;
-            showEmailVerify = true;
-            showMobileVerify = false;
-            mobileVerified = true;
-          });
         }
-      } else {
-        setState(() {
-          enableEdit = true;
-          if (widget.userData != null) {
-            firstNameController.text = widget.userData!['name'];
-            secondNameController.text = widget.userData!['lastName'];
-            emailController.text = widget.userData!['email'];
-            mobileController.text = widget.userData!['mobile'];
-            emailVerified = widget.userData!['isEmailVerified'];
-            mobileVerified = widget.userData!['isMobileVerified'];
-          }
-        });
       }
     } else {
       setState(() {
@@ -825,21 +883,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Email
                     CustomTextField(
                       title: 'Email',
-                      isMandatory: true,
+                      isMandatory: !(mobileVerified ||
+                          isPhoneVerifiedDB ||
+                          widget.keyValue == 'mobile_number' ||
+                          widget.userData?['isMobileVerified'] == true),
                       controller: emailController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                         EmailInputFormatter(),
                       ],
                       keyboardType: TextInputType.emailAddress,
-                      readOnly: !showEmailVerify,
+                      readOnly: emailVerified,
                       enableEdit: enableEdit,
                       isEmail: true,
-                      isExist: showEmailVerify,
+                      // true only when email already verified (Change flow).
+                      isExist: emailVerified,
                       isFirst: widget.isProfileUpdated,
                       onVerifiedChange: updateEmailVerification,
                       textStyle: TextCapitalization.none,
-                      showCursor: showEmailVerify,
+                      showCursor: !emailVerified,
                     ),
                     Visibility(
                       visible: emailError,
@@ -1148,21 +1210,29 @@ class _ProfilePageState extends State<ProfilePage> {
                               FocusScope.of(context).unfocus();
                               print('isPhoneNumberValid: $mobileVerified');
                               if (validateInputs()) {
-                                if (emailVerified == false) {
+                                // Mobile OTP login / verified phone is enough —
+                                // email is optional and must not block Save.
+                                final phoneOk = mobileVerified ||
+                                    isPhoneVerifiedDB ||
+                                    widget.keyValue == 'mobile_number' ||
+                                    widget.userData?['isMobileVerified'] ==
+                                        true;
+                                final identityVerified =
+                                    emailVerified || phoneOk;
+                                if (!identityVerified) {
                                   setState(() {
                                     emailError = true;
                                     emailErrMessage =
                                         'Please verify your Email';
                                   });
+                                  return;
                                 }
-                                // if (mobileVerified == false) {
-                                //   setState(() {
-                                //     mobileError = true;
-                                //     mobileErrMessage = 'Please verify your mobile number';
-                                //   });
-                                // }
-                                // if (emailVerified == true && isPhoneNumberValid && mobileVerified == true)
-                                if (emailVerified == true &&
+                                // Keep local flags in sync so later edits stay consistent.
+                                if (phoneOk && !mobileVerified) {
+                                  mobileVerified = true;
+                                  isPhoneVerifiedDB = true;
+                                }
+                                if (identityVerified &&
                                     (mobileController.text.isEmpty ||
                                         isPhoneNumberValid)) {
                                   setState(() {

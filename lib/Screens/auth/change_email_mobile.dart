@@ -437,11 +437,10 @@ class _ChangeEmailMobileState extends State<ChangeEmailMobile> {
                                           isChange: false,
                                           newVerify: true,
                                         ));
-                                    if (result == 'success') {
-                                      Get.to(() => ProfilePage(
-                                            title: 'Profile Details',
-                                            isProfileUpdated: true,
-                                          ));
+                                    if (result == true || result == 'success') {
+                                      // Return to the existing profile form instead of
+                                      // pushing a blank ProfilePage that wipes edits.
+                                      Get.back(result: true);
                                     }
                                   } else {
                                     showErrorSnackBar(

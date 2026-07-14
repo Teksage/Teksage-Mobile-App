@@ -15,6 +15,7 @@ import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
+import 'package:astro_prompt/config/login_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -234,7 +235,7 @@ class _WhatsAppUpdatesPageState extends State<WhatsAppUpdatesPage> {
                       'You will no longer receive astrology updates on WhatsApp. Tap the button below to enable alerts again.'
                           .tr,
                       child: WhatsAppUpdatesSendSection(
-                        profileCountryCode: profile?.countryCode ?? '91',
+                        profileCountryCode: profile?.countryCode ?? LoginConstants.defaultCountryCodeNumeric,
                         profileMobile: profile?.mobileNumber ?? '',
                         loading: sending,
                         showStopNote: false,
@@ -250,7 +251,7 @@ class _WhatsAppUpdatesPageState extends State<WhatsAppUpdatesPage> {
                       sending: sending,
                       startingOver: revoking,
                       showPhoneChoice: changingNumber,
-                      profileCountryCode: profile?.countryCode ?? '91',
+                      profileCountryCode: profile?.countryCode ?? LoginConstants.defaultCountryCodeNumeric,
                       profileMobile: profile?.mobileNumber ?? '',
                       onResend: _sendConsent,
                       onChangeNumber: () =>
@@ -261,7 +262,7 @@ class _WhatsAppUpdatesPageState extends State<WhatsAppUpdatesPage> {
                     Padding(
                       padding: EdgeInsets.only(top: util.height20),
                       child: WhatsAppUpdatesSendSection(
-                        profileCountryCode: profile?.countryCode ?? '91',
+                        profileCountryCode: profile?.countryCode ?? LoginConstants.defaultCountryCodeNumeric,
                         profileMobile: profile?.mobileNumber ?? '',
                         loading: sending,
                         disabled: !verified,

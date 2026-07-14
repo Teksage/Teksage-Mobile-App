@@ -96,9 +96,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   String cleanPhoneNumber(String phoneNumber) {
-    return phoneNumber
-        .replaceAll(RegExp(r'\D'), '')
-        .replaceFirst(RegExp(r'^91'), '');
+    return phoneNumber.replaceAll(RegExp(r'\D'), '');
   }
 
   // Future<void> passCountryList(BuildContext context) async {
@@ -735,7 +733,11 @@ class _OTPScreenState extends State<OTPScreen> {
                                   errorMessage = '';
                                 });
                                 var response = await authService.login(
-                                    widget.keyValue, widget.userInfo);
+                                    widget.keyValue, widget.userInfo,
+                                    countryCode: widget.keyValue ==
+                                            'mobile_number'
+                                        ? widget.countryCode?.replaceAll('+', '')
+                                        : null);
 
                                 if (!mounted) return;
 

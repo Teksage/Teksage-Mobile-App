@@ -1,11 +1,17 @@
+import 'package:astro_prompt/config/login_constants.dart';
+
 const whatsAppResendCooldownMs = 120000;
 
 String maskPhoneForDisplay(String countryCode, String mobile) {
   final cc = countryCode.replaceAll(RegExp(r'\D'), '');
   final national = mobile.replaceAll(RegExp(r'\D'), '');
-  if (national.isEmpty) return '+${cc.isEmpty ? '91' : cc}';
-  if (national.length <= 4) return '+${cc.isEmpty ? '91' : cc} ****';
-  return '+${cc.isEmpty ? '91' : cc} ${'*' * (national.length - 4)}${national.substring(national.length - 4)}';
+  if (national.isEmpty) {
+    return '+${cc.isEmpty ? LoginConstants.defaultCountryCodeNumeric : cc}';
+  }
+  if (national.length <= 4) {
+    return '+${cc.isEmpty ? LoginConstants.defaultCountryCodeNumeric : cc} ****';
+  }
+  return '+${cc.isEmpty ? LoginConstants.defaultCountryCodeNumeric : cc} ${'*' * (national.length - 4)}${national.substring(national.length - 4)}';
 }
 
 String formatResendCountdown(int totalSeconds) {
@@ -39,6 +45,9 @@ int getResendSecondsRemaining({
   return ((whatsAppResendCooldownMs - elapsed) / 1000).ceil().clamp(0, 999999);
 }
 
-bool isValidWhatsAppMobile(String mobile) {
-  return RegExp(r'^[1-9]\d{9}$').hasMatch(mobile);
+bool isValidWhatsAppMobile(String mobile, [int? expectedLength]) {
+  return LoginConstants.isValidNationalMobile(
+    mobile,
+    expectedLength ?? 0,
+  );
 }

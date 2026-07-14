@@ -1,9 +1,13 @@
 import 'package:astro_prompt/Components/auth/login_method_tabs.dart';
+import 'package:astro_prompt/Components/Common/customCountryDropDown.dart';
+import 'package:astro_prompt/Model/country_model.dart';
 import 'package:astro_prompt/Screens/auth/password.dart';
 import 'package:astro_prompt/Screens/settings/privacy_page.dart';
 import 'package:astro_prompt/Screens/settings/t&c_page.dart';
 import 'package:astro_prompt/Services/AuthService/authService.dart';
+import 'package:astro_prompt/Services/countryService/countryCodeService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
+import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -34,7 +38,11 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  LoginDialOption _selectedDial = LoginConstants.dialOptions.first;
+  String _selectedDialCode = LoginConstants.defaultDialCode;
+  String _selectedCountryCodeNumeric = LoginConstants.defaultCountryCodeNumeric;
+  int _mobileLength = LoginConstants.defaultMobileLength;
+  String? _countryFlag;
+  List<Country> _countries = [];
   String? _errorMessage;
   bool _isLoading = false;
   bool _canSubmit = false;
@@ -53,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   bool _isValidMobile(String mobile) {
-    return LoginConstants.mobileDigitsRegex.hasMatch(mobile);
+    return LoginConstants.isValidNationalMobile(mobile, _mobileLength);
   }
 
   void _validateMobile(String value) {
@@ -93,6 +101,38 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<void> _openCountryPicker() async {
+    CustomLoader.show(context);
+    try {
+      if (_countries.isEmpty) {
+        _countries = await CountryCodeService().fetchCountries();
+      }
+      CustomLoader.hide();
+      if (!mounted) return;
+      final result = await showDialog<Map<String, String>>(
+        context: context,
+        builder: (_) => CountryDropdownDialog(countries: _countries),
+      );
+      if (result == null || !mounted) return;
+      setState(() {
+        _selectedDialCode =
+            result['dialCode'] ?? LoginConstants.defaultDialCode;
+        _selectedCountryCodeNumeric =
+            _selectedDialCode.replaceAll('+', '');
+        _mobileLength = int.tryParse(result['mobileNumberLength'] ?? '') ??
+            LoginConstants.defaultMobileLength;
+        _countryFlag = result['countryFlag'];
+        _mobileController.clear();
+        _errorMessage = null;
+        _canSubmit = false;
+      });
+    } catch (_) {
+      CustomLoader.hide();
+      if (!mounted) return;
+      showErrorSnackBar(context, 'Error in Fetching Country code');
+    }
+  }
+
   Future<void> _submitMobile() async {
     FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
@@ -101,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
       final response = await _authService.login(
         'mobile_number',
         mobile,
-        countryCode: _selectedDial.countryCodeNumeric,
+        countryCode: _selectedCountryCodeNumeric,
       );
       if (!mounted) return;
       setState(() => _isLoading = false);
@@ -113,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
               isMobileScreen: true,
               verifyScreen: false,
               isChange: false,
-              countryCode: _selectedDial.dialCode,
+              countryCode: _selectedDialCode,
             ));
       } else {
         showErrorSnackBar(
@@ -202,72 +242,66 @@ class _LoginPageState extends State<LoginPage> {
       height: fieldHeight,
       child: Row(
         children: [
-          Container(
-            height: fieldHeight,
-            padding: EdgeInsets.symmetric(horizontal: util.width10),
-          decoration: BoxDecoration(
-            color: whiteColor,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: blackColor.withValues(alpha: 0.2)),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedDial.dialCode,
-              icon: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: util.fontSize20,
-                color: blackColor.withValues(alpha: 0.6),
+          GestureDetector(
+            onTap: _openCountryPicker,
+            child: Container(
+              height: fieldHeight,
+              padding: EdgeInsets.symmetric(horizontal: util.width10),
+              decoration: BoxDecoration(
+                color: whiteColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: blackColor.withValues(alpha: 0.2)),
               ),
-              items: LoginConstants.dialOptions
-                  .map(
-                    (option) => DropdownMenuItem<String>(
-                      value: option.dialCode,
-                      child: Text(
-                        option.dialCode,
-                        style: TextStyle(
-                          fontFamily: AppFont.get(FontType.bold),
-                          fontSize: util.fontSize16,
-                        ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_countryFlag != null && _countryFlag!.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(right: util.width8),
+                      child: Image.network(
+                        _countryFlag!,
+                        width: 22,
+                        height: 16,
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                       ),
                     ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value == null) return;
-                setState(() {
-                  _selectedDial = LoginConstants.dialOptions.firstWhere(
-                    (option) => option.dialCode == value,
-                  );
-                  _errorMessage = null;
-                  _canSubmit = _isValidMobile(_mobileController.text);
-                });
-              },
-            ),
-          ),
-        ),
-        SizedBox(width: util.width10),
-        Expanded(
-          child: TextField(
-            controller: _mobileController,
-            keyboardType: TextInputType.number,
-            onChanged: _validateMobile,
-            style: TextStyle(
-              fontFamily: AppFont.get(FontType.bold),
-              fontSize: util.fontSize16,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(
-                _selectedDial.mobileLength,
+                  Text(
+                    _selectedDialCode,
+                    style: TextStyle(
+                      fontFamily: AppFont.get(FontType.bold),
+                      fontSize: util.fontSize16,
+                    ),
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    size: util.fontSize20,
+                    color: blackColor.withValues(alpha: 0.6),
+                  ),
+                ],
               ),
-            ],
-            decoration: _fieldDecoration(
-              util,
-              LoginConstants.mobilePlaceholder,
             ),
           ),
-        ),
-      ],
+          SizedBox(width: util.width10),
+          Expanded(
+            child: TextField(
+              controller: _mobileController,
+              keyboardType: TextInputType.number,
+              onChanged: _validateMobile,
+              style: TextStyle(
+                fontFamily: AppFont.get(FontType.bold),
+                fontSize: util.fontSize16,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(_mobileLength),
+              ],
+              decoration: _fieldDecoration(
+                util,
+                LoginConstants.mobilePlaceholder,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -12,6 +12,7 @@ import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/ask_astrologer_flow_screen.dart';
+import 'package:astro_prompt/config/login_constants.dart';
 import 'package:astro_prompt/config/whatsapp_consent_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,6 +38,7 @@ class _AskAstrologerWhatsappConsentPageState
   WhatsAppPhoneMode _phoneMode = WhatsAppPhoneMode.profile;
   late String _countryCode;
   String _mobile = '';
+  int _mobileLength = LoginConstants.defaultMobileLength;
   String? _validationError;
 
   @override
@@ -47,9 +49,12 @@ class _AskAstrologerWhatsappConsentPageState
 
   Future<void> _init() async {
     profile = await ProfileService().fetchUserProfile();
-    _countryCode =
-        (profile?.countryCode ?? '91').replaceAll(RegExp(r'\D'), '');
-    if (_countryCode.isEmpty) _countryCode = '91';
+    _countryCode = (profile?.countryCode ??
+            LoginConstants.defaultCountryCodeNumeric)
+        .replaceAll(RegExp(r'\D'), '');
+    if (_countryCode.isEmpty) {
+      _countryCode = LoginConstants.defaultCountryCodeNumeric;
+    }
     await _loadConsent();
   }
 
@@ -67,7 +72,7 @@ class _AskAstrologerWhatsappConsentPageState
   }
 
   String get _profileMasked => maskPhoneForDisplay(
-        profile?.countryCode ?? '91',
+        profile?.countryCode ?? LoginConstants.defaultCountryCodeNumeric,
         profile?.mobileNumber ?? '',
       );
 
@@ -75,7 +80,7 @@ class _AskAstrologerWhatsappConsentPageState
     if (sending || profile?.mobileVerified != true) return;
 
     if (_phoneMode == WhatsAppPhoneMode.different) {
-      if (!isValidWhatsAppMobile(_mobile)) {
+      if (!isValidWhatsAppMobile(_mobile, _mobileLength)) {
         setState(() => _validationError = 'Enter a valid mobile number.');
         return;
       }
@@ -181,6 +186,7 @@ class _AskAstrologerWhatsappConsentPageState
                         profileMasked: _profileMasked,
                         countryCode: _countryCode,
                         mobile: _mobile,
+                        mobileLength: _mobileLength,
                         validationError: _validationError,
                         onModeChange: (mode) => setState(() {
                           _phoneMode = mode;
@@ -188,6 +194,8 @@ class _AskAstrologerWhatsappConsentPageState
                         }),
                         onCountryCodeChange: (code) =>
                             setState(() => _countryCode = code),
+                        onMobileLengthChange: (length) =>
+                            setState(() => _mobileLength = length),
                         onMobileChange: (value) => setState(() {
                           _mobile = value;
                           _validationError = null;

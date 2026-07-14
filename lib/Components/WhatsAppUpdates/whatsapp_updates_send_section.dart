@@ -3,6 +3,7 @@ import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/login_constants.dart';
 import 'package:astro_prompt/config/whatsapp_consent_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -45,13 +46,16 @@ class _WhatsAppUpdatesSendSectionState extends State<WhatsAppUpdatesSendSection>
   WhatsAppPhoneMode _mode = WhatsAppPhoneMode.profile;
   late String _countryCode;
   String _mobile = '';
+  int _mobileLength = LoginConstants.defaultMobileLength;
   String? _validationError;
 
   @override
   void initState() {
     super.initState();
     _countryCode = widget.profileCountryCode.replaceAll(RegExp(r'\D'), '');
-    if (_countryCode.isEmpty) _countryCode = '91';
+    if (_countryCode.isEmpty) {
+      _countryCode = LoginConstants.defaultCountryCodeNumeric;
+    }
   }
 
   String get _profileMasked =>
@@ -63,7 +67,7 @@ class _WhatsAppUpdatesSendSectionState extends State<WhatsAppUpdatesSendSection>
       await widget.onSend(useProfilePhone: true);
       return;
     }
-    if (!isValidWhatsAppMobile(_mobile)) {
+    if (!isValidWhatsAppMobile(_mobile, _mobileLength)) {
       setState(() => _validationError = 'Enter a valid mobile number.'.tr);
       return;
     }
@@ -91,12 +95,15 @@ class _WhatsAppUpdatesSendSectionState extends State<WhatsAppUpdatesSendSection>
           profileMasked: _profileMasked,
           countryCode: _countryCode,
           mobile: _mobile,
+          mobileLength: _mobileLength,
           validationError: _validationError,
           onModeChange: (mode) => setState(() {
             _mode = mode;
             _validationError = null;
           }),
           onCountryCodeChange: (code) => setState(() => _countryCode = code),
+          onMobileLengthChange: (length) =>
+              setState(() => _mobileLength = length),
           onMobileChange: (value) => setState(() {
             _mobile = value;
             _validationError = null;

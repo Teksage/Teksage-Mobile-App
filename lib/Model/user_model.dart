@@ -16,6 +16,7 @@ class UserProfile {
   final PlanDetails? planDetails;
   final UserNotify? userNotify;
   final bool mobileVerified;
+  final bool emailVerified;
   final String? howYouKnow;
 
   UserProfile({
@@ -36,6 +37,7 @@ class UserProfile {
     this.planDetails,
     this.userNotify,
     required this.mobileVerified,
+    required this.emailVerified,
     this.howYouKnow,
   });
 
@@ -64,6 +66,7 @@ class UserProfile {
           ? UserNotify.fromJson(json['user_notify'])
           : null,
       mobileVerified: json['is_mobile_verified'] ?? false,
+      emailVerified: json['is_email_verified'] ?? false,
       howYouKnow: json['referral_source'] ?? '',
     );
   }

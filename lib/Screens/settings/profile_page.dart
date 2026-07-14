@@ -573,12 +573,12 @@ class _ProfilePageState extends State<ProfilePage> {
     print(
         'mobileVerified from API: ${profileData.mobileVerified},${widget.phoneNumberChangeData}');
     setState(() {
-      // Keep verification flags from login; sync phone from API.
+      // Keep verification flags from login; sync from API (mobile + email).
       final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number';
       final emailVerifiedFromLogin = widget.keyValue == 'email';
-      if (emailVerifiedFromLogin) {
-        emailVerified = true;
-      }
+      emailVerified = profileData.emailVerified ||
+          emailVerifiedFromLogin ||
+          emailVerified;
       isPhoneVerifiedDB = widget.phoneNumberChangeData != null
           ? false
           : (profileData.mobileVerified || phoneVerifiedFromLogin);

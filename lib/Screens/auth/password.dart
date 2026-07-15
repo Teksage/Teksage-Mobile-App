@@ -189,14 +189,14 @@ class _OTPScreenState extends State<OTPScreen> {
           Get.back(result: true);
         }
 
-        final isEmail =
-            widget.keyValue == 'email' ||
-            (widget.title?.toLowerCase().contains('email') ?? false);
+        final verifiedLabel = (widget.title ?? '')
+            .replaceFirst(RegExp(r'^Verify\s+', caseSensitive: false), '')
+            .trim();
         showLoginSuccessSnackBar(
           context,
-          isEmail
-              ? 'Email verified successfully'
-              : 'Phone number verified successfully',
+          verifiedLabel.isEmpty
+              ? 'Contact verified successfully'
+              : '$verifiedLabel verified successfully',
         );
       } else {
         setState(() {

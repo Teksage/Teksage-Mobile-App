@@ -130,6 +130,9 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       mobileVerified = isVerified;
       isPhoneVerifiedDB = isVerified || isPhoneVerifiedDB;
+      if (isVerified) {
+        isPhoneNumberValid = true;
+      }
       mobileError = false;
     });
   }
@@ -145,6 +148,8 @@ class _ProfilePageState extends State<ProfilePage> {
       mobileVerified = true;
       isPhoneVerifiedDB = true;
       showMobileVerify = false;
+      // OTP-verified phone is already valid — don't block Save on format flag.
+      isPhoneNumberValid = true;
       // Email not verified yet → optional field + Verify button.
       if (!emailFromData) {
         emailVerified = false;
@@ -1301,6 +1306,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     "last_name": secondNameController.text.trim(),
                                   };
 
+                                  // Referral is required only on first profile completion.
                                   if (!widget.isProfileUpdated &&
                                       howYouKnow.text.trim().isNotEmpty) {
                                     profileData["referral_source"] =

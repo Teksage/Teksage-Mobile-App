@@ -129,12 +129,22 @@ class ProfileService {
       return {"success": true, "data": json.decode(response.body)};
     } else {
       var responseBody = json.decode(response.body);
-      return {
-        "success": false,
-        "error": responseBody['error'] ??
-            responseBody['detail'] ??
-            'Unknown error'
-      };
+      final detail = responseBody['detail'];
+      String message = 'Unknown error';
+      if (responseBody['error'] is String &&
+          (responseBody['error'] as String).isNotEmpty) {
+        message = responseBody['error'];
+      } else if (detail is String && detail.isNotEmpty) {
+        message = detail;
+      } else if (detail is List && detail.isNotEmpty) {
+        final first = detail.first;
+        if (first is Map && first['msg'] != null) {
+          message = first['msg'].toString();
+        } else {
+          message = detail.toString();
+        }
+      }
+      return {"success": false, "error": message};
     }
   }
 

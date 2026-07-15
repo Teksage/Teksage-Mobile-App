@@ -4,6 +4,7 @@ import 'package:astro_prompt/Screens/auth/password.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customLoader.dart';
+import 'package:astro_prompt/Utility/phone_utils.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:flutter/material.dart';
@@ -80,14 +81,12 @@ class _ChangeButtonState extends State<ChangeButton> {
           onTap: () async {
             final dialCode = widget.selectedCountry?['dialCode'] ?? '';
             String rawText = widget.userData.text.trim();
-            // Strip dial code prefix if it was prepended into the text field
             if (widget.title == 'Phone Number' && dialCode.isNotEmpty) {
-              final prefix = dialCode.replaceAll('+', '');
-              if (rawText.startsWith('+$prefix')) {
-                rawText = rawText.substring('+$prefix'.length).trim();
-              } else if (rawText.startsWith(prefix)) {
-                rawText = rawText.substring(prefix.length).trim();
-              }
+              rawText = normalizeEnteredMobileNumber(
+                dialCode,
+                rawText,
+                expectedNationalLength: widget.mobileLengthLimit,
+              );
             }
 
             if (widget.isExist == false) {

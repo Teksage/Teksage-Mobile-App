@@ -184,9 +184,12 @@ class _OTPScreenState extends State<OTPScreen> {
           Get.back(result: true);
         }
 
-        showLoginSuccessSnackBar(context, 'OTP Verified');
+        final verifiedLabel = (widget.title ?? '')
+            .replaceFirst(RegExp(r'^Verify\s+', caseSensitive: false), '')
+            .trim();
         showLoginSuccessSnackBar(
-            context, '${widget.title!} Verified Successfully');
+            context,
+            '${verifiedLabel.isEmpty ? 'Contact' : verifiedLabel} Verified Successfully');
       } else {
         setState(() {
           errorMessage = "Incorrect OTP";

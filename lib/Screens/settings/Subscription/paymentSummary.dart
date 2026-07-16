@@ -573,17 +573,20 @@ class _SubscriptionPaymentSummaryPageState
                                 //   },
                                 // });
 
-                                if (email.isNotEmpty && response != null) {
+                                if (response != null) {
+                                  final prefill = <String, String>{
+                                    'contact': mobileNumber,
+                                  };
+                                  if (email.isNotEmpty) {
+                                    prefill['email'] = email;
+                                  }
                                   var options = {
                                     'key': response.key,
                                     'subscription_id': response.subscription_id,
                                     'name': 'Teksage',
                                     'description':
                                         'Monthly Auto Subscription Payment',
-                                    'prefill': {
-                                      'contact': mobileNumber,
-                                      'email': email
-                                    },
+                                    'prefill': prefill,
                                   };
                                   CustomLoader.hide();
                                   _razorpay.open(options);
@@ -616,7 +619,13 @@ class _SubscriptionPaymentSummaryPageState
                                 //   },
                                 // });
 
-                                if (email.isNotEmpty && response != null) {
+                                if (response != null) {
+                                  final prefill = <String, String>{
+                                    'contact': mobileNumber,
+                                  };
+                                  if (email.isNotEmpty) {
+                                    prefill['email'] = email;
+                                  }
                                   var options = {
                                     'key': response.key,
                                     'amount': response.amount,
@@ -624,10 +633,7 @@ class _SubscriptionPaymentSummaryPageState
                                     'name': 'Teksage',
                                     'description': 'Subscription Payment',
                                     'order_id': response.id,
-                                    'prefill': {
-                                      'contact': mobileNumber,
-                                      'email': email
-                                    },
+                                    'prefill': prefill,
                                   };
                                   CustomLoader.hide();
                                   _razorpay.open(options);

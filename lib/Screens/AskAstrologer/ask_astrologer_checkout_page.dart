@@ -78,6 +78,7 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
       aiResponse: flow!.aiResponse,
       preferredLanguages: flow!.preferredLanguages!,
       currency: currency,
+      muhurthaResult: flow!.muhurthaResult,
     );
     CustomLoader.hide();
     if (order == null) {

@@ -13,6 +13,7 @@ import 'package:astro_prompt/Model/weekly_prediction_model.dart';
 import 'package:astro_prompt/Screens/Astrologer/homePage.dart';
 import 'package:astro_prompt/Screens/Chat/chat.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
+import 'package:astro_prompt/Components/EventPlanner/event_planner_home_banner.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingDetails.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
 import 'package:astro_prompt/Screens/Notification/notificationPage.dart';
@@ -1337,6 +1338,10 @@ class _HomePageState extends State<HomePage>
                               ),
                       ],
                     ),
+                    SizedBox(
+                      height: util.responsiveHeight(0.0296),
+                    ),
+                    const EventPlannerHomeBanner(),
                     SizedBox(
                       height: util.responsiveHeight(0.0296),
                     ),

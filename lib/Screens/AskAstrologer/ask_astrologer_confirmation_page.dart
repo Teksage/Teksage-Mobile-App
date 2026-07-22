@@ -1,4 +1,7 @@
 import 'package:astro_prompt/Screens/Chat/chat.dart';
+import 'package:astro_prompt/Screens/EventPlanner/event_planner_form_page.dart';
+import 'package:astro_prompt/Screens/EventPlanner/event_planner_results_page.dart';
+import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Notification/notificationPage.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -17,7 +20,54 @@ class AskAstrologerConfirmationPage extends StatefulWidget {
 }
 
 class _AskAstrologerConfirmationPageState
-    extends State<AskAstrologerConfirmationPage> with AskAstrologerFlowScreenMixin {
+    extends State<AskAstrologerConfirmationPage>
+    with AskAstrologerFlowScreenMixin {
+  bool _fromEventPlanner = false;
+  bool _ready = false;
+  String? _event;
+  String? _startDate;
+  String? _location;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSource();
+  }
+
+  Future<void> _loadSource() async {
+    final flow = await readAskAstrologerFlow();
+    if (!mounted) return;
+    final result = flow?.muhurthaResult;
+    setState(() {
+      _fromEventPlanner = flow?.isEventPlanner == true;
+      _event = result?['event'] as String?;
+      _startDate = result?['start_date'] as String?;
+      _location = result?['location'] as String?;
+      _ready = true;
+    });
+  }
+
+  Future<void> _goBack() async {
+    await clearAskAstrologerFlow();
+    if (_fromEventPlanner) {
+      final event = _event?.trim() ?? '';
+      final startDate = _startDate?.trim() ?? '';
+      final location = _location?.trim() ?? '';
+      Get.offAll(() => const BottomNavigationScreen());
+      if (event.isNotEmpty && startDate.isNotEmpty && location.isNotEmpty) {
+        Get.to(() => EventPlannerResultsPage(
+              event: event,
+              startDate: startDate,
+              location: location,
+            ));
+      } else {
+        Get.to(() => const EventPlannerFormPage());
+      }
+    } else {
+      Get.offAll(() => AIChatScreen());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
@@ -56,7 +106,8 @@ class _AskAstrologerConfirmationPageState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Status'.tr,
-                        style: TextStyle(color: blackColor.withValues(alpha: 0.5))),
+                        style: TextStyle(
+                            color: blackColor.withValues(alpha: 0.5))),
                     Text('Received'.tr,
                         style: TextStyle(
                             fontFamily: AppFont.get(FontType.semiBold),
@@ -90,17 +141,17 @@ class _AskAstrologerConfirmationPageState
         child: Padding(
           padding: EdgeInsets.all(util.width20),
           child: ElevatedButton(
-            onPressed: () async {
-              await clearAskAstrologerFlow();
-              Get.offAll(() => AIChatScreen());
-            },
+            onPressed: _ready ? _goBack : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: homeBanner,
               minimumSize: Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
             ),
-            child: Text('Back to Chat'.tr,
+            child: Text(
+                _fromEventPlanner
+                    ? 'Back to Event Planner'.tr
+                    : 'Back to Chat'.tr,
                 style: TextStyle(
                     fontFamily: AppFont.get(FontType.semiBold),
                     color: whiteColor)),

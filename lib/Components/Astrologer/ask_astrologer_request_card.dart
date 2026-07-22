@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:astro_prompt/Components/Astrologer/ask_answer_voice_input.dart';
+import 'package:astro_prompt/Components/EventPlanner/muhurtha_event_plan_accordion.dart';
+import 'package:astro_prompt/Model/muhurtha_model.dart';
 import 'package:astro_prompt/Components/Common/voice_answer_player.dart';
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/astrologerAskService.dart';
@@ -43,10 +45,39 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
   }
 
   Future<void> _submit() async {
-    if (_answerText.trim().isEmpty && _voiceFile == null) {
-      showErrorSnackBar(context, 'Provide an answer (text and/or voice).'.tr);
+    if (_voiceFile == null) {
+      showErrorSnackBar(
+        context,
+        'Please record or attach a voice answer before submitting.'.tr,
+      );
       return;
     }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Are you sure?'.tr,
+            style: TextStyle(fontFamily: AppFont.get(FontType.bold))),
+        content: Text(
+          'Are you sure you want to submit this answer? You won\'t be able to edit it after submission.'
+              .tr,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Submit'.tr,
+                style: TextStyle(
+                    fontFamily: AppFont.get(FontType.semiBold),
+                    color: mainColor)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
     setState(() => _submitting = true);
     CustomLoader.show(context);
     final ok = await _service.submitAnswer(
@@ -129,14 +160,21 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
             if (langs.isNotEmpty) _detailRow('Language'.tr, langs),
           ]),
           Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
-          Text('AI Answer (for reference)'.tr,
-              style: TextStyle(fontFamily: AppFont.get(FontType.semiBold))),
-          SizedBox(height: 8),
-          Text(req.aiResponse,
-              style: TextStyle(
-                  fontSize: util.fontSize14,
-                  color: blackColor.withValues(alpha: 0.75),
-                  height: 1.4)),
+          if (req.muhurthaResult != null) ...[
+            MuhurthaEventPlanAccordion(
+              result: MuhurthaResult.fromJson(req.muhurthaResult!),
+            ),
+            SizedBox(height: 16),
+          ] else ...[
+            Text('AI Answer (for reference)'.tr,
+                style: TextStyle(fontFamily: AppFont.get(FontType.semiBold))),
+            SizedBox(height: 8),
+            Text(req.aiResponse,
+                style: TextStyle(
+                    fontSize: util.fontSize14,
+                    color: blackColor.withValues(alpha: 0.75),
+                    height: 1.4)),
+          ],
           if (req.status == 'answered') ...[
             Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
             Text('Your Answer'.tr,
@@ -162,7 +200,7 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
           ],
           if (_expanded && req.status == 'assigned') ...[
             Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
-            Text('Record your answer (recommended)'.tr,
+            Text('Record your answer (required)'.tr,
                 style: TextStyle(fontFamily: AppFont.get(FontType.semiBold))),
             SizedBox(height: 8),
             Text(

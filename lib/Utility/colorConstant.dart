@@ -39,3 +39,7 @@ const astroUserConsultBG = Color(0xff94C10D);
 const astroUserConsultText = Color(0xff87B303);
 const astroFilterChip = Color(0xff7FA900);
 const questionButtonColor = Color(0xff85AD0A);
+/** Event Planner home banner — matches website mint tokens. */
+const eventPlannerBannerTop = Color(0xffD4F1D1);
+const eventPlannerBannerBottom = Color(0xffECF9EB);
+const eventPlannerBannerBorder = Color(0xffCFEFCC);

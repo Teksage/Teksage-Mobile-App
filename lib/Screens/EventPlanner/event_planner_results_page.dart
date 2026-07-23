@@ -355,43 +355,44 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Actions
+                  // Actions — same row, right-aligned
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: _handleAskAstrologer,
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(0, 48),
-                            side: const BorderSide(color: mainColor),
-                            foregroundColor: mainColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                          child: Text('Ask Astrologer'.tr,
-                              style: TextStyle(
-                                  fontFamily: AppFont.get(FontType.semiBold),
-                                  fontSize: util.fontSize14)),
+                      OutlinedButton(
+                        onPressed: _handleAskAstrologer,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, 44),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          side: const BorderSide(color: mainColor),
+                          foregroundColor: mainColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
                         ),
+                        child: Text('Ask Astrologer'.tr,
+                            style: TextStyle(
+                                fontFamily: AppFont.get(FontType.semiBold),
+                                fontSize: util.fontSize13)),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              Get.off(() => const EventPlannerFormPage()),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: mainColor,
-                            minimumSize: const Size(0, 48),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                          child: Text('New search'.tr,
-                              style: TextStyle(
-                                  fontFamily: AppFont.get(FontType.semiBold),
-                                  color: whiteColor,
-                                  fontSize: util.fontSize14)),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () =>
+                            Get.off(() => const EventPlannerFormPage()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: mainColor,
+                          minimumSize: const Size(0, 44),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
                         ),
+                        child: Text('New search'.tr,
+                            style: TextStyle(
+                                fontFamily: AppFont.get(FontType.semiBold),
+                                color: whiteColor,
+                                fontSize: util.fontSize13)),
                       ),
                     ],
                   ),

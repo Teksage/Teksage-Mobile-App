@@ -12,7 +12,6 @@ import 'package:astro_prompt/Utility/customToolTip.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
-import 'package:astro_prompt/config/Helper/currencyHelper.dart';
 import 'package:astro_prompt/config/textConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -350,37 +349,20 @@ class _DailyPredictionState extends State<DailyPrediction>
                       GestureDetector(
                         onTap: () async {
                           if (!widget.premiumUser) {
-                            if (widget.currency != null) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                barrierColor: Colors.black.withAlpha(128),
-                                builder: (context) => SubscribePromptDialog(
-                                  currency: widget.currency!,
-                                  reDirectHome: false,
-                                ),
-                              );
-                            } else {
-                              await CurrencyHelper.fetchCurrencyIfNeeded(
-                                context: context,
-                                currentCurrency: currency!,
-                                loaderColor: mainColor,
-                                onCurrencyFetched: (fetchedCurrency) {
-                                  setState(() {
-                                    currency = fetchedCurrency;
-                                  });
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    barrierColor: Colors.black.withAlpha(128),
-                                    builder: (context) => SubscribePromptDialog(
-                                      currency: fetchedCurrency,
-                                      reDirectHome: false,
-                                    ),
-                                  );
-                                },
-                              );
-                            }
+                            // Dialog resolves INR/USD when currency is missing
+                            // (e.g. opened from a push notification).
+                            final passed = (widget.currency ?? currency)?.trim();
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierColor: Colors.black.withAlpha(128),
+                              builder: (context) => SubscribePromptDialog(
+                                currency: (passed != null && passed.isNotEmpty)
+                                    ? passed
+                                    : null,
+                                reDirectHome: false,
+                              ),
+                            );
                           }
                         },
                         child: Container(

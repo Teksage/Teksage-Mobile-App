@@ -130,6 +130,9 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       mobileVerified = isVerified;
       isPhoneVerifiedDB = isVerified || isPhoneVerifiedDB;
+      if (isVerified) {
+        isPhoneNumberValid = true;
+      }
       mobileError = false;
     });
   }
@@ -145,6 +148,8 @@ class _ProfilePageState extends State<ProfilePage> {
       mobileVerified = true;
       isPhoneVerifiedDB = true;
       showMobileVerify = false;
+      // OTP-verified phone is already valid — don't block Save on format flag.
+      isPhoneNumberValid = true;
       // Email not verified yet → optional field + Verify button.
       if (!emailFromData) {
         emailVerified = false;
@@ -161,45 +166,68 @@ class _ProfilePageState extends State<ProfilePage> {
     if (loginKey == 'mobile_number' && widget.userInfo != null) {
       mobileController.text = widget.userInfo!;
       selectedCountryCode = widget.countryCode;
+      // Prefill bypasses CustomTextField onChange — mark valid so Save isn't blocked.
+      isPhoneNumberValid = true;
     }
   }
 
-  bool validateInputs() {
-    bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
+  /// Same rule as website ProfileDetailsForm:
+  /// `user.isEmailVerified || user.isMobileVerified`
+  bool get _isIdentityVerified {
+    final emailOk = emailVerified ||
+        widget.keyValue == 'email' ||
+        widget.userData?['isEmailVerified'] == true;
     final phoneOk = mobileVerified ||
         isPhoneVerifiedDB ||
         widget.keyValue == 'mobile_number' ||
         widget.userData?['isMobileVerified'] == true;
+    return emailOk || phoneOk;
+  }
+
+  bool get _isPhoneVerifiedIdentity {
+    return mobileVerified ||
+        isPhoneVerifiedDB ||
+        widget.keyValue == 'mobile_number' ||
+        widget.userData?['isMobileVerified'] == true;
+  }
+
+  /// Website: email required only when mobile is not verified.
+  bool get _isEmailMandatory => !_isPhoneVerifiedIdentity;
+
+  /// Website: mobile is never required on profile (optional if email verified).
+  bool get _isMobileMandatory => false;
+
+  bool validateInputs() {
+    bool isEmpty(TextEditingController c) => c.text.trim().isEmpty;
+    final phoneOk = _isPhoneVerifiedIdentity;
 
     setState(() {
       firstNameError = isEmpty(firstNameController);
       secondNameError = isEmpty(secondNameController);
-      // Email required only when phone is not already verified.
+      // Email required only when phone is not already verified (website parity).
       emailError = phoneOk ? false : isEmpty(emailController);
-      // mobileError = isEmpty(mobileController);
       mobileError = false;
       chatLanguageError = isEmpty(chatLanguage);
       howYouKnowError = isEmpty(howYouKnow);
       dobError = isEmpty(dobController);
       tobError = isEmpty(timeController);
       pobError = isEmpty(placeOfBirth);
-      // prefLocError = isEmpty(preferredLocation);
       prefLocError = false;
       emailErrMessage = emailError ? 'Please enter a valid Email' : '';
-      // mobileErrMessage = mobileError ? 'Please enter a valid Mobile number' : '';
       mobileErrMessage = '';
+      // Empty optional mobile, or verified login mobile, must not block Save.
+      if (mobileController.text.trim().isEmpty || phoneOk) {
+        isPhoneNumberValid = true;
+      }
     });
 
     bool hasCommonError = firstNameError ||
             secondNameError ||
             emailError ||
-            // mobileError ||
             chatLanguageError ||
             dobError ||
             tobError ||
-            pobError
-        // || prefLocError
-        ;
+            pobError;
 
     return !widget.isProfileUpdated
         ? !(hasCommonError || howYouKnowError)
@@ -258,9 +286,9 @@ class _ProfilePageState extends State<ProfilePage> {
             context: context,
             barrierDismissible: true,
             barrierColor: Colors.black.withAlpha(128),
-            builder: (context) => const SubscribePromptDialog(
+            builder: (context) => SubscribePromptDialog(
               planStatus: 'expired',
-              currency: 'INR',
+              currency: currency,
               reDirectHome: false,
             ),
           );
@@ -289,9 +317,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 context: context,
                 barrierDismissible: true,
                 barrierColor: Colors.black.withAlpha(128),
-                builder: (context) => const SubscribePromptDialog(
+                builder: (context) => SubscribePromptDialog(
                   planStatus: 'expired',
-                  currency: 'INR',
+                  currency: fetchedCurrency,
                   reDirectHome: false,
                 ),
               );
@@ -554,6 +582,19 @@ class _ProfilePageState extends State<ProfilePage> {
         print("Incomplete profile data: ${e.profileData}");
       }
       final UserProfile profile = UserProfile.fromJson(e.profileData);
+      // API includes is_email_verified / is_mobile_verified — apply like website.
+      setState(() {
+        if (e.profileData['is_email_verified'] == true ||
+            profile.emailVerified) {
+          emailVerified = true;
+          showEmailVerify = false;
+        }
+        if (e.profileData['is_mobile_verified'] == true ||
+            profile.mobileVerified) {
+          mobileVerified = true;
+          isPhoneVerifiedDB = true;
+        }
+      });
       updateProfileFields(profile, skipIfFilled: true);
       // Optionally handle or prefill partial data
     } catch (e) {
@@ -573,18 +614,20 @@ class _ProfilePageState extends State<ProfilePage> {
     print(
         'mobileVerified from API: ${profileData.mobileVerified},${widget.phoneNumberChangeData}');
     setState(() {
-      // Keep verification flags from login; sync from API (mobile + email).
-      final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number';
-      final emailVerifiedFromLogin = widget.keyValue == 'email';
-      emailVerified = profileData.emailVerified ||
+      // Keep verification flags from login + API (website uses server flags).
+      final phoneVerifiedFromLogin = widget.keyValue == 'mobile_number' ||
+          widget.userData?['isMobileVerified'] == true;
+      final emailVerifiedFromLogin = widget.keyValue == 'email' ||
+          widget.userData?['isEmailVerified'] == true;
+      emailVerified = emailVerified ||
           emailVerifiedFromLogin ||
-          emailVerified;
+          profileData.emailVerified;
       isPhoneVerifiedDB = widget.phoneNumberChangeData != null
           ? false
           : (profileData.mobileVerified || phoneVerifiedFromLogin);
       mobileVerified =
           mobileVerified || isPhoneVerifiedDB || phoneVerifiedFromLogin;
-      print('isPhoneVerifiedDB : $isPhoneVerifiedDB');
+      print('isPhoneVerifiedDB : $isPhoneVerifiedDB emailVerified: $emailVerified');
       showEmailVerify = !emailVerified;
       showMobileVerify = isPhoneVerifiedDB;
       if (!skipIfFilled || firstNameController.text.isEmpty) {
@@ -610,6 +653,10 @@ class _ProfilePageState extends State<ProfilePage> {
             selectedCountryCode = profileData.countryCode;
           }
         }
+      } else if (mobileController.text.trim().isNotEmpty &&
+          (mobileVerified || isPhoneVerifiedDB || phoneVerifiedFromLogin)) {
+        // Mobile already prefilled from OTP login — don't leave isPhoneNumberValid false.
+        isPhoneNumberValid = true;
       }
       if (!skipIfFilled || chatLanguage.text.isEmpty) {
         chatLanguage.text = profileData.chatLanguage;
@@ -655,6 +702,7 @@ class _ProfilePageState extends State<ProfilePage> {
           showMobileVerify = false;
           mobileVerified = true;
           isPhoneVerifiedDB = true;
+          isPhoneNumberValid = true;
           emailVerified =
               widget.userData?['isEmailVerified'] == true || emailVerified;
         });
@@ -883,10 +931,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Email
                     CustomTextField(
                       title: 'Email',
-                      isMandatory: !(mobileVerified ||
-                          isPhoneVerifiedDB ||
-                          widget.keyValue == 'mobile_number' ||
-                          widget.userData?['isMobileVerified'] == true),
+                      isMandatory: _isEmailMandatory,
                       controller: emailController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
@@ -917,10 +962,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 10,
                     ),
 
-                    // Mobile Number
+                    // Mobile Number — optional when email login (website parity)
                     CustomTextField(
                       title: 'Phone Number',
-                      isMandatory: false,
+                      isMandatory: _isMobileMandatory,
                       controller: mobileController,
                       keyboardType: TextInputType.phone,
                       readOnly: isPhoneVerifiedDB,
@@ -1208,18 +1253,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ? GestureDetector(
                             onTap: () async {
                               FocusScope.of(context).unfocus();
-                              print('isPhoneNumberValid: $mobileVerified');
+                              print(
+                                  'save check mobileVerified=$mobileVerified isPhoneNumberValid=$isPhoneNumberValid');
                               if (validateInputs()) {
-                                // Mobile OTP login / verified phone is enough —
-                                // email is optional and must not block Save.
-                                final phoneOk = mobileVerified ||
-                                    isPhoneVerifiedDB ||
-                                    widget.keyValue == 'mobile_number' ||
-                                    widget.userData?['isMobileVerified'] ==
-                                        true;
-                                final identityVerified =
-                                    emailVerified || phoneOk;
-                                if (!identityVerified) {
+                                // Website: !isEmailVerified && !isMobileVerified → block.
+                                if (!_isIdentityVerified) {
                                   setState(() {
                                     emailError = true;
                                     emailErrMessage =
@@ -1228,13 +1266,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                   return;
                                 }
                                 // Keep local flags in sync so later edits stay consistent.
-                                if (phoneOk && !mobileVerified) {
+                                if (_isPhoneVerifiedIdentity && !mobileVerified) {
                                   mobileVerified = true;
                                   isPhoneVerifiedDB = true;
+                                  isPhoneNumberValid = true;
                                 }
-                                if (identityVerified &&
-                                    (mobileController.text.isEmpty ||
-                                        isPhoneNumberValid)) {
+                                if (widget.keyValue == 'email' ||
+                                    widget.userData?['isEmailVerified'] ==
+                                        true) {
+                                  emailVerified = true;
+                                }
+                                final phoneFormatOk =
+                                    mobileController.text.trim().isEmpty ||
+                                        isPhoneNumberValid ||
+                                        _isPhoneVerifiedIdentity;
+                                if (_isIdentityVerified && phoneFormatOk) {
                                   setState(() {
                                     emailError = false;
                                     mobileError = false;
@@ -1251,70 +1297,42 @@ class _ProfilePageState extends State<ProfilePage> {
                                   String formattedTime =
                                       DateFormat("HH:mm").format(parsedTime);
 
-                                  Map<String, dynamic> profileData;
+                                  Map<String, dynamic> profileData = {
+                                    "chat_languages": chatLanguage.text,
+                                    "date_of_birth": formattedDate,
+                                    "time_of_birth": formattedTime,
+                                    "birth_location": birthPlaceFullLocation,
+                                    "first_name": firstNameController.text.trim(),
+                                    "last_name": secondNameController.text.trim(),
+                                  };
 
-                                  if (widget.userData != null) {
-                                    profileData = {
-                                      "chat_languages": chatLanguage.text,
-                                      "date_of_birth": formattedDate,
-                                      "time_of_birth": formattedTime,
-                                      "birth_location": birthPlaceFullLocation,
-                                    };
-
-                                    if (mobileController.text
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["mobile_number"] =
-                                          mobileController.text.trim();
-                                    }
-                                    if (selectedCountryCode != null &&
-                                        selectedCountryCode!
-                                            .trim()
-                                            .isNotEmpty) {
-                                      profileData["country_code"] =
-                                          selectedCountryCode;
-                                    }
-                                    if (preferredPlaceFullLocation
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["preferred_location"] =
-                                          preferredPlaceFullLocation;
-                                    } else {
-                                      profileData["preferred_location"] =
-                                          "Chennai, Tamil Nadu, India";
-                                    }
+                                  // Referral is required only on first profile completion.
+                                  if (!widget.isProfileUpdated &&
+                                      howYouKnow.text.trim().isNotEmpty) {
+                                    profileData["referral_source"] =
+                                        howYouKnow.text.trim();
+                                  }
+                                  if (emailController.text.trim().isNotEmpty) {
+                                    profileData["email"] =
+                                        emailController.text.trim();
+                                  }
+                                  if (mobileController.text.trim().isNotEmpty) {
+                                    profileData["mobile_number"] =
+                                        mobileController.text.trim();
+                                  }
+                                  if (selectedCountryCode != null &&
+                                      selectedCountryCode!.trim().isNotEmpty) {
+                                    profileData["country_code"] =
+                                        selectedCountryCode;
+                                  }
+                                  if (preferredPlaceFullLocation
+                                      .trim()
+                                      .isNotEmpty) {
+                                    profileData["preferred_location"] =
+                                        preferredPlaceFullLocation;
                                   } else {
-                                    profileData = {
-                                      "chat_languages": chatLanguage.text,
-                                      "date_of_birth": formattedDate,
-                                      "time_of_birth": formattedTime,
-                                      "birth_location": birthPlaceFullLocation,
-                                      "first_name": firstNameController.text,
-                                      "last_name": secondNameController.text,
-                                      "referral_source": howYouKnow.text,
-                                    };
-                                    if (mobileController.text
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["mobile_number"] =
-                                          mobileController.text.trim();
-                                    }
-                                    if (selectedCountryCode != null &&
-                                        selectedCountryCode!
-                                            .trim()
-                                            .isNotEmpty) {
-                                      profileData["country_code"] =
-                                          selectedCountryCode;
-                                    }
-                                    if (preferredPlaceFullLocation
-                                        .trim()
-                                        .isNotEmpty) {
-                                      profileData["preferred_location"] =
-                                          preferredPlaceFullLocation;
-                                    } else {
-                                      profileData["preferred_location"] =
-                                          "Chennai, Tamil Nadu, India";
-                                    }
+                                    profileData["preferred_location"] =
+                                        "Chennai, Tamil Nadu, India";
                                   }
 
                                   CustomLoader.show(context);

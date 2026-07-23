@@ -67,7 +67,7 @@ class BottomNavController extends GetxController {
           // Hide loader before showing dialog
           CustomLoader.hide();
           if (_screenActive && (Get.context != null) && (Get.context!.mounted)) {
-            await _showDialog(const SubscribePromptDialog(currency: 'INR', reDirectHome: true, planStatus: 'expired'));
+            await _showDialog(const SubscribePromptDialog(reDirectHome: true, planStatus: 'expired'));
           }
           return false;
         }

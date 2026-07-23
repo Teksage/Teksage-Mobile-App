@@ -25,14 +25,18 @@ class AskAstrologerService {
     required String aiResponse,
     required List<String> preferredLanguages,
     required String currency,
+    Map<String, dynamic>? muhurthaResult,
   }) async {
     try {
-      final body = {
+      final body = <String, dynamic>{
         'user_question': userQuestion,
         'ai_response': aiResponse,
         'preferred_languages': preferredLanguages,
         'currency': currency,
       };
+      if (muhurthaResult != null && muhurthaResult.isNotEmpty) {
+        body['muhurtha_result'] = muhurthaResult;
+      }
       final response =
           await APIRequest.postRequest(ApiEndpoint.askAstrologerCreate, body);
       if (response.statusCode == 200) {

@@ -65,9 +65,11 @@ class AskAstrologerOrderResponse {
 class AskAstrologerRequest {
   final int id;
   final String status;
+  final String? requestKind;
   final String userQuestion;
   final String aiResponse;
   final List<String> preferredLanguages;
+  final Map<String, dynamic>? muhurthaResult;
   final String? answerText;
   final String? answerVoiceUrl;
   final int? answerVoiceDurationSec;
@@ -87,9 +89,11 @@ class AskAstrologerRequest {
   AskAstrologerRequest({
     required this.id,
     required this.status,
+    this.requestKind,
     required this.userQuestion,
     required this.aiResponse,
     required this.preferredLanguages,
+    this.muhurthaResult,
     this.answerText,
     this.answerVoiceUrl,
     this.answerVoiceDurationSec,
@@ -111,9 +115,13 @@ class AskAstrologerRequest {
     return AskAstrologerRequest(
       id: json['id'] as int,
       status: json['status'] as String,
+      requestKind: json['request_kind'] as String?,
       userQuestion: json['user_question'] as String,
-      aiResponse: json['ai_response'] as String,
+      aiResponse: json['ai_response'] as String? ?? '',
       preferredLanguages: List<String>.from(json['preferred_languages'] ?? []),
+      muhurthaResult: json['muhurtha_result'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['muhurtha_result'] as Map)
+          : null,
       answerText: json['answer_text'] as String?,
       answerVoiceUrl: json['answer_voice_url'] as String?,
       answerVoiceDurationSec: json['answer_voice_duration_sec'] as int?,
@@ -145,25 +153,34 @@ class AskAstrologerFlowState {
   final String userQuestion;
   final String aiResponse;
   final List<String>? preferredLanguages;
+  final Map<String, dynamic>? muhurthaResult;
 
   AskAstrologerFlowState({
     required this.userQuestion,
     required this.aiResponse,
     this.preferredLanguages,
+    this.muhurthaResult,
   });
+
+  bool get isEventPlanner =>
+      muhurthaResult != null && muhurthaResult!.isNotEmpty;
 
   Map<String, dynamic> toJson() => {
         'user_question': userQuestion,
         'ai_response': aiResponse,
         if (preferredLanguages != null) 'preferred_languages': preferredLanguages,
+        if (muhurthaResult != null) 'muhurtha_result': muhurthaResult,
       };
 
   factory AskAstrologerFlowState.fromJson(Map<String, dynamic> json) {
     return AskAstrologerFlowState(
       userQuestion: json['user_question'] as String,
-      aiResponse: json['ai_response'] as String,
+      aiResponse: json['ai_response'] as String? ?? '',
       preferredLanguages: json['preferred_languages'] != null
           ? List<String>.from(json['preferred_languages'])
+          : null,
+      muhurthaResult: json['muhurtha_result'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['muhurtha_result'] as Map)
           : null,
     );
   }

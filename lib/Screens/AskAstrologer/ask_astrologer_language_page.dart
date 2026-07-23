@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:astro_prompt/Components/Consultation-User/LanguageDropDown.dart';
+import 'package:astro_prompt/Components/EventPlanner/muhurtha_event_plan_accordion.dart';
+import 'package:astro_prompt/Model/muhurtha_model.dart';
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
 import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_checkout_page.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -10,6 +11,7 @@ import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/LocallySavedData/askAstrologerFlow.dart';
 import 'package:astro_prompt/config/ask_astrologer_flow_screen.dart';
+import 'package:astro_prompt/Components/Consultation-User/LanguageDropDown.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +19,12 @@ import 'package:get/get.dart';
 
 class AskAstrologerLanguagePage extends StatefulWidget {
   final String userQuestion;
-  const AskAstrologerLanguagePage({super.key, required this.userQuestion});
+  final bool isEventPlanner;
+  const AskAstrologerLanguagePage({
+    super.key,
+    required this.userQuestion,
+    this.isEventPlanner = false,
+  });
 
   @override
   State<AskAstrologerLanguagePage> createState() =>
@@ -28,6 +35,7 @@ class _AskAstrologerLanguagePageState extends State<AskAstrologerLanguagePage>
     with AskAstrologerFlowScreenMixin {
   String selectedLanguage = '';
   bool showError = false;
+  MuhurthaResult? _eventPlan;
   final languages = AskAstrologerLanguages.options
       .map((o) => o['label']!.tr)
       .toList();
@@ -38,6 +46,21 @@ class _AskAstrologerLanguagePageState extends State<AskAstrologerLanguagePage>
       orElse: () => {'id': label.toLowerCase(), 'label': label},
     );
     return match['id']!;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFlow();
+  }
+
+  Future<void> _loadFlow() async {
+    final flow = await readAskAstrologerFlow();
+    if (flow?.muhurthaResult != null) {
+      setState(() {
+        _eventPlan = MuhurthaResult.fromJson(flow!.muhurthaResult!);
+      });
+    }
   }
 
   Future<void> _onContinue() async {
@@ -55,6 +78,7 @@ class _AskAstrologerLanguagePageState extends State<AskAstrologerLanguagePage>
       userQuestion: flow.userQuestion,
       aiResponse: flow.aiResponse,
       preferredLanguages: [_languageId(selectedLanguage)],
+      muhurthaResult: flow.muhurthaResult,
     ));
     Get.to(() => AskAstrologerCheckoutPage());
   }
@@ -89,29 +113,34 @@ class _AskAstrologerLanguagePageState extends State<AskAstrologerLanguagePage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(util.width20),
-              decoration: BoxDecoration(
-                color: blackColor.withValues(alpha: 0.03),
-                borderRadius: BorderRadius.circular(12),
+            if (_eventPlan != null) ...[
+              MuhurthaEventPlanAccordion(result: _eventPlan!),
+              SizedBox(height: util.height20),
+            ] else ...[
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(util.width20),
+                decoration: BoxDecoration(
+                  color: blackColor.withValues(alpha: 0.03),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Your question'.tr,
+                        style: TextStyle(
+                            fontSize: util.fontSize12,
+                            color: blackColor.withValues(alpha: 0.5))),
+                    SizedBox(height: 8),
+                    Text(widget.userQuestion,
+                        style: TextStyle(
+                            fontFamily: AppFont.get(FontType.semiBold),
+                            fontSize: util.fontSize14)),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Your question'.tr,
-                      style: TextStyle(
-                          fontSize: util.fontSize12,
-                          color: blackColor.withValues(alpha: 0.5))),
-                  SizedBox(height: 8),
-                  Text(widget.userQuestion,
-                      style: TextStyle(
-                          fontFamily: AppFont.get(FontType.semiBold),
-                          fontSize: util.fontSize14)),
-                ],
-              ),
-            ),
-            SizedBox(height: util.height20),
+              SizedBox(height: util.height20),
+            ],
             Text('Select your preferred language'.tr,
                 style: TextStyle(
                     fontFamily: AppFont.get(FontType.semiBold),

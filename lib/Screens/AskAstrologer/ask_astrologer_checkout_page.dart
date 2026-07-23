@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
 import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_whatsapp_consent_page.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
@@ -10,7 +8,7 @@ import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
-import 'package:astro_prompt/config/Helper/currencyHelper.dart';
+import 'package:astro_prompt/config/Helper/profile_currency.dart';
 import 'package:astro_prompt/config/LocallySavedData/askAstrologerFlow.dart';
 import 'package:astro_prompt/config/ask_astrologer_flow_screen.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
@@ -59,16 +57,14 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
       Get.back();
       return;
     }
-    if (Platform.isAndroid) {
-      await CurrencyHelper.fetchCurrencyIfNeeded(
-        context: context,
-        currentCurrency: currency,
-        onCurrencyFetched: (c) => currency = c,
-      );
-    }
+    // Same rule as web subscription/consultation: preferred_location → country → timezone
+    currency = await ProfileCurrency.resolve();
     pricing = await _service.fetchPricing();
     if (mounted) setState(() => loading = false);
   }
+
+  double get _fee =>
+      currency == 'INR' ? pricing!.localPlanPrice : pricing!.foreignPlanPrice;
 
   double get _total =>
       currency == 'INR' ? pricing!.inrTotal : pricing!.usdTotal;
@@ -82,6 +78,7 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
       aiResponse: flow!.aiResponse,
       preferredLanguages: flow!.preferredLanguages!,
       currency: currency,
+      muhurthaResult: flow!.muhurthaResult,
     );
     CustomLoader.hide();
     if (order == null) {
@@ -160,6 +157,8 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
     final langs = flow!.preferredLanguages!
         .map((id) => AskAstrologerLanguages.labelFor(id).tr)
         .join(', ');
+    final isInr = currency == 'INR';
+    final symbol = isInr ? '₹' : '\$';
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -207,15 +206,19 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
                           color: blackColor.withValues(alpha: 0.5))),
                   SizedBox(height: 12),
                   _detailCard([
-                    _row('Consultation fee'.tr,
-                        '${currency == 'INR' ? '₹' : '\$'}${pricing!.localPlanPrice.toStringAsFixed(currency == 'INR' ? 0 : 2)}'),
-                    if (currency == 'INR') ...[
+                    _row(
+                      'Consultation fee'.tr,
+                      '$symbol${_fee.toStringAsFixed(isInr ? 0 : 2)}',
+                    ),
+                    if (isInr) ...[
                       _row('CGST'.tr, '₹${pricing!.cgst.toStringAsFixed(2)}'),
                       _row('SGST'.tr, '₹${pricing!.sgst.toStringAsFixed(2)}'),
                     ],
-                    _row('Total'.tr,
-                        '${currency == 'INR' ? '₹' : '\$'}${_total.toStringAsFixed(currency == 'INR' ? 0 : 2)}',
-                        bold: true),
+                    _row(
+                      'Total'.tr,
+                      '$symbol${_total.toStringAsFixed(isInr ? 0 : 2)}',
+                      bold: true,
+                    ),
                   ]),
                 ],
               ),

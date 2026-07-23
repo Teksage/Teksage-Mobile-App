@@ -8,17 +8,17 @@ class ApiEndpoint {
   // static const String mainUrl ="http://10.0.2.2:8000";
   //physical device — use your PC's current Wi‑Fi IPv4 (ipconfig). Must match same network as phone.
 //   static const String mainUrl ="http://10.122.202.187:8000";
-static const String mainUrl ="http://10.199.119.187:8000";
+// static const String mainUrl ="http://192.168.1.2:8000";
 
-  // static const String mainUrl ='https://teksage-backend-latest.onrender.com';
-  // static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
+  static const String mainUrl ='https://teksage-backend-latest.onrender.com';
+  static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
   
 
   //emulator
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
 //   static const String chatUrl ="ws://10.122.202.187:8000/chat";
-static const String chatUrl ="ws://10.199.119.187/chat";
+// static const String chatUrl ="ws://192.168.1.2:8000/chat";.e
   
 
   ///
@@ -54,6 +54,9 @@ static const String chatUrl ="ws://10.199.119.187/chat";
 
   // Panchang
   static const String panchang = '$prediction/panchang';
+
+  // Event Planner (Muhurtha)
+  static const String eventPlanner = '$prediction/event-planner';
 
   //Horoscope
   static const String horoscope = '$profile/horoscope';

@@ -390,7 +390,6 @@ class _HomePageState extends State<HomePage>
           barrierColor: Colors.black.withAlpha(128),
           builder: (_) => const SubscribePromptDialog(
             planStatus: 'expired',
-            currency: 'INR',
             reDirectHome: false,
           ),
         );
@@ -406,7 +405,6 @@ class _HomePageState extends State<HomePage>
         barrierDismissible: true,
         barrierColor: Colors.black.withAlpha(128),
         builder: (_) => const SubscribePromptDialog(
-          currency: 'INR',
           reDirectHome: false,
         ),
       );

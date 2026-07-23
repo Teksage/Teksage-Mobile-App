@@ -286,9 +286,9 @@ class _ProfilePageState extends State<ProfilePage> {
             context: context,
             barrierDismissible: true,
             barrierColor: Colors.black.withAlpha(128),
-            builder: (context) => const SubscribePromptDialog(
+            builder: (context) => SubscribePromptDialog(
               planStatus: 'expired',
-              currency: 'INR',
+              currency: currency,
               reDirectHome: false,
             ),
           );
@@ -317,9 +317,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 context: context,
                 barrierDismissible: true,
                 barrierColor: Colors.black.withAlpha(128),
-                builder: (context) => const SubscribePromptDialog(
+                builder: (context) => SubscribePromptDialog(
                   planStatus: 'expired',
-                  currency: 'INR',
+                  currency: fetchedCurrency,
                   reDirectHome: false,
                 ),
               );

@@ -260,7 +260,7 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
           EventPlannerHeader(
             title: 'Event Planner (Muhurtha)'.tr,
             subtitle:
-                'Select a life event and start date. We scan the next 7 days using your birth chart and Panchang.'
+                'Select a life event and start date. We scan the next 7 days to find auspicious dates for you using your birth chart and panchang.'
                     .tr,
           ),
           Padding(

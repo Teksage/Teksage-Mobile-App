@@ -62,11 +62,11 @@ class EventPlannerHomeBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Find auspicious dates for your life events'.tr,
+                    'Event Planner'.tr,
                     style: TextStyle(
                       fontFamily: AppFont.get(FontType.bold),
                       fontSize: util.fontSize14,
-                      color: blackColor,
+                      color: blackColor.withValues(alpha: 0.5),
                       height: 1.25,
                     ),
                   ),
@@ -76,7 +76,7 @@ class EventPlannerHomeBanner extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: AppFont.get(FontType.semiBold),
                       fontSize: util.fontSize12,
-                      color: mainColor,
+                      color: blackColor.withValues(alpha: 0.5),
                     ),
                   ),
                 ],

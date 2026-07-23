@@ -193,8 +193,8 @@ class LocalString extends Translations {
           // Event Planner (Muhurtha)
           'Event Planner (Muhurtha)': 'Event Planner (Muhurtha)',
           'Plan an auspicious time': 'Plan an auspicious time',
-          'Select a life event and start date. We scan the next 7 days using your birth chart and Panchang.':
-              'Select a life event and start date. We scan the next 7 days using your birth chart and Panchang.',
+          'Select a life event and start date. We scan the next 7 days to find auspicious dates for you using your birth chart and panchang.':
+              'Select a life event and start date. We scan the next 7 days to find auspicious dates for you using your birth chart and panchang.',
           'Event type': 'Event type',
           'Start date': 'Start date',
           'Searching the next 7 days from this date':
@@ -230,6 +230,7 @@ class LocalString extends Translations {
           'Hide event plan': 'Hide event plan',
           'Find auspicious dates for your life events':
               'Find auspicious dates for your life events',
+          'Event Planner': 'Event Planner',
           'Plan Now': 'Plan Now',
           'Find Event Planner for your event':
               'Find Event Planner for your event',
@@ -953,6 +954,7 @@ class LocalString extends Translations {
           'Full day': 'முழு நாள்',
           'New search': 'புதிய தேடல்',
           'Plan Now': 'இப்போது திட்டமிடுங்கள்',
+          'Event Planner': 'நிகழ்வு திட்டமிடுபவர்',
           'Book Consultation': 'ஆலோசனை முன்பதிவு',
           'Your question': 'உங்கள் கேள்வி',
           'Select your preferred language': 'உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்',

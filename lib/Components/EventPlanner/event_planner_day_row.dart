@@ -40,6 +40,22 @@ class EventPlannerDayRow extends StatelessWidget {
     return [];
   }
 
+  /// Morning/Evening only when the day is not a full weekday exclusion.
+  List<MuhurthaDaySegment> _displaySegments(MuhurthaDayResult d) {
+    if (d.segments.length <= 1) return const [];
+    final weekday = (d.weekday ?? '').toLowerCase();
+    if (weekday == 'tuesday' || weekday == 'saturday') return const [];
+    final allWeekdayExcluded = d.segments.every((s) {
+      final codes = <String>[
+        ...s.reasonCodes,
+        if (s.reasonCode != null) s.reasonCode!,
+      ];
+      return codes.contains('weekday_excluded');
+    });
+    if (allWeekdayExcluded) return const [];
+    return d.segments;
+  }
+
   Color _chipBg(bool suitable, String? rating) {
     if (!suitable) return const Color(0xFFFCE8E8);
     final r = (rating ?? '').toLowerCase();
@@ -199,8 +215,8 @@ class EventPlannerDayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final split =
-        day.segments.length > 1 ? day.segments : <MuhurthaDaySegment>[];
+    // Tue/Sat (or any day where every segment is weekday-excluded): show as one row.
+    final split = _displaySegments(day);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

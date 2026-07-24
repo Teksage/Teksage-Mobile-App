@@ -66,7 +66,7 @@ class EventPlannerHomeBanner extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: AppFont.get(FontType.bold),
                       fontSize: util.fontSize14,
-                      color: blackColor.withValues(alpha: 0.5),
+                      color: blackColor,
                       height: 1.25,
                     ),
                   ),

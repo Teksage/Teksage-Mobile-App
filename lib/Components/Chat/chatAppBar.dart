@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:astro_prompt/Components/Chat/successDialog.dart';
 import 'package:astro_prompt/Components/Dashboard/subscribeDialog.dart';
+import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/settings/settings_page.dart';
 import 'package:astro_prompt/Services/ChatService/chatQueryService.dart';
 import 'package:astro_prompt/Services/HoroscopeService/fileStorageService.dart';
@@ -374,21 +375,13 @@ class _ChatAppBarWithDownloadState extends State<ChatAppBarWithDownload> {
                               height: util.height20,
                             ),
                             onPressed: () async {
-                              // if (widget.msgCount == 0) {
-                              Get.back();
-                              // } else {
-                              //   final result = await showDialog(
-                              //     context: context,
-                              //     barrierDismissible: true,
-                              //     barrierColor: blackColor.withValues(alpha: 0.5),
-                              //     builder: (context) => ChatHistoryDialog(),
-                              //   );
-                              //
-                              //   if (result != null && widget.onChatHistorySelected != null) {
-                              //     widget.onChatHistorySelected!(result);
-                              //     Get.to(() => BottomNavigationScreen());
-                              //   }
-                              // }
+                              // After Ask Astrologer payment, chat may be root —
+                              // fall back to home so back always leaves chat.
+                              if (Navigator.of(context).canPop()) {
+                                Get.back();
+                              } else {
+                                Get.offAll(() => const BottomNavigationScreen());
+                              }
                             },
                           ),
                           SizedBox(

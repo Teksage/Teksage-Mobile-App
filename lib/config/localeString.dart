@@ -199,6 +199,8 @@ class LocalString extends Translations {
           'Start date': 'Start date',
           'Searching the next 7 days from this date':
               'Searching the next 7 days from this date',
+          'Choose a date within the next 30 days.':
+              'Choose a date within the next 30 days.',
           'Location is required': 'Location is required',
           'Find Auspicious Dates': 'Find Auspicious Dates',
           'Sign in to find Event Planner': 'Sign in to find Event Planner',
@@ -941,6 +943,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ஜோதிடரிடம் கேளுங்கள்',
           'Event Planner (Muhurtha)': 'நிகழ்வு திட்டமிடுபவர் (முகூர்த்தம்)',
+          'Choose a date within the next 30 days.':
+              'அடுத்த 30 நாட்களுக்குள் ஒரு தேதியைத் தேர்ந்தெடுக்கவும்.',
           'Plan an auspicious time': 'சுபமான நேரத்தைத் திட்டமிடுங்கள்',
           'Find Auspicious Dates': 'சுப தேதிகளைக் கண்டறியுங்கள்',
           'Event Planner results': 'நிகழ்வு திட்டமிடுபவர் முடிவுகள்',
@@ -1686,6 +1690,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'జ్యోతిష్కుడిని అడగండి',
           'Event Planner (Muhurtha)': 'ఈవెంట్ ప్లానర్ (ముహూర్తం)',
+          'Choose a date within the next 30 days.':
+              'వచ్చే 30 రోజుల్లోపు ఒక తేదీని ఎంచుకోండి.',
           'Find Auspicious Dates': 'శుభ తేదీలను కనుగొనండి',
           'Event Planner results': 'ఈవెంట్ ప్లానర్ ఫలితాలు',
           'Your event plan': 'మీ ఈవెంట్ ప్లాన్',
@@ -2407,6 +2413,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ಜ್ಯೋತಿಷಿಯನ್ನು ಕೇಳಿ',
           'Event Planner (Muhurtha)': 'ಈವೆಂಟ್ ಪ್ಲಾನರ್ (ಮುಹೂರ್ತ)',
+          'Choose a date within the next 30 days.':
+              'ಮುಂದಿನ 30 ದಿನಗಳಲ್ಲಿ ಒಂದು ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
           'Find Auspicious Dates': 'ಶುಭ ದಿನಾಂಕಗಳನ್ನು ಹುಡುಕಿ',
           'Event Planner results': 'ಈವೆಂಟ್ ಪ್ಲಾನರ್ ಫಲಿತಾಂಶಗಳು',
           'Your event plan': 'ನಿಮ್ಮ ಈವೆಂಟ್ ಯೋಜನೆ',
@@ -3129,6 +3137,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ജ്യോതിഷിയോട് ചോദിക്കൂ',
           'Event Planner (Muhurtha)': 'ഇവന്റ് പ്ലാനർ (മുഹൂർത്തം)',
+          'Choose a date within the next 30 days.':
+              'അടുത്ത 30 ദിവസത്തിനുള്ളിൽ ഒരു തീയതി തിരഞ്ഞെടുക്കുക.',
           'Find Auspicious Dates': 'ശുഭ തീയതികൾ കണ്ടെത്തുക',
           'Event Planner results': 'ഇവന്റ് പ്ലാനർ ഫലങ്ങൾ',
           'Your event plan': 'നിങ്ങളുടെ ഇവന്റ് പ്ലാൻ',
@@ -3856,6 +3866,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषी से पूछें',
           'Event Planner (Muhurtha)': 'इवेंट प्लानर (मुहूर्त)',
+          'Choose a date within the next 30 days.':
+              'अगले 30 दिनों के भीतर एक तारीख चुनें।',
           'Find Auspicious Dates': 'शुभ तिथियाँ खोजें',
           'Event Planner results': 'इवेंट प्लानर परिणाम',
           'Your event plan': 'आपकी इवेंट योजना',
@@ -4558,6 +4570,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषाला विचारा',
           'Event Planner (Muhurtha)': 'इव्हेंट प्लानर (मुहूर्त)',
+          'Choose a date within the next 30 days.':
+              'पुढील ३० दिवसांत एक तारीख निवडा.',
           'Find Auspicious Dates': 'शुभ तारखा शोधा',
           'Event Planner results': 'इव्हेंट प्लानर निकाल',
           'Your event plan': 'तुमची इव्हेंट योजना',

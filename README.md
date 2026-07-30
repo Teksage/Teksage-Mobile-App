@@ -1,128 +1,131 @@
-# Teksage – The World's First Voice-Based AI Astrology App
+# Teksage Mobile App
 
-**Powered by the trusted AstroPrompt engine**
+Flutter app for **Teksage** — voice-capable AI astrology companion (predictions, chat, panchang, matchmaking, consultation, Event Planner, subscriptions).
 
-What if you could talk to your stars — just like asking Siri or Alexa? **Teksage** makes it possible. Combining ancient Jyotish wisdom with cutting-edge AI and voice technology, Teksage becomes your personal astrology companion, available anytime, anywhere, and in your own language — **English, Hindi, Tamil, Telugu, Malayalam, Marathi and Kannada**.
+- **Package name:** `astro_prompt`
+- **Android applicationId:** `com.venzo.astroPrompt`
+- **iOS bundle id:** `com.app.teksage`
+- **Play Store:** [Teksage](https://play.google.com/store/apps/details?id=com.venzo.astroPrompt)
 
-With the all-new **Teksage 2.0** update, you can now experience astrology through *natural voice conversations*, making guidance from the stars more intuitive, personal, and accessible than ever before.
+Backend: [Teksage-backend-latest](../Teksage-backend-latest). Web parity: [teksage-website](../teksage-website).
 
----
-
-## 🌟 Key Highlights
-
-### 🧠 AI-Powered Astrology
-AstroPrompt delivers **real-time, personalized predictions** and insights tailored to your birth details — not just generic horoscopes.
-
-### 💬 24/7 AI Astrologer Chat
-Ask unlimited questions about your **career, love life, health, and finances** and get instant, accurate responses in your preferred language:
-> English • Hindi • Malayalam • Tamil • Telugu
-
-### 📅 Daily, Weekly & Yearly Predictions
-Get actionable insights based on your unique birth chart (date, time, and place of birth).
-
-### 📖 Life Predictions Report
-Receive a detailed analysis of your **life path, strengths, challenges, and opportunities**.
-
-### 💞 Marriage & Compatibility
-Check compatibility instantly using authentic Vedic matchmaking algorithms.
-
-### 🪐 Personalized Panchang
-View your **Thara Bala**, **Chandra Bala**, and **Auspicious Timings** anytime.
-
-### 👨‍🏫 Consult Human Astrologers
-Book verified astrologers directly from the app for personalized consultations.
-
-### 🧘 Choose Your Avatar & Chat Style
-Pick a communication tone — **compassionate**, **practical**, **motivational**, or **insightful** — and choose between **concise** or **detailed** answers.
+For product overview and feature marketing copy, see the sections below. For day-to-day engineering, start with **Quick start** and [README_TECHNICAL.md](README_TECHNICAL.md).
 
 ---
 
-## 🔊 Version 2.0 — Introducing **Teksage**
+## Quick start (developers)
 
-**Teksage** transforms AstroPrompt into a **voice-first astrology companion** — talk to your Jyotish Guide just like Siri or Alexa.
+### Prerequisites
 
-### ✨ Latest Updates (v2.0.1)
-- **Enhanced Yearly Predictions**: Improved navigation from notifications and better display of planetary period transitions
-- **Chat Improvements**: Fixed critical bugs for more reliable messaging
-- **Subscription Clarity**: Added pending days display for better subscription visibility
-- **Currency Fixes**: Resolved payment and pricing display issues
+- [Flutter](https://docs.flutter.dev/get-started/install) with Dart SDK **^3.6.1** (see `pubspec.yaml`)
+- Android Studio / Xcode as needed
+- A running Teksage API if you want local backend (default port **8000**)
 
-### 🗣️ Voice-First Experience
-Ask questions naturally in English or Indian languages (Hindi, Kannada, Malayalam, Tamil, Telugu). Teksage listens and responds instantly.
-
-### 🪄 AI + Jyotish Wisdom
-Fuses **Speech-to-Text (STT)**, **Text-to-Speech (TTS)**, and **authentic Jyotish principles** to create a natural, conversational astrology experience.
-
-### 🌌 Celestial Accuracy
-Uses **Swiss Ephemeris (NASA-grade algorithms)** for real-time planetary data and precise chart-based predictions.
-
-### 🔐 Privacy First
-All voice interactions are **encrypted** — your personal insights remain private.
-
----
-
-## 🌠 Why AstroPrompt/Teksage Are Different
-
-- Not just sun-sign horoscopes — predictions are based on your **unique birth chart**
-- **Real-time AI answers**, not pre-written templates
-- **Voice-first** Jyotish experience (Teksage)
-- **Avatar-based personalization**
-- Combines **AI insights** with **human expertise**
-
----
-
-## How Teksage Helps You
-
-- Make confident life and career decisions
-- Discover your strengths and growth areas
-- Improve relationships with compatibility insights
-- Plan your investments and personal goals
-- Access instant guidance — anytime, anywhere
-
----
-
-## 🚀 Join the Future of Astrology
-
-AstroPrompt/Teksage redefine how you experience astrology — blending **ancient wisdom** with **modern AI technology**.
-
-Download the app today and unlock your **personal astrologer in your pocket**.
-
-> 🪐 [Available on Google Play Store](https://play.google.com/store/apps/details?id=com.venzo.astroPrompt)
-
----
-
-## For Developers
-
-This is a Flutter application built with modern architecture combining AI, voice technology, and Vedic astrology calculations.
-
-📋 **[View Technical Documentation](TECHNICAL_NOTES.md)** - Complete setup guide, build instructions, architecture details, and troubleshooting.
-
-### Quick Start
+### Install & run
 
 ```bash
-# Clone the repository
-git clone https://github.com/venzo-tech/AstroPrompt_MobileApp.git
-cd AstroPrompt_MobileApp
-
-# Install dependencies
+cd Teksage-Mobile-App
 flutter pub get
-
-# Run the app
 flutter run
 ```
 
-For detailed installation, configuration, and deployment instructions, please refer to the [Technical Notes](TECHNICAL_NOTES.md).
+Useful:
 
-------
+```bash
+flutter devices
+flutter run -d <device_id>
+flutter clean && flutter pub get
+```
 
-## Connect With Us
+### Point the app at your API
 
-🌐 **Website:** [www.teksage.com](https://www.teksage.com)  
-📧 **Support:** support@teksage.com  
-💬 **Follow Us:** Twitter | Instagram | Facebook
+Edit [`lib/config/api_endpoints.dart`](lib/config/api_endpoints.dart):
 
-------
+| Target | Example |
+|--------|---------|
+| Production EC2 | Active `mainUrl` / `chatUrl` in that file |
+| Android emulator → host machine | `http://10.0.2.2:8000` and `ws://10.0.2.2:8000/chat` |
+| Physical device on same Wi‑Fi | `http://<your-pc-lan-ip>:8000` (from `ipconfig` / `ifconfig`) |
+| HTTPS host | Use `https://` / `wss://` variants |
+
+Comment/uncomment the blocks in `api_endpoints.dart` — there is **no** `.env` / product-flavor switch yet.
+
+### Build
+
+```bash
+# Android
+flutter build apk --release
+flutter build appbundle --release
+
+# iOS (macOS)
+flutter build ipa
+```
+
+Android release signing uses `android/key.properties` when present (do not commit secrets).
+
+---
+
+## Project structure (`lib/`)
+
+```
+lib/
+  main.dart
+  config/           # api_endpoints, localeString (i18n), helpers
+  Screens/          # Feature screens (auth, Home, Chat, …)
+  Components/       # Reusable widgets
+  Services/         # API / domain services
+  Model/            # DTOs
+  Utility/          # colors, images, snackbars, …
+```
+
+### i18n
+
+GetX translations in [`lib/config/localeString.dart`](lib/config/localeString.dart) (`LocalString`), wired in `main.dart`. Locales include `en_US`, `ta`, `hi`, `te_IN`, `kn_IN`, `ml_IN`, `mr_IN`. Use `.tr` for user-facing strings — keep keys in sync with the website message files when adding shared product copy.
+
+### State / navigation
+
+GetX (`get` package) for routing, locale, and much of the app state.
+
+---
+
+## Related docs
+
+| Doc | Purpose |
+|-----|---------|
+| [README_TECHNICAL.md](README_TECHNICAL.md) | Setup, API config, structure, troubleshooting |
+| [TECHNICAL_NOTES.md](TECHNICAL_NOTES.md) | Longer historical notes (some sections may be stale vs current Gradle/pubspec) |
+| [RELEASE_NOTES.md](RELEASE_NOTES.md) | Release changelog |
+
+---
+
+## Product overview
+
+Teksage combines Jyotish wisdom with AI and voice: personalized predictions, multilingual chat, panchang, matchmaking, human consultations, and more — in English, Hindi, Tamil, Telugu, Malayalam, Marathi, and Kannada.
+
+### Highlights
+
+- AI-powered, birth-chart–based insights (not sun-sign only)
+- Daily / weekly / yearly predictions and life reports
+- 24/7 AI astrologer chat + optional human consultations
+- Personalized panchang (Thara Bala, Chandra Bala, auspicious timings)
+- Voice-first experience (STT / TTS) in supported languages
+- Event Planner (Muhurtha) and subscription plans
+
+### Why Teksage
+
+- Chart-based predictions and real-time AI answers
+- Avatar / tone personalization
+- Privacy-minded handling of sensitive interactions
+
+---
+
+## Connect
+
+- Website: [www.teksage.app](https://www.teksage.app) / [my.teksage.app](https://my.teksage.app)
+- Support: support@teksage.com
+
+---
 
 ## License
 
-Copyright © 2025 Teksage. All rights reserved.
+Copyright © Teksage. All rights reserved.

@@ -6,6 +6,8 @@ class EventPlannerConfig {
   static const storagePrefix = 'teksage_event_planner_v3';
   static const ttlDays = 10;
   static const maxStartDaysAhead = 30;
+  static const startDateOutOfRange =
+      'Choose a date within the next 30 days.';
   static const publicSiteOrigin = 'https://my.teksage.app';
   /// Debug/local website origin (Next.js `npm run dev`). For a physical device,
   /// set this to your PC LAN IP, e.g. `http://192.168.1.10:3000`.

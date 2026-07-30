@@ -115,10 +115,13 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
           _loading = false;
         });
       }
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
+        final raw = e is Exception
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'Could not load Event Planner';
         setState(() {
-          _error = 'Could not load Event Planner'.tr;
+          _error = raw.tr;
           _loading = false;
         });
       }

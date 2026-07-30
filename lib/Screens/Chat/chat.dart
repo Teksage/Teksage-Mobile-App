@@ -16,6 +16,7 @@ import 'package:astro_prompt/Model/chat_preference_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/subscription_details_page_IOS.dart';
 import 'package:astro_prompt/Screens/settings/profile_page.dart';
+import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Services/ChatService/chatQueryService.dart';
 import 'package:astro_prompt/Services/ChatService/socketConnection.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
@@ -764,7 +765,11 @@ class _AIChatScreenState extends State<AIChatScreen>
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop && Platform.isAndroid) {
           Future.microtask(() async {
-            Get.back();
+            if (Navigator.of(context).canPop()) {
+              Get.back();
+            } else {
+              Get.offAll(() => const BottomNavigationScreen());
+            }
           });
         }
       },

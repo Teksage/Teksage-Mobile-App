@@ -121,9 +121,15 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
     UserProfile? profileData = await profileService.fetchUserProfile();
     if (profileData != null) {
       fee = widget.consultingFee;
-      cgst = fee * 0.09;
-      sgst = fee * 0.09;
-      totalAmount = widget.consultingFee + cgst + sgst;
+      if (widget.currency == 'INR') {
+        cgst = fee * 0.09;
+        sgst = fee * 0.09;
+        totalAmount = fee + cgst + sgst;
+      } else {
+        cgst = 0;
+        sgst = 0;
+        totalAmount = fee;
+      }
 
       // Save original values
       originalConsultingFee = fee;

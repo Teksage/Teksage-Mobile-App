@@ -25,6 +25,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/profile_currency.dart';
 
 class SubscriptionPaymentSummaryPage extends StatefulWidget {
   final SubscriptionPlanModel premiumPlan;
@@ -71,14 +72,20 @@ class _SubscriptionPaymentSummaryPageState
   bool isLoading = false;
   String email = '';
   String mobileNumber = '';
+  late String payCurrency;
 
   @override
   void initState() {
     super.initState();
-    // print('Currency Sub Page: ${widget.currency}');
-    fetchProfileData();
+    payCurrency =
+        widget.currency.trim().isNotEmpty ? widget.currency.trim() : 'INR';
+    _applyPlanPricing();
     _initializeRazorpay();
-    isINR = widget.currency == 'INR';
+    _bootstrap();
+  }
+
+  void _applyPlanPricing() {
+    isINR = payCurrency == 'INR';
     originalPlanCost = isINR
         ? widget.premiumPlan.localPlanPrice
         : widget.premiumPlan.foreignPlanPrice;
@@ -88,19 +95,29 @@ class _SubscriptionPaymentSummaryPageState
     originalSGstPercentage = widget.premiumPlan.sgstPercentage;
     originalLocalTotalCost = widget.premiumPlan.localTotalAmount;
     originalForeignTotalCost = widget.premiumPlan.foreignTotalAmount;
-    // print('Plan : $originalPlanCost');
+    planCost = originalPlanCost;
+    cgst = widget.premiumPlan.cgstAmount;
+    cgstPercentage = widget.premiumPlan.cgstPercentage;
+    sgst = widget.premiumPlan.sgstAmount;
+    sgstPercentage = widget.premiumPlan.sgstPercentage;
+    localTotalCost = widget.premiumPlan.localTotalAmount;
+    foreignTotalCost = widget.premiumPlan.foreignTotalAmount;
+  }
 
-    setState(() {
-      planCost = isINR
-          ? widget.premiumPlan.localPlanPrice
-          : widget.premiumPlan.foreignPlanPrice;
-      cgst = widget.premiumPlan.cgstAmount;
-      cgstPercentage = widget.premiumPlan.cgstPercentage;
-      sgst = widget.premiumPlan.sgstAmount;
-      sgstPercentage = widget.premiumPlan.sgstPercentage;
-      localTotalCost = widget.premiumPlan.localTotalAmount;
-      foreignTotalCost = widget.premiumPlan.foreignTotalAmount;
-    });
+  Future<void> _bootstrap() async {
+    if (widget.currency.trim().isEmpty) {
+      try {
+        final resolved = await ProfileCurrency.resolve();
+        if (!mounted) return;
+        setState(() {
+          payCurrency = resolved;
+          _applyPlanPricing();
+        });
+      } catch (_) {
+        // Keep INR fallback from initState.
+      }
+    }
+    fetchProfileData();
   }
 
   void _initializeRazorpay() {
@@ -204,7 +221,7 @@ class _SubscriptionPaymentSummaryPageState
               subscriptionData: planData!.subscription!,
               planData: planData.planDetails!,
               fromSettingPage: false,
-              currency: widget.currency,
+              currency: payCurrency,
             ),
             preventDuplicates: false,
           );
@@ -467,7 +484,7 @@ class _SubscriptionPaymentSummaryPageState
                             fontColor: whiteColor.withValues(alpha: 0.5),
                             containerBorderColor: whiteColor,
                             planId: widget.premiumPlan.planId,
-                            currency: widget.currency,
+                            currency: payCurrency,
                             amount: isINR
                                 ? widget.premiumPlan.localPlanPrice
                                 : widget.premiumPlan.foreignPlanPrice,
@@ -573,17 +590,20 @@ class _SubscriptionPaymentSummaryPageState
                                 //   },
                                 // });
 
-                                if (email.isNotEmpty && response != null) {
+                                if (response != null) {
+                                  final prefill = <String, String>{
+                                    'contact': mobileNumber,
+                                  };
+                                  if (email.isNotEmpty) {
+                                    prefill['email'] = email;
+                                  }
                                   var options = {
                                     'key': response.key,
                                     'subscription_id': response.subscription_id,
                                     'name': 'Teksage',
                                     'description':
                                         'Monthly Auto Subscription Payment',
-                                    'prefill': {
-                                      'contact': mobileNumber,
-                                      'email': email
-                                    },
+                                    'prefill': prefill,
                                   };
                                   CustomLoader.hide();
                                   _razorpay.open(options);
@@ -616,7 +636,13 @@ class _SubscriptionPaymentSummaryPageState
                                 //   },
                                 // });
 
-                                if (email.isNotEmpty && response != null) {
+                                if (response != null) {
+                                  final prefill = <String, String>{
+                                    'contact': mobileNumber,
+                                  };
+                                  if (email.isNotEmpty) {
+                                    prefill['email'] = email;
+                                  }
                                   var options = {
                                     'key': response.key,
                                     'amount': response.amount,
@@ -624,10 +650,7 @@ class _SubscriptionPaymentSummaryPageState
                                     'name': 'Teksage',
                                     'description': 'Subscription Payment',
                                     'order_id': response.id,
-                                    'prefill': {
-                                      'contact': mobileNumber,
-                                      'email': email
-                                    },
+                                    'prefill': prefill,
                                   };
                                   CustomLoader.hide();
                                   _razorpay.open(options);

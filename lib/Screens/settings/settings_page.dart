@@ -27,6 +27,7 @@ import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/currencyHelper.dart';
+import 'package:astro_prompt/config/Helper/profile_currency.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
 import 'package:astro_prompt/config/currency.dart';
@@ -355,7 +356,6 @@ class _SettingsPageState extends State<SettingsPage>
                                 builder: (context) =>
                                     const SubscribePromptDialog(
                                   reDirectHome: false,
-                                  currency: 'INR',
                                 ),
                               );
                               return;
@@ -608,9 +608,14 @@ class _SettingsPageState extends State<SettingsPage>
                             CustomLoader.show(context);
                             try {
                               if (Platform.isIOS) {
+                                final iosCurrency =
+                                    currency.isNotEmpty
+                                        ? currency
+                                        : await ProfileCurrency.resolve();
                                 if (subscriptionData != null) {
                                   await Get.to(() => SubscriptionDetailsPage(
-                                      selectedIndex: 1, currency: 'INR'));
+                                      selectedIndex: 1,
+                                      currency: iosCurrency));
                                   // refresh profile after returning
                                   getProfileData();
                                 } else {
@@ -618,7 +623,7 @@ class _SettingsPageState extends State<SettingsPage>
                                         subscriptionData: subscriptionData,
                                         planData: planData,
                                         fromSettingPage: true,
-                                        currency: 'INR',
+                                        currency: iosCurrency,
                                       ));
                                   getProfileData();
                                 }

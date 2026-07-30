@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:astro_prompt/config/Helper/timezoneHelper.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:astro_prompt/config/LocallySavedData/appLanguage.dart';
+import 'package:astro_prompt/config/LocallySavedData/eventPlannerCache.dart';
 import 'package:astro_prompt/config/LocallySavedData/chatLanguage.dart';
 import 'package:astro_prompt/config/LocallySavedData/chatPreference.dart';
 import 'package:astro_prompt/config/LocallySavedData/matchMaking.dart';
@@ -296,6 +297,7 @@ class AuthService {
       // Reset locale after logout
       resetLocaleAfterLogout();
       await clearWelcomeMessageStatus();
+      await clearAllEventPlannerCache();
       var jsonData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return jsonData["message"];
@@ -329,6 +331,7 @@ class AuthService {
       // Reset locale after logout
       resetLocaleAfterLogout();
       await clearWelcomeMessageStatus();
+      await clearAllEventPlannerCache();
       return null;
     }
   }

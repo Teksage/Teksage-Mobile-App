@@ -436,6 +436,7 @@ class _ChangeEmailMobileState extends State<ChangeEmailMobile> {
                                           verifyScreen: true,
                                           isChange: false,
                                           newVerify: true,
+                                          updateContact: true,
                                         ));
                                     if (result == true || result == 'success') {
                                       // Return to the existing profile form instead of

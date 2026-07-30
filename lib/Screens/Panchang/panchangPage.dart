@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:astro_prompt/Components/Dashboard/LoginDialog.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Components/Dashboard/subscribeDialog.dart';
+import 'package:astro_prompt/Components/EventPlanner/panchang_event_planner_cta.dart';
 import 'package:astro_prompt/Components/Panchang/panchangDatePicker.dart';
 import 'package:astro_prompt/Components/Panchang/panchangDateRibbon.dart';
 import 'package:astro_prompt/Model/panchang_model.dart';
@@ -1071,6 +1072,7 @@ class _PanchangPageState extends State<PanchangPage> {
                                                 ],
                                               ),
                                             ),
+                                            const PanchangEventPlannerCta(),
                                             DashedLine(
                                               dashWidth: 3,
                                               color: blackColor.withValues(

@@ -4,9 +4,11 @@ import android.app.AlarmManager
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.NonNull
+import androidx.core.view.WindowCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -19,6 +21,12 @@ class MainActivity : FlutterActivity() {
     private val ALARM_CHANNEL = "com.venzo.astroPrompt/alarm"
     private val FILE_CHANNEL = "com.venzo.astroPrompt/filesaver"
     private val UPDATE_CHANNEL = "com.venzo.astroPrompt/update"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // Android 15+/16 edge-to-edge: content draws behind system bars.
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

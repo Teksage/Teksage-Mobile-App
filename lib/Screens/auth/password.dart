@@ -40,6 +40,9 @@ class OTPScreen extends StatefulWidget {
   final bool isChange;
   final bool? newVerify;
   final String? countryCode;
+  /// When true, verify API uses `?update=true` (link/change contact) — website ChangeContactView.
+  /// Profile field verify uses false — website ProfilePhoneRow / ProfileEmailRow.
+  final bool updateContact;
   const OTPScreen({
     super.key,
     required this.userInfo,
@@ -50,6 +53,7 @@ class OTPScreen extends StatefulWidget {
     required this.isChange,
     this.newVerify,
     this.countryCode,
+    this.updateContact = false,
   });
 
   @override
@@ -152,11 +156,12 @@ class _OTPScreenState extends State<OTPScreen> {
   Future<void> _handleVerifyScreenOtp(String otp, String userInfo) async {
     try {
       final bool isChange = widget.isChange == true;
-      final bool useProfileVerification = !isChange;
+      // Match website: profile verify → update=false; change/link new contact → update=true
+      final bool updateContact = widget.updateContact;
       print(
-          'valuse::::${widget.keyValue}${userInfo}${otp}${useProfileVerification}');
+          'verify::::${widget.keyValue} $userInfo $otp update=$updateContact');
       final result = await profileService.profileVerifyOtp(
-          widget.keyValue, userInfo, otp, useProfileVerification,
+          widget.keyValue, userInfo, otp, updateContact,
           countryCode: widget.countryCode);
       final countries = await CountryCodeService().fetchCountries();
       final changeTitle = widget.title!.toLowerCase().contains('email')
@@ -184,9 +189,15 @@ class _OTPScreenState extends State<OTPScreen> {
           Get.back(result: true);
         }
 
-        showLoginSuccessSnackBar(context, 'OTP Verified');
+        final verifiedLabel = (widget.title ?? '')
+            .replaceFirst(RegExp(r'^Verify\s+', caseSensitive: false), '')
+            .trim();
         showLoginSuccessSnackBar(
-            context, '${widget.title!} Verified Successfully');
+          context,
+          verifiedLabel.isEmpty
+              ? 'Contact verified successfully'
+              : '$verifiedLabel verified successfully',
+        );
       } else {
         setState(() {
           errorMessage = "Incorrect OTP";

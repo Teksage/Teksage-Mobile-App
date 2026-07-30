@@ -37,7 +37,7 @@ class UserProfile {
     this.planDetails,
     this.userNotify,
     required this.mobileVerified,
-    required this.emailVerified,
+    this.emailVerified = false,
     this.howYouKnow,
   });
 

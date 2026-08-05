@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:astro_prompt/Model/AstrologerUserConsult/coupon_model.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
+import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
@@ -91,11 +92,13 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
         discountAmount = result.discount;
         print('Result: ${result.discount}');
         widget.onCouponApplied?.call(result);
+        showLoginSuccessSnackBar(context, 'Coupon applied');
       } else {
         _isApplied = false;
         _isValid = false;
         errorText = 'Invalid or expired promo code.';
         _appliedCode = '';
+        showErrorSnackBar(context, 'Invalid or expired promo code.');
       }
     });
   }

@@ -18,6 +18,7 @@ class UserProfile {
   final bool mobileVerified;
   final bool emailVerified;
   final String? howYouKnow;
+  final bool showPartnerReferralSection;
 
   UserProfile({
     required this.userId,
@@ -39,6 +40,7 @@ class UserProfile {
     required this.mobileVerified,
     this.emailVerified = false,
     this.howYouKnow,
+    this.showPartnerReferralSection = false,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,8 @@ class UserProfile {
       mobileVerified: json['is_mobile_verified'] ?? false,
       emailVerified: json['is_email_verified'] ?? false,
       howYouKnow: json['referral_source'] ?? '',
+      showPartnerReferralSection:
+          json['show_partner_referral_section'] == true,
     );
   }
 }

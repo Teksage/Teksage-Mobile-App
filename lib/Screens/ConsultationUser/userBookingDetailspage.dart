@@ -1,11 +1,14 @@
 import 'package:astro_prompt/Components/Common/dashedContianer.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Components/Consultation-User/timeConversion.dart';
+import 'package:astro_prompt/Model/AstrologerUserConsult/coupon_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/userBookingSummary.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/userAstrologer.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerReferralService.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customLoader.dart';
@@ -73,6 +76,10 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
   late double originalSgst = 0;
   late double originalTotalAmount = 0;
   double fee = 0.0;
+  double discountAmount = 0.0;
+  double displayPlanFee = 0.0;
+  bool referralLocked = false;
+  CouponModel? referralPricing;
   bool isLoading = false;
 
   String convertDateFormat(String dateStr) {
@@ -104,7 +111,9 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
     originalCgst = cgst;
     originalSgst = sgst;
     originalTotalAmount = totalAmount;
+    displayPlanFee = fee;
     fetchProfileData();
+    _loadPartnerDiscount();
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -136,6 +145,7 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
       originalCgst = cgst;
       originalSgst = sgst;
       originalTotalAmount = totalAmount;
+      displayPlanFee = fee;
 
       setState(() {
         mobileNumber = profileData.mobileNumber;
@@ -146,9 +156,43 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
         rasi = profileData.rashi;
         nakshatram = profileData.nakshatra;
       });
+
+      final profilePct = profileData.partnerDiscount?.consultPctForCheckout() ?? 0;
+      if (profilePct > 0 && !referralLocked) {
+        _applyPartnerPct(profilePct);
+      }
     } else {
       print("Profile data is null. Unable to update UI.");
     }
+  }
+
+  Future<void> _loadPartnerDiscount() async {
+    try {
+      final discount = await PartnerReferralService.fetchMyDiscount();
+      final pct = discount.consultPctForCheckout();
+      if (pct > 0 && mounted) {
+        _applyPartnerPct(pct);
+      }
+    } catch (_) {}
+  }
+
+  void _applyPartnerPct(double pct) {
+    final pricing = partnerPricingFromFee(
+      fee: widget.consultingFee,
+      currency: widget.currency,
+      partnerPct: pct,
+    );
+    setState(() {
+      referralLocked = true;
+      referralPricing = pricing;
+      discountAmount = pricing.discount;
+      displayPlanFee = pricing.planPrice;
+      fee = pricing.discountedPrice;
+      cgst = pricing.cgstAmount;
+      sgst = pricing.sgstAmount;
+      totalAmount = pricing.finalPrice;
+      couponId = '';
+    });
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -598,15 +642,29 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
                       containerBorderColor: blackColor,
                       couponType: 'consultation',
                       amount: widget.consultingFee,
+                      lockedCode:
+                          referralLocked ? kPartnerCheckoutCode : null,
+                      lockedPricing: referralPricing,
+                      isReferralLock: referralLocked,
                       onCouponApplied: (amount) {
                         setState(() {
                           if (amount == null) {
+                            if (referralLocked) return;
                             fee = originalConsultingFee;
                             cgst = originalCgst;
                             sgst = originalSgst;
                             totalAmount = originalTotalAmount;
+                            discountAmount = 0;
+                            displayPlanFee = originalConsultingFee;
+                            couponId = '';
                           } else {
-                            couponId = amount.couponId.toString();
+                            couponId = amount.couponId > 0
+                                ? amount.couponId.toString()
+                                : '';
+                            discountAmount = amount.discount;
+                            displayPlanFee = amount.planPrice > 0
+                                ? amount.planPrice
+                                : originalConsultingFee;
                             fee = amount.discountedPrice;
                             cgst = amount.cgstAmount;
                             sgst = amount.sgstAmount;
@@ -637,7 +695,7 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
                               height: 1.0),
                         ),
                         Text(
-                          '${widget.currency == 'INR' ? '₹' : '\$'} ${fee.toStringAsFixed(2)}/-',
+                          '${widget.currency == 'INR' ? '₹' : '\$'} ${displayPlanFee.toStringAsFixed(2)}/-',
                           style: TextStyle(
                               fontFamily: AppFont.get(FontType.medium),
                               fontSize: MyUtility(context).fontSize14,
@@ -646,6 +704,31 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
                         )
                       ],
                     ),
+                    if (discountAmount > 0) ...[
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            (referralLocked ? 'Referral discount' : 'Discount')
+                                .tr,
+                            style: TextStyle(
+                                fontFamily: AppFont.get(FontType.medium),
+                                fontSize: MyUtility(context).fontSize14,
+                                color: blackColor.withValues(alpha: 0.8),
+                                height: 1.0),
+                          ),
+                          Text(
+                            '${widget.currency == 'INR' ? '₹' : '\$'} ${discountAmount.toStringAsFixed(2)}/-',
+                            style: TextStyle(
+                                fontFamily: AppFont.get(FontType.medium),
+                                fontSize: MyUtility(context).fontSize14,
+                                color: blackColor.withValues(alpha: 0.8),
+                                height: 1.0),
+                          )
+                        ],
+                      ),
+                    ],
                     SizedBox(
                       height: 8,
                     ),

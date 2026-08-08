@@ -664,7 +664,7 @@ class _HomePageState extends State<HomePage>
                     ),
                     if (tokenExist) const PartnerDiscountBanner(),
                     SizedBox(
-                      height: util.responsiveHeight(0.0296),
+                      height: util.responsiveHeight(0.0124),
                     ),
                     //Predictions
                     Row(

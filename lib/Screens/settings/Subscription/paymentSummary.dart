@@ -10,6 +10,8 @@ import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/subscription_home_page.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerReferralService.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Services/SubscriptionService/subscriptionService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -73,6 +75,8 @@ class _SubscriptionPaymentSummaryPageState
   String email = '';
   String mobileNumber = '';
   late String payCurrency;
+  bool referralLocked = false;
+  CouponModel? referralPricing;
 
   @override
   void initState() {
@@ -118,6 +122,7 @@ class _SubscriptionPaymentSummaryPageState
       }
     }
     fetchProfileData();
+    _loadPartnerDiscount();
   }
 
   void _initializeRazorpay() {
@@ -141,9 +146,46 @@ class _SubscriptionPaymentSummaryPageState
         mobileNumber = profileData.mobileNumber;
         email = profileData.email;
       });
+      final pct =
+          profileData.partnerDiscount?.yearlyPctForCheckout(widget.premiumPlan.planId) ??
+              0;
+      if (pct > 0 && !referralLocked) {
+        _applyPartnerYearlyPct(pct);
+      }
     } else {
       print("Profile data is null. Unable to update UI.");
     }
+  }
+
+  Future<void> _loadPartnerDiscount() async {
+    try {
+      final discount = await PartnerReferralService.fetchMyDiscount();
+      final pct = discount.yearlyPctForCheckout(widget.premiumPlan.planId);
+      if (pct > 0 && mounted) {
+        _applyPartnerYearlyPct(pct);
+      }
+    } catch (_) {}
+  }
+
+  void _applyPartnerYearlyPct(double pct) {
+    final pricing = partnerPricingFromFee(
+      fee: originalPlanCost,
+      currency: payCurrency,
+      partnerPct: pct,
+    );
+    setState(() {
+      referralLocked = true;
+      referralPricing = pricing;
+      planCost = pricing.planPrice;
+      discountPrice = pricing.discount;
+      cgst = pricing.cgstAmount;
+      cgstPercentage = pricing.cgstPercentage;
+      sgst = pricing.sgstAmount;
+      sgstPercentage = pricing.sgstPercentage;
+      localTotalCost = pricing.finalPrice;
+      foreignTotalCost = pricing.finalPrice;
+      couponId = '';
+    });
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -388,7 +430,10 @@ class _SubscriptionPaymentSummaryPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Discount'.tr,
+                                (referralLocked
+                                        ? 'Referral discount'
+                                        : 'Discount')
+                                    .tr,
                                 style: TextStyle(
                                     fontFamily: AppFont.get(FontType.medium),
                                     fontSize: MyUtility(context).fontSize16,
@@ -488,11 +533,16 @@ class _SubscriptionPaymentSummaryPageState
                             amount: isINR
                                 ? widget.premiumPlan.localPlanPrice
                                 : widget.premiumPlan.foreignPlanPrice,
+                            lockedCode:
+                                referralLocked ? kPartnerCheckoutCode : null,
+                            lockedPricing: referralPricing,
+                            isReferralLock: referralLocked,
                             onCouponApplied: (amount) {
                               print(
                                   'AmountPromo: ${amount?.planPrice} $originalPlanCost');
                               setState(() {
                                 if (amount == null) {
+                                  if (referralLocked) return;
                                   planCost = originalPlanCost;
                                   cgst = originalCGst;
                                   discountPrice = 0.0;
@@ -501,6 +551,7 @@ class _SubscriptionPaymentSummaryPageState
                                   sgstPercentage = originalSGstPercentage;
                                   localTotalCost = originalLocalTotalCost;
                                   foreignTotalCost = originalForeignTotalCost;
+                                  couponId = '';
                                 } else {
                                   var discount = double.parse(
                                       (amount.planPrice -
@@ -514,7 +565,9 @@ class _SubscriptionPaymentSummaryPageState
                                   sgstPercentage = amount.sgstPercentage;
                                   localTotalCost = amount.finalPrice;
                                   foreignTotalCost = amount.finalPrice;
-                                  couponId = amount.couponId.toString();
+                                  couponId = amount.couponId > 0
+                                      ? amount.couponId.toString()
+                                      : '';
                                 }
                               });
                             },

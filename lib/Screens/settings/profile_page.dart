@@ -1238,6 +1238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       show: showPartnerReferralSection,
                       onApplied: () {
                         setState(() => showPartnerReferralSection = false);
+                        fetchProfileData();
                       },
                     ),
 

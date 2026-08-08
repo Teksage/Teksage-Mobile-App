@@ -684,8 +684,12 @@ class _ProfilePageState extends State<ProfilePage> {
         preferredLocation.text = extractCityName(profileData.preferredLocation);
         preferredPlaceFullLocation = profileData.preferredLocation;
       }
-      selectedRasi.text = profileData.rashi;
-      selectedNakshatra.text = profileData.nakshatra;
+      if (!skipIfFilled || selectedRasi.text.isEmpty) {
+        selectedRasi.text = profileData.rashi;
+      }
+      if (!skipIfFilled || selectedNakshatra.text.isEmpty) {
+        selectedNakshatra.text = profileData.nakshatra;
+      }
       showPartnerReferralSection = profileData.showPartnerReferralSection;
     });
   }

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/subscription_model.dart';
@@ -7,8 +6,12 @@ import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/paymentSummary.dart';
 import 'package:astro_prompt/Screens/settings/settings_page.dart';
 import 'package:astro_prompt/Services/Astrologer-user/userAstrologer.dart';
+import 'package:astro_prompt/Services/ProfileService/profileService.dart';
+import 'package:astro_prompt/Services/SubscriptionService/subscriptionService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
+import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
+import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/textConfig.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +75,11 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
   int selectedIndex = 0;
   String tenureValue = '';
   String tenureUnit = '';
+  Subscription? _subscriptionOverride;
+  bool _cancelBusy = false;
+
+  Subscription get _subscription =>
+      _subscriptionOverride ?? widget.subscriptionData;
 
   @override
   void initState() {
@@ -85,8 +93,8 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
     final tUnit = widget.planData.tenureCount[0].toUpperCase() +
         widget.planData.tenureCount.toString().substring(1);
     final startDate =
-        DateTime.parse(widget.subscriptionData.subscriptionStartDate);
-    final endDate = DateTime.parse(widget.subscriptionData.subscriptionEndDate);
+        DateTime.parse(_subscription.subscriptionStartDate);
+    final endDate = DateTime.parse(_subscription.subscriptionEndDate);
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -138,7 +146,7 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
     }
     setState(() {
       allPlans = currentPlans
-          .where((plan) => plan.planId != widget.subscriptionData.planId)
+          .where((plan) => plan.planId != _subscription.planId)
           .toList();
       final otherPlanPrices = allPlans.map((plan) => widget.currency == 'INR'
           ? plan.localPlanPrice
@@ -161,22 +169,238 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
     });
   }
 
+  String _formatDateLabel(String? iso) {
+    if (iso == null || iso.isEmpty) return '';
+    final date = DateTime.tryParse(iso);
+    if (date == null) return '';
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  bool _isAutoPayActive() {
+    return _subscription.isAutoPay == true &&
+        (_subscription.autoPayStatus ?? '').toLowerCase() == 'active';
+  }
+
+  Future<void> _refreshSubscriptionFromProfile() async {
+    final profile = await ProfileService().fetchUserProfile();
+    if (profile?.subscription != null) {
+      setState(() {
+        _subscriptionOverride = profile!.subscription!;
+      });
+      getPendingDays();
+    }
+  }
+
+  static const List<String> _cancelReasons = [
+    'Too expensive',
+    'Not using it enough',
+    "Didn't find it useful",
+    'Technical issues',
+    'Switching to another service',
+  ];
+  static const String _otherReason = 'Other';
+
+  Future<void> _onCancelAutoPayTap() async {
+    if (_cancelBusy || !_isAutoPayActive()) return;
+    final otherController = TextEditingController();
+    String? selected;
+    String? reasonError;
+
+    final selectedReason = await showDialog<String>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text(
+            'Cancel auto-renew'.tr,
+            style: TextStyle(
+              fontFamily: AppFont.get(FontType.bold),
+              fontSize: MyUtility(context).fontSize18,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Stop automatic renewals? Your premium access will continue until the current period ends.'
+                      .tr,
+                  style: TextStyle(
+                    fontFamily: AppFont.get(FontType.medium),
+                    fontSize: MyUtility(context).fontSize14,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Reason for cancellation'.tr,
+                  style: TextStyle(
+                    fontFamily: AppFont.get(FontType.semiBold),
+                    fontSize: MyUtility(context).fontSize14,
+                  ),
+                ),
+                ..._cancelReasons.map(
+                  (reason) => RadioListTile<String>(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: mainColor,
+                    fillColor: WidgetStateProperty.all(mainColor),
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    title: Text(reason.tr),
+                    value: reason,
+                    groupValue: selected,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selected = value;
+                        reasonError = null;
+                        if (value != _otherReason) otherController.clear();
+                      });
+                    },
+                  ),
+                ),
+                RadioListTile<String>(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  activeColor: mainColor,
+                  fillColor: WidgetStateProperty.all(mainColor),
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  title: Text(_otherReason.tr),
+                  value: _otherReason,
+                  groupValue: selected,
+                  onChanged: (value) {
+                    setDialogState(() {
+                      selected = value;
+                      reasonError = null;
+                    });
+                  },
+                ),
+                if (selected == _otherReason)
+                  TextField(
+                    controller: otherController,
+                    maxLines: 3,
+                    maxLength: 500,
+                    decoration: InputDecoration(
+                      hintText: 'Tell us why you are cancelling auto-renew'.tr,
+                      errorText: reasonError,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                if (selected != _otherReason && reasonError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      reasonError!,
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                'Keep auto-renew'.tr,
+                style: TextStyle(fontFamily: AppFont.get(FontType.medium)),
+              ),
+            ),
+            TextButton(
+              onPressed: selected == null
+                  ? null
+                  : () {
+                      if (selected == _otherReason &&
+                          otherController.text.trim().isEmpty) {
+                        setDialogState(() {
+                          reasonError = 'Please enter a reason for Other.'.tr;
+                        });
+                        return;
+                      }
+                      final reason = selected == _otherReason
+                          ? '$_otherReason: ${otherController.text.trim()}'
+                          : selected;
+                      Navigator.pop(ctx, reason);
+                    },
+              child: Text(
+                'Cancel auto-renew'.tr,
+                style: TextStyle(
+                  fontFamily: AppFont.get(FontType.semiBold),
+                  color: selected == null ? null : mainColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    otherController.dispose();
+
+    if (selectedReason == null || selectedReason.trim().isEmpty) return;
+    if (!mounted) return;
+
+    setState(() => _cancelBusy = true);
+    CustomLoader.show(context, loaderColor: mainColor);
+    final result = await SubscriptionService().cancelAutoPaySubscription(
+      reason: selectedReason,
+    );
+    if (!mounted) return;
+    CustomLoader.hide();
+    setState(() => _cancelBusy = false);
+
+    if (result != null && result['status'] == 'success') {
+      await _refreshSubscriptionFromProfile();
+      if (!mounted) return;
+      final accessTill = _formatDateLabel(
+        result['access_till']?.toString() ?? _subscription.subscriptionEndDate,
+      );
+      final message = accessTill.isNotEmpty
+          ? 'Your premium access will continue until $accessTill.'
+          : 'Auto-renew cancelled.'.tr;
+      showLoginSuccessSnackBar(context, message);
+    } else {
+      showErrorSnackBar(
+        context,
+        'Could not cancel auto-renew. Please try again.'.tr,
+      );
+    }
+  }
+
+  String _buildPlanDurationLabel() {
+    final unit = tenureUnit.toLowerCase();
+    if (unit == 'month' || unit == 'months') {
+      final monthKey = tenureValue == '1' ? 'month' : 'months';
+      return '$tenureValue ${monthKey.tr}';
+    }
+    return '$tenureValue ${tenureUnit.tr} ${'Plan'.tr}';
+  }
+
   String _getRenewalText() {
     print('status,${widget.planData.planId}');
     final isMonthlyPlan =
-        (widget.subscriptionData.autoPayStatus != "cancelled" &&
-                widget.subscriptionData.autoPayStatus != "halted") &&
-            widget.subscriptionData.isAutoPay != null &&
+        (_subscription.autoPayStatus != "cancelled" &&
+                _subscription.autoPayStatus != "halted") &&
+            _subscription.isAutoPay != null &&
             widget.planData.planId == 1;
 
     if (isMonthlyPlan) {
-      if (widget.subscriptionData.subscriptionEndDate == null ||
-          widget.subscriptionData.subscriptionEndDate.isEmpty) {
+      if (_subscription.subscriptionEndDate.isEmpty) {
         return '';
       }
 
       final endDate =
-          DateTime.tryParse(widget.subscriptionData.subscriptionEndDate);
+          DateTime.tryParse(_subscription.subscriptionEndDate);
 
       if (endDate == null) return '';
 
@@ -235,7 +459,7 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                 ),
                 leading: IconButton(
                   onPressed: () {
-                    final status = widget.subscriptionData.planStatus
+                    final status = _subscription.planStatus
                         .toString()
                         .toLowerCase()
                         .trim();
@@ -309,7 +533,7 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                                         height: util.height10,
                                       ),
                                       Text(
-                                        '$tenureValue ${tenureUnit == 'Months' || tenureUnit == 'months' || tenureUnit == 'month' || tenureUnit == 'Month' ? "month_plan".tr : tenureUnit.tr} ${'Plan'.tr}',
+                                        _buildPlanDurationLabel(),
                                         style: TextStyle(
                                             fontFamily:
                                                 AppFont.get(FontType.medium),
@@ -330,7 +554,6 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                                         barRadius: Radius.circular(15),
                                         backgroundColor:
                                             whiteColor.withValues(alpha: 0.12),
-                                        // progressColor: convertPercentage > 0.7 ? errorColor : whiteColor,
                                         progressColor: convertPercentage < 0.1
                                             ? Colors.red
                                             : whiteColor,
@@ -344,8 +567,6 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                                         style: TextStyle(
                                             fontFamily: 'FonrMedium',
                                             fontSize: util.fontSize10,
-                                            // height: 1.0,
-
                                             color: whiteColor),
                                       ),
                                     ],
@@ -353,6 +574,79 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                                 ),
                               ],
                             ),
+                            if (_isAutoPayActive()) ...[
+                              const SizedBox(height: 16),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 14),
+                                decoration: BoxDecoration(
+                                  color: whiteColor.withValues(alpha: 0.05),
+                                  border: Border.all(
+                                    color: whiteColor.withValues(alpha: 0.15),
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Auto-renewal is on'.tr,
+                                      style: TextStyle(
+                                        fontFamily:
+                                            AppFont.get(FontType.semiBold),
+                                        fontSize: util.fontSize14,
+                                        color: whiteColor,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    if (_subscription
+                                        .subscriptionEndDate.isNotEmpty) ...[
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '${'Auto Renews on'.tr}\n${_formatDateLabel(_subscription.subscriptionEndDate)}',
+                                        style: TextStyle(
+                                          fontFamily:
+                                              AppFont.get(FontType.medium),
+                                          fontSize: util.fontSize12,
+                                          color:
+                                              whiteColor.withValues(alpha: 0.6),
+                                          height: 1.3,
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 12),
+                                    GestureDetector(
+                                      onTap:
+                                          _cancelBusy ? null : _onCancelAutoPayTap,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                whiteColor.withValues(alpha: 0.3),
+                                          ),
+                                          borderRadius: BorderRadius.circular(24),
+                                        ),
+                                        child: Text(
+                                          'Cancel auto-renew'.tr,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily:
+                                                AppFont.get(FontType.semiBold),
+                                            fontSize: util.fontSize14,
+                                            color: whiteColor,
+                                            height: 1.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                             SizedBox(
                               height: util.height20,
                             ),

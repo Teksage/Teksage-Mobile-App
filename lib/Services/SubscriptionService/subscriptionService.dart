@@ -94,4 +94,26 @@ class SubscriptionService {
       return null;
     }
   }
+
+  /// Cancel Razorpay auto-renew — access continues until current period ends.
+  Future<Map<String, dynamic>?> cancelAutoPaySubscription(
+      {required String reason}) async {
+    try {
+      final response = await APIRequest.postRequest(
+        ApiEndpoint.cancelAutoPay,
+        {'reason': reason.trim()},
+      );
+      print('Cancel auto-pay: ${response.body} ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data is Map<String, dynamic> ? data : null;
+      }
+      print(
+          'Error cancel auto-pay: ${response.statusCode} - ${response.reasonPhrase}');
+      return null;
+    } catch (e) {
+      print('Exception cancel auto-pay: $e');
+      return null;
+    }
+  }
 }

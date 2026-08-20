@@ -41,3 +41,36 @@ class Horoscope {
     );
   }
 }
+
+class HoroscopeDivisionalChart {
+  final String id;
+  final String label;
+  final String html;
+
+  HoroscopeDivisionalChart({
+    required this.id,
+    required this.label,
+    required this.html,
+  });
+
+  factory HoroscopeDivisionalChart.fromJson(Map<String, dynamic> json) {
+    return HoroscopeDivisionalChart(
+      id: json['id']?.toString() ?? '',
+      label: json['label']?.toString() ?? '',
+      html: json['html']?.toString() ?? '',
+    );
+  }
+}
+
+List<HoroscopeDivisionalChart> fallbackDivisionalCharts(Horoscope data) {
+  return [
+    if (data.rashiChart.trim().isNotEmpty)
+      HoroscopeDivisionalChart(id: 'd1', label: 'Rasi', html: data.rashiChart),
+    if (data.navamsaChart.trim().isNotEmpty)
+      HoroscopeDivisionalChart(
+        id: 'd9',
+        label: 'Navamsa',
+        html: data.navamsaChart,
+      ),
+  ];
+}

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:astro_prompt/Components/Chat/successDialog.dart';
 import 'package:astro_prompt/Components/Dashboard/LoginDialog.dart';
 import 'package:astro_prompt/Components/Horoscope/comingSoon.dart';
-import 'package:astro_prompt/Components/Horoscope/horoscopeChart.dart';
+import 'package:astro_prompt/Components/Horoscope/divisionalChartPicker.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/horoscope_model.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
@@ -894,22 +894,8 @@ class _HoroscopePageState extends State<HoroscopePage> {
                                             );
                                           },
                                           child: selectedIndex == 0
-                                              ? Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: util.height20,
-                                                    ),
-                                                    ChartWidget(
-                                                        htmlChart: snapshot
-                                                            .data!.rashiChart),
-                                                    SizedBox(
-                                                      height: util.height20,
-                                                    ),
-                                                    ChartWidget(
-                                                        htmlChart: snapshot
-                                                            .data!
-                                                            .navamsaChart),
-                                                  ],
+                                              ? DivisionalChartPicker(
+                                                  horoscope: snapshot.data!,
                                                 )
                                               : ComingSoonContainer(),
                                         ),

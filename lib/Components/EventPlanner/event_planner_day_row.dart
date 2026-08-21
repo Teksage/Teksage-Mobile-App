@@ -56,57 +56,22 @@ class EventPlannerDayRow extends StatelessWidget {
     return d.segments;
   }
 
-  Color _chipBg(bool suitable, String? rating) {
-    if (!suitable) return const Color(0xFFFCE8E8);
+  String _statusLabel(bool suitable, {String? rating}) {
+    if (!suitable) return '🔴 Not Suitable';
     final r = (rating ?? '').toLowerCase();
-    if (r.contains('average')) return const Color(0xFFFFF8DC);
-    if (r.contains('good') && !r.contains('very')) {
-      return const Color(0xFFFFF0E0);
-    }
-    return const Color(0xFFE8F8E6);
-  }
-
-  Color _chipFg(bool suitable, String? rating) {
-    if (!suitable) return const Color(0xFFB42318);
-    final r = (rating ?? '').toLowerCase();
-    if (r.contains('average')) return const Color(0xFFC9920A);
-    if (r.contains('good') && !r.contains('very')) {
-      return const Color(0xFFD35400);
-    }
-    return const Color(0xFF1B7A12);
-  }
-
-  Color _chipRing(bool suitable, String? rating) {
-    if (!suitable) return const Color(0xFFF5B5B0);
-    final r = (rating ?? '').toLowerCase();
-    if (r.contains('average')) return const Color(0xFFF0D060);
-    if (r.contains('good') && !r.contains('very')) {
-      return const Color(0xFFF5B07A);
-    }
-    return const Color(0xFF9AD492);
+    if (r.contains('average')) return '🟠 Average';
+    if (r.contains('good') && !r.contains('very')) return '🟡 Good';
+    return '🟢 Very Good';
   }
 
   Widget _statusChip(bool suitable, {String? rating}) {
-    final label = suitable
-        ? (rating != null && rating.isNotEmpty
-            ? '${'Suitable'.tr} – ${rating.tr}'
-            : 'Suitable'.tr)
-        : 'Not suitable'.tr;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: _chipBg(suitable, rating),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _chipRing(suitable, rating)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontFamily: AppFont.get(FontType.semiBold),
-          color: _chipFg(suitable, rating),
-          height: 1.2,
-        ),
+    return Text(
+      _statusLabel(suitable, rating: rating),
+      style: TextStyle(
+        fontSize: 11,
+        fontFamily: AppFont.get(FontType.semiBold),
+        color: blackColor,
+        height: 1.25,
       ),
     );
   }

@@ -53,6 +53,7 @@ class _AskAstrologerConfirmationPageState
       final event = _event?.trim() ?? '';
       final startDate = _startDate?.trim() ?? '';
       final location = _location?.trim() ?? '';
+      // Keep home under Event Planner so system/back can leave the feature.
       Get.offAll(() => const BottomNavigationScreen());
       if (event.isNotEmpty && startDate.isNotEmpty && location.isNotEmpty) {
         Get.to(() => EventPlannerResultsPage(
@@ -64,7 +65,10 @@ class _AskAstrologerConfirmationPageState
         Get.to(() => const EventPlannerFormPage());
       }
     } else {
-      Get.offAll(() => AIChatScreen());
+      // Keep BottomNav under chat so the chat back arrow can return home.
+      // (Get.offAll(AIChatScreen) alone leaves no route for Get.back().)
+      Get.offAll(() => const BottomNavigationScreen());
+      Get.to(() => AIChatScreen());
     }
   }
 

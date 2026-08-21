@@ -4,6 +4,7 @@ import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
 import 'package:astro_prompt/Screens/auth/login_page.dart';
 import 'package:astro_prompt/Screens/intro/splashScreen.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerRefStorage.dart';
 import 'package:astro_prompt/Services/NotificationService/notificationService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customLoader.dart';
@@ -20,6 +21,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Capture ?ref= if the app was opened via a deep link / web URL.
+  await PartnerRefStorage.captureFromUri(Uri.base);
   if (Platform.isAndroid) {
     await NotificationService.init();
   }

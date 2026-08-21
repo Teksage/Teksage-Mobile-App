@@ -8,15 +8,21 @@ import 'package:astro_prompt/Screens/EventPlanner/event_planner_form_page.dart';
 import 'package:astro_prompt/Services/MuhurthaService/muhurthaService.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
+import 'package:astro_prompt/Utility/imageConstant.dart';
+import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:astro_prompt/config/LocallySavedData/askAstrologerFlow.dart';
 import 'package:astro_prompt/config/LocallySavedData/eventPlannerCache.dart';
 import 'package:astro_prompt/config/LocallySavedData/userId.dart';
+import 'package:astro_prompt/config/event_planner_config.dart';
+import 'package:astro_prompt/config/event_planner_share_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:screenshot/screenshot.dart';
 
 class EventPlannerResultsPage extends StatefulWidget {
   final String event;
@@ -40,6 +46,8 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
   bool _loading = true;
   String? _error;
   int _retryToken = 0;
+  bool _sharing = false;
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   static const _mintBg = Color(0xffECF8EB);
 
@@ -107,10 +115,13 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
           _loading = false;
         });
       }
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
+        final raw = e is Exception
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'Could not load Event Planner';
         setState(() {
-          _error = 'Could not load Event Planner'.tr;
+          _error = raw.tr;
           _loading = false;
         });
       }
@@ -145,6 +156,27 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
           userQuestion: question,
           isEventPlanner: true,
         ));
+  }
+
+  Future<void> _handleShare() async {
+    if (_sharing || _data?.result == null) return;
+    final url = EventPlannerConfig.buildResultsShareUrl(
+      event: widget.event,
+      startDate: widget.startDate,
+      location: widget.location,
+    );
+    setState(() => _sharing = true);
+    try {
+      await EventPlannerShareImage.share(
+        controller: _screenshotController,
+        pageUrl: url,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      showErrorSnackBar(context, 'Could not share. Please try again.'.tr);
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
   }
 
   @override
@@ -278,80 +310,119 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
               child: Column(
                 children: [
-                  // Summary card
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: _cardDecoration(),
-                    child: Column(
-                      children: [
-                        Text(
-                          '${'Event Planner results'.tr} — ${result.event.tr}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: AppFont.get(FontType.bold),
-                            fontSize: util.fontSize16,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            _chip(_formatRange(
-                                result.startDate, result.endDate)),
-                            _chip(result.location),
-                          ],
-                        ),
-                        if (!hasSuitable)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              'No auspicious days found. Try another start date.'
-                                  .tr,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: blackColor.withValues(alpha: 0.6)),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Day table
-                  Container(
-                    decoration: _cardDecoration(),
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        Container(
-                          color: mainColor.withValues(alpha: 0.06),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          child: Row(
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Screenshot(
+                        controller: _screenshotController,
+                        child: ColoredBox(
+                          color: _mintBg,
+                          child: Column(
                             children: [
-                              Expanded(
-                                  flex: 3,
-                                  child: Text('DATE'.tr,
-                                      style: _colHeadStyle())),
-                              Expanded(
-                                  flex: 3,
-                                  child: Text('STATUS'.tr,
-                                      style: _colHeadStyle())),
-                              Expanded(
-                                  flex: 4,
-                                  child: Text('DETAILS'.tr,
-                                      textAlign: TextAlign.right,
-                                      style: _colHeadStyle())),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.fromLTRB(16, 16, 48, 16),
+                                decoration: _cardDecoration(),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '${'Event Planner results'.tr} — ${result.event.tr}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: AppFont.get(FontType.bold),
+                                        fontSize: util.fontSize16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: [
+                                        _chip(_formatRange(
+                                            result.startDate, result.endDate)),
+                                        _chip(result.location),
+                                      ],
+                                    ),
+                                    if (!hasSuitable)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          'No auspicious days found. Try another start date.'
+                                              .tr,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: blackColor.withValues(
+                                                  alpha: 0.6)),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                decoration: _cardDecoration(),
+                                clipBehavior: Clip.antiAlias,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      color: mainColor.withValues(alpha: 0.06),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text('DATE'.tr,
+                                                  style: _colHeadStyle())),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text('STATUS'.tr,
+                                                  style: _colHeadStyle())),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text('DETAILS'.tr,
+                                                  textAlign: TextAlign.right,
+                                                  style: _colHeadStyle())),
+                                        ],
+                                      ),
+                                    ),
+                                    ...rows.map((d) => EventPlannerDayRow(day: d)),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        ...rows.map((d) => EventPlannerDayRow(day: d)),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: IconButton(
+                            onPressed: _sharing ? null : _handleShare,
+                            tooltip: 'Share Event Planner result'.tr,
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                            constraints: const BoxConstraints(
+                              minWidth: 40,
+                              minHeight: 40,
+                            ),
+                            icon: SvgPicture.asset(
+                              share,
+                              width: 22,
+                              height: 22,
+                              colorFilter: ColorFilter.mode(
+                                blackColor.withValues(alpha: 0.7),
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
 

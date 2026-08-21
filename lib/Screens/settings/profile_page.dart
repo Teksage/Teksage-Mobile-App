@@ -7,6 +7,7 @@ import 'package:astro_prompt/Components/Profile/unsavedDialog.dart';
 import 'package:astro_prompt/Components/Profile/customDatePicker.dart';
 import 'package:astro_prompt/Components/Profile/customTimePicker.dart';
 import 'package:astro_prompt/Components/Settings/profileComponent.dart';
+import 'package:astro_prompt/Components/Settings/partnerReferralSection.dart';
 import 'package:astro_prompt/Model/country_model.dart';
 import 'package:astro_prompt/Model/location_selection_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
@@ -106,6 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool mobileError = false;
   bool chatLanguageError = false;
   bool howYouKnowError = false;
+  bool showPartnerReferralSection = false;
   bool dobError = false;
   bool tobError = false;
   bool pobError = false;
@@ -682,8 +684,13 @@ class _ProfilePageState extends State<ProfilePage> {
         preferredLocation.text = extractCityName(profileData.preferredLocation);
         preferredPlaceFullLocation = profileData.preferredLocation;
       }
-      selectedRasi.text = profileData.rashi;
-      selectedNakshatra.text = profileData.nakshatra;
+      if (!skipIfFilled || selectedRasi.text.isEmpty) {
+        selectedRasi.text = profileData.rashi;
+      }
+      if (!skipIfFilled || selectedNakshatra.text.isEmpty) {
+        selectedNakshatra.text = profileData.nakshatra;
+      }
+      showPartnerReferralSection = profileData.showPartnerReferralSection;
     });
   }
 
@@ -1230,6 +1237,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             ],
                           )
                         : SizedBox.shrink(),
+
+                    PartnerReferralSection(
+                      show: showPartnerReferralSection,
+                      onApplied: () {
+                        setState(() => showPartnerReferralSection = false);
+                        fetchProfileData();
+                      },
+                    ),
 
                     //Fill all the fields error
                     SizedBox(

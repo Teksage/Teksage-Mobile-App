@@ -1,3 +1,5 @@
+import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
+
 class UserProfile {
   final int userId;
   final String firstName;
@@ -18,6 +20,8 @@ class UserProfile {
   final bool mobileVerified;
   final bool emailVerified;
   final String? howYouKnow;
+  final bool showPartnerReferralSection;
+  final PartnerDiscountState? partnerDiscount;
 
   UserProfile({
     required this.userId,
@@ -39,6 +43,8 @@ class UserProfile {
     required this.mobileVerified,
     this.emailVerified = false,
     this.howYouKnow,
+    this.showPartnerReferralSection = false,
+    this.partnerDiscount,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -68,6 +74,13 @@ class UserProfile {
       mobileVerified: json['is_mobile_verified'] ?? false,
       emailVerified: json['is_email_verified'] ?? false,
       howYouKnow: json['referral_source'] ?? '',
+      showPartnerReferralSection:
+          json['show_partner_referral_section'] == true,
+      partnerDiscount: json['partner_discount'] is Map
+          ? PartnerDiscountState.fromJson(
+              Map<String, dynamic>.from(json['partner_discount'] as Map),
+            )
+          : null,
     );
   }
 }

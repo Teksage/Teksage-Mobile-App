@@ -895,20 +895,23 @@ class _HoroscopePageState extends State<HoroscopePage> {
                                           },
                                           child: selectedIndex == 0
                                               ? Column(
+                                                  key: const ValueKey(
+                                                      'south_charts'),
                                                   children: [
                                                     SizedBox(
                                                       height: util.height20,
                                                     ),
                                                     ChartWidget(
-                                                        htmlChart: snapshot
-                                                            .data!.rashiChart),
+                                                      htmlChart: snapshot
+                                                          .data!.rashiChart,
+                                                    ),
                                                     SizedBox(
                                                       height: util.height20,
                                                     ),
                                                     ChartWidget(
-                                                        htmlChart: snapshot
-                                                            .data!
-                                                            .navamsaChart),
+                                                      htmlChart: snapshot
+                                                          .data!.navamsaChart,
+                                                    ),
                                                   ],
                                                 )
                                               : ComingSoonContainer(),

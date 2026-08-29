@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:astro_prompt/Services/Analytics/installAttributionService.dart';
 import 'package:astro_prompt/config/Helper/timezoneHelper.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:astro_prompt/config/LocallySavedData/appLanguage.dart';
@@ -276,6 +277,7 @@ class AuthService {
       // Save app language before clearing prefs so it persists across logout
       final String savedAppLang = await getAppLanguage();
 
+      await InstallAttributionService.instance.onLogout();
       await clearPrefs();
       await clearUserNamePrefs();
       await clearUserTypePrefs();
@@ -310,6 +312,7 @@ class AuthService {
       // Save app language before clearing prefs so it persists across logout
       final String savedAppLang = await getAppLanguage();
 
+      await InstallAttributionService.instance.onLogout();
       await clearPrefs();
       await clearUserNamePrefs();
       await clearUserTypePrefs();

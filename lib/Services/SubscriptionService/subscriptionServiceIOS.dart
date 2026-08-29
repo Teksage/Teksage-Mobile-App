@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/RefreshToken/autoRefreshToken.dart';
 import 'package:astro_prompt/config/api_endpoints.dart';
 import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
@@ -230,6 +231,22 @@ class SubscriptionIosService {
         final responseBody = json.decode(response.body);
         final apiMessage = responseBody['message'] ?? '';
         await savePremiumUser(true);
+        final amount = double.tryParse(
+                verificationJson['price']?.toString() ?? '') ??
+            0;
+        final currency =
+            verificationJson['currency']?.toString() ?? 'USD';
+        await FacebookAppEventsService.instance.logPurchase(
+          amount: amount,
+          currency: currency,
+          contentId: '4',
+          contentType: 'subscription',
+        );
+        await FacebookAppEventsService.instance.logSubscribe(
+          orderId: verificationJson['transactionId']?.toString(),
+          currency: currency,
+          price: amount,
+        );
         if (purchase.pendingCompletePurchase) {
           debugPrint('✅ Completing pending purchase...');
           _iap.completePurchase(purchase);

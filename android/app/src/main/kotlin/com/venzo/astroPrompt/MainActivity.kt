@@ -21,15 +21,40 @@ class MainActivity : FlutterActivity() {
     private val ALARM_CHANNEL = "com.venzo.astroPrompt/alarm"
     private val FILE_CHANNEL = "com.venzo.astroPrompt/filesaver"
     private val UPDATE_CHANNEL = "com.venzo.astroPrompt/update"
+    private val DEEPLINK_CHANNEL = "com.venzo.astroPrompt/deeplink"
+    private var initialLink: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Android 15+/16 edge-to-edge: content draws behind system bars.
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        initialLink = intent?.dataString
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val link = intent.dataString
+        if (link != null) {
+            initialLink = link
+            flutterEngine?.dartExecutor?.binaryMessenger?.let { messenger ->
+                MethodChannel(messenger, DEEPLINK_CHANNEL).invokeMethod("onDeepLink", link)
+            }
+        }
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // Deep link method
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEEPLINK_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == "getInitialLink") {
+                    result.success(initialLink)
+                } else {
+                    result.notImplemented()
+                }
+            }
 
         // Alarm method
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ALARM_CHANNEL)

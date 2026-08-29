@@ -4,6 +4,7 @@ import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
 import 'package:astro_prompt/Screens/auth/login_page.dart';
 import 'package:astro_prompt/Screens/intro/splashScreen.dart';
+import 'package:astro_prompt/Services/Analytics/installAttributionService.dart';
 import 'package:astro_prompt/Services/PartnerService/partnerRefStorage.dart';
 import 'package:astro_prompt/Services/NotificationService/notificationService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -21,8 +22,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // Capture ?ref= if the app was opened via a deep link / web URL.
-  await PartnerRefStorage.captureFromUri(Uri.base);
+  // Capture deep link params (?ref=, ?utm_source=facebook, etc.) and report install attribution
+  await InstallAttributionService.instance.initDeepLinkAndAttribution();
   if (Platform.isAndroid) {
     await NotificationService.init();
   }
@@ -157,7 +158,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             GetPage(name: '/splash', page: () => SplashScreen()),
             GetPage(name: '/home', page: () => BottomNavigationScreen()),
             GetPage(name: '/login', page: () => const LoginPage()),
+            GetPage(name: '/', page: () => SplashScreen()),
+            GetPage(name: '/app', page: () => SplashScreen()),
           ],
+          unknownRoute: GetPage(name: '/notfound', page: () => SplashScreen()),
           initialRoute: '/splash',
           routingCallback: (_) => AskAnswerReadyScheduler.notifyRouteChanged(),
           builder: (context, child) {

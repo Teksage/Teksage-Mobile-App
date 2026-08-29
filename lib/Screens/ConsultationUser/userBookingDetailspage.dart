@@ -5,6 +5,7 @@ import 'package:astro_prompt/Model/AstrologerUserConsult/coupon_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/userBookingSummary.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/userAstrologer.dart';
 import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
@@ -205,6 +206,13 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
       );
       if (!mounted) return;
       if (result != null && result.status == 'success') {
+        await FacebookAppEventsService.instance.logPurchase(
+          amount: totalAmount,
+          currency: widget.currency,
+          contentId: widget.astrologerId.toString(),
+          contentType: 'consultation',
+        );
+        await FacebookAppEventsService.instance.logSchedule();
         showSuccessSnackBar(context, 'Payment successful!');
         Get.to(() => UserConsultationSummary(
               bookingSummary: result,
@@ -894,6 +902,12 @@ class _UserBookingDetailsPageState extends State<UserBookingDetailsPage> {
                 ///Payment Process
                 if (response != null) {
                   try {
+                    await FacebookAppEventsService.instance.logInitiatedCheckout(
+                      contentId: widget.astrologerId.toString(),
+                      contentType: 'consultation',
+                      totalPrice: fee,
+                      currency: widget.currency == 'INR' ? 'INR' : 'USD',
+                    );
                     var options = {
                       'key': response.key,
                       'amount': response.amount,

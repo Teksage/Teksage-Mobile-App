@@ -4,6 +4,7 @@ import 'package:astro_prompt/Screens/Chat/chat.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/auth/change_email_mobile.dart';
 import 'package:astro_prompt/Screens/settings/profile_page.dart';
+import 'package:astro_prompt/Services/Analytics/installAttributionService.dart';
 import 'package:astro_prompt/Services/AuthService/authService.dart';
 import 'package:astro_prompt/Services/NotificationService/firebaseService.dart';
 import 'package:astro_prompt/Services/NotificationService/notificationService.dart';
@@ -270,6 +271,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
       if (result['userId'] != null) {
         await saveUserId(result['userId']);
+        await InstallAttributionService.instance.onLoginSuccess(
+          userId: result['userId'].toString(),
+        );
       }
       await saveUserName(userName);
       await saveLastName(lastName);

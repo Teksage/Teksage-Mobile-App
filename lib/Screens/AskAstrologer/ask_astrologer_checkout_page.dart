@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
 import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_whatsapp_consent_page.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -98,6 +99,12 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
     }
     pendingOrder = order;
     final profile = await ProfileService().fetchUserProfile();
+    await FacebookAppEventsService.instance.logInitiatedCheckout(
+      contentId: 'ask_astrologer',
+      contentType: 'ask_astrologer',
+      totalPrice: (order.amount / 100).toDouble(),
+      currency: order.currency,
+    );
     _razorpay.open({
       'key': order.key,
       'amount': order.amount,
@@ -124,6 +131,12 @@ class _AskAstrologerCheckoutPageState extends State<AskAstrologerCheckoutPage>
     );
     CustomLoader.hide();
     if (ok) {
+      await FacebookAppEventsService.instance.logPurchase(
+        amount: (pendingOrder!.amount / 100).toDouble(),
+        currency: pendingOrder!.currency,
+        contentId: 'ask_astrologer',
+        contentType: 'ask_astrologer',
+      );
       showSuccessSnackBar(context, 'Payment successful!'.tr);
       Get.off(() => AskAstrologerWhatsappConsentPage());
     } else {

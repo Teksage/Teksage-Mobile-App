@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1568379927830837</string>
+    <string name="facebook_client_token">e7f5538a8af219765585e9ecff862090</string>
+    <string name="fb_login_protocol_scheme">fb1568379927830837</string>
+    <string name="app_name">Teksage</string>
+</resources>

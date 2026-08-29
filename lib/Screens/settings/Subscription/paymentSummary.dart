@@ -9,6 +9,7 @@ import 'package:astro_prompt/Model/subscription_payment_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/subscription_home_page.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
 import 'package:astro_prompt/Services/PartnerService/partnerReferralService.dart';
@@ -215,6 +216,19 @@ class _SubscriptionPaymentSummaryPageState
 
     CustomLoader.hide();
     if (result != null && result.status == 'success') {
+      final payAmount = isINR ? localTotalCost : foreignTotalCost;
+      final payCurrency = isINR ? 'INR' : 'USD';
+      await FacebookAppEventsService.instance.logPurchase(
+        amount: payAmount,
+        currency: payCurrency,
+        contentId: widget.premiumPlan.planId.toString(),
+        contentType: 'subscription',
+      );
+      await FacebookAppEventsService.instance.logSubscribe(
+        orderId: response.orderId ?? response.paymentId,
+        currency: payCurrency,
+        price: payAmount,
+      );
       showLoginSuccessSnackBar(context, 'Payment successful!');
       await showDialog(
         context: context,
@@ -644,6 +658,13 @@ class _SubscriptionPaymentSummaryPageState
                                 // });
 
                                 if (response != null) {
+                                  await FacebookAppEventsService.instance
+                                      .logInitiatedCheckout(
+                                    contentId: planId.toString(),
+                                    contentType: 'subscription',
+                                    totalPrice: amount.toDouble(),
+                                    currency: currency,
+                                  );
                                   final prefill = <String, String>{
                                     'contact': mobileNumber,
                                   };
@@ -690,6 +711,13 @@ class _SubscriptionPaymentSummaryPageState
                                 // });
 
                                 if (response != null) {
+                                  await FacebookAppEventsService.instance
+                                      .logInitiatedCheckout(
+                                    contentId: planId.toString(),
+                                    contentType: 'subscription',
+                                    totalPrice: amount.toDouble(),
+                                    currency: currency,
+                                  );
                                   final prefill = <String, String>{
                                     'contact': mobileNumber,
                                   };

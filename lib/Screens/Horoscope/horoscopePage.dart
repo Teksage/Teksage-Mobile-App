@@ -917,12 +917,12 @@ class _HoroscopePageState extends State<HoroscopePage> {
                                                 )
                                               : ComingSoonContainer(),
                                         ),
+                                        SizedBox(height: 20),
+                                        const FullHoroscopeEntryCard(),
+                                        SizedBox(height: 100),
                                       ],
                                     );
                                   }),
-                              SizedBox(height: 20),
-                              const FullHoroscopeEntryCard(),
-                              SizedBox(height: 100),
                             ],
                           ),
                         ),

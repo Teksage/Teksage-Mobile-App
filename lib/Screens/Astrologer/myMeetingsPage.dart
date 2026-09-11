@@ -44,7 +44,7 @@ class _MyMeetingsPageState extends State<MyMeetingsPage> {
       fetched.sort((a, b) {
         final aTime = DateTime.parse(a.startTime);
         final bTime = DateTime.parse(b.startTime);
-        return aTime.compareTo(bTime);
+        return bTime.compareTo(aTime);
       });
       if (!mounted) return;
       setState(() {

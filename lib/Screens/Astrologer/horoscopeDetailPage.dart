@@ -3,19 +3,25 @@ import 'package:astro_prompt/Components/Horoscope/horoscopeChart.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astrologer_consult_event_model.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
+import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class HoroscopeDetailsPage extends StatefulWidget {
   final UserHoroscope horoscope;
   final String fullName;
+  final int? eventId;
   const HoroscopeDetailsPage(
-      {super.key, required this.horoscope, required this.fullName});
+      {super.key,
+      required this.horoscope,
+      required this.fullName,
+      this.eventId});
 
   @override
   State<HoroscopeDetailsPage> createState() => _HoroscopeDetailsPageState();
@@ -309,11 +315,103 @@ class _HoroscopeDetailsPageState extends State<HoroscopeDetailsPage> {
                   ChartWidget(htmlChart: widget.horoscope.navamsaChart),
                 ],
               ),
+              if (widget.eventId != null) ...[
+                SizedBox(height: util.height20),
+                _FullHoroscopeWebEntry(eventId: widget.eventId!),
+              ],
               SizedBox(
                 height: 50,
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Opens website Full Horoscope for this consultation (astrologer must be logged in on web).
+class _FullHoroscopeWebEntry extends StatelessWidget {
+  final int eventId;
+  const _FullHoroscopeWebEntry({required this.eventId});
+
+  static const _origin = 'https://www.teksage.app';
+
+  Future<void> _open(BuildContext context) async {
+    final uri = Uri.parse('$_origin/astrologer/meetings/$eventId/horoscope');
+    final ok = await canLaunchUrl(uri) &&
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok && context.mounted) {
+      showInfoSnackBar(context, 'Could not open Full Horoscope');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final util = MyUtility(context);
+    return GestureDetector(
+      onTap: () => _open(context),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: util.width20,
+          vertical: util.responsiveHeight(0.016),
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [eventPlannerBannerTop, eventPlannerBannerBottom],
+          ),
+          border: Border.all(color: eventPlannerBannerBorder),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: const BoxDecoration(
+                color: whiteColor,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.grid_view_rounded, size: 20, color: mainColor),
+            ),
+            SizedBox(width: util.width12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Full Horoscope'.tr,
+                    style: TextStyle(
+                      fontFamily: AppFont.get(FontType.semiBold),
+                      fontSize: util.fontSize14,
+                      color: blackColor,
+                    ),
+                  ),
+                  Text(
+                    'Dasa, Shadbala, Ashtavarga & more'.tr,
+                    style: TextStyle(
+                      fontFamily: AppFont.get(FontType.medium),
+                      fontSize: util.fontSize12,
+                      color: panchangHeading,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              'Open'.tr,
+              style: TextStyle(
+                fontFamily: AppFont.get(FontType.semiBold),
+                fontSize: util.fontSize12,
+                color: mainColor,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.arrow_forward, size: 16, color: mainColor),
+          ],
         ),
       ),
     );

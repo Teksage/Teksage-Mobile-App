@@ -393,7 +393,7 @@ class _SubscriptionPaymentSummaryPageState
                         SizedBox(
                           height: 20,
                         ),
-                        if (widget.premiumPlan.planId == 1)
+                        if (widget.premiumPlan.planId == 1) ...[
                           Text(
                             'Auto-renews every month'.tr,
                             textAlign: TextAlign.center,
@@ -403,6 +403,17 @@ class _SubscriptionPaymentSummaryPageState
                                 color: whiteColor,
                                 height: 1.0),
                           ),
+                          SizedBox(height: 8),
+                          Text(
+                            'You can cancel anytime through the app.'.tr,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: AppFont.get(FontType.medium),
+                                fontSize: util.fontSize12,
+                                color: whiteColor.withValues(alpha: 0.7),
+                                height: 1.3),
+                          ),
+                        ],
                         SizedBox(
                           height: 15,
                         ),

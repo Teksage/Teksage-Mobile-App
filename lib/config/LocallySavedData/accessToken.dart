@@ -25,6 +25,6 @@ Future<String> getRefreshToken() async {
 ///Clear Token
 Future<void> clearPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  // await prefs.clear();
   await prefs.remove("access_token");
+  await prefs.remove("refresh_token");
 }

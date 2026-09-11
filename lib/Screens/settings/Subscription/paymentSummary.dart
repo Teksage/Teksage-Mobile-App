@@ -33,10 +33,13 @@ import 'package:astro_prompt/config/Helper/profile_currency.dart';
 class SubscriptionPaymentSummaryPage extends StatefulWidget {
   final SubscriptionPlanModel premiumPlan;
   final String currency;
+  /// When false, monthly plan uses one-time payment instead of Razorpay subscription.
+  final bool enableAutoPay;
   const SubscriptionPaymentSummaryPage({
     super.key,
     required this.premiumPlan,
     required this.currency,
+    this.enableAutoPay = true,
   });
 
   @override
@@ -70,6 +73,7 @@ class _SubscriptionPaymentSummaryPageState
   late double originalLocalTotalCost;
   late double originalForeignTotalCost;
   bool isINR = false;
+  late bool enableAutoPay;
   String rupeeSymbol = '₹';
   String dollarSymbol = '\$';
   bool isLoading = false;
@@ -82,6 +86,7 @@ class _SubscriptionPaymentSummaryPageState
   @override
   void initState() {
     super.initState();
+    enableAutoPay = widget.enableAutoPay;
     payCurrency =
         widget.currency.trim().isNotEmpty ? widget.currency.trim() : 'INR';
     _applyPlanPricing();
@@ -394,24 +399,51 @@ class _SubscriptionPaymentSummaryPageState
                           height: 20,
                         ),
                         if (widget.premiumPlan.planId == 1) ...[
-                          Text(
-                            'Auto-renews every month'.tr,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'FontSemiBold',
-                                fontSize: util.fontSize14,
-                                color: whiteColor,
-                                height: 1.0),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: Checkbox(
+                                  activeColor: mainColor,
+                                  value: enableAutoPay,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      enableAutoPay = value ?? true;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'I agree to recurring payments'.tr,
+                                  style: TextStyle(
+                                    fontFamily: 'FontSemiBold',
+                                    fontSize: util.fontSize14,
+                                    color: whiteColor,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            'You can cancel anytime through the app.'.tr,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
+                          Padding(
+                            padding: const EdgeInsets.only(left: 32, top: 8),
+                            child: Text(
+                              'You can cancel anytime through the app.'.tr,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
                                 fontFamily: AppFont.get(FontType.medium),
                                 fontSize: util.fontSize12,
                                 color: whiteColor.withValues(alpha: 0.7),
-                                height: 1.3),
+                                height: 1.3,
+                              ),
+                            ),
                           ),
                         ],
                         SizedBox(
@@ -646,7 +678,7 @@ class _SubscriptionPaymentSummaryPageState
                             // print(
                             //     'durationUnit: ${widget.premiumPlan.durationUnit},${widget.premiumPlan.planId}');
                             try {
-                              if (isMonthlyPlan) {
+                              if (isMonthlyPlan && enableAutoPay) {
                                 // Auto-recurring subscription for 1-month plan
                                 var response = await subscriptionService
                                     .autoSubscriptionPaymentInitiate(

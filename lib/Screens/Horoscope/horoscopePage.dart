@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:astro_prompt/Components/Chat/successDialog.dart';
 import 'package:astro_prompt/Components/Dashboard/LoginDialog.dart';
 import 'package:astro_prompt/Components/Horoscope/comingSoon.dart';
+import 'package:astro_prompt/Components/Horoscope/full_horoscope_entry_card.dart';
 import 'package:astro_prompt/Components/Horoscope/horoscopeChart.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/horoscope_model.dart';
@@ -919,6 +920,8 @@ class _HoroscopePageState extends State<HoroscopePage> {
                                       ],
                                     );
                                   }),
+                              SizedBox(height: 20),
+                              const FullHoroscopeEntryCard(),
                               SizedBox(height: 100),
                             ],
                           ),
@@ -930,18 +933,20 @@ class _HoroscopePageState extends State<HoroscopePage> {
               ),
               Positioned(
                 bottom: 0,
-                child: Container(
-                  width: util.width,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFFBAE8B5)
-                            .withValues(alpha: 0), // Transparent at the top
-                        Color(0xFFBAE8B5), // Solid color at the bottom
-                      ],
+                child: IgnorePointer(
+                  child: Container(
+                    width: util.width,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFBAE8B5)
+                              .withValues(alpha: 0), // Transparent at the top
+                          Color(0xFFBAE8B5), // Solid color at the bottom
+                        ],
+                      ),
                     ),
                   ),
                 ),

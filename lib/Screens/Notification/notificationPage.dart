@@ -85,6 +85,13 @@ class _NotificationPageState extends State<NotificationPage>
     try {
       final data = await AskAstrologerService().fetchMyRequests();
       if (!mounted) return;
+      data.sort((a, b) {
+        final aTime = DateTime.tryParse(a.answeredAt ?? a.createdAt ?? '') ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        final bTime = DateTime.tryParse(b.answeredAt ?? b.createdAt ?? '') ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return bTime.compareTo(aTime);
+      });
       setState(() {
         askRequests = data;
       });
@@ -110,7 +117,15 @@ class _NotificationPageState extends State<NotificationPage>
       var data = fetchEventData
           .where((e) => e.status == 'confirmed' || e.status == 'completed')
           .toList()
-        ..sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
+        ..sort((a, b) {
+          final aTime = DateTime.tryParse(a.startTime) ??
+              DateTime.tryParse(a.bookingDate) ??
+              DateTime.fromMillisecondsSinceEpoch(0);
+          final bTime = DateTime.tryParse(b.startTime) ??
+              DateTime.tryParse(b.bookingDate) ??
+              DateTime.fromMillisecondsSinceEpoch(0);
+          return bTime.compareTo(aTime);
+        });
       final pendingEvents =
           data.where((e) => e.queriesAnswered == false).toList();
       setState(() {
@@ -124,6 +139,7 @@ class _NotificationPageState extends State<NotificationPage>
   Future<void> fetchGeneralNotifications() async {
     try {
       final data = await NotificationService().fetchNotifications();
+      data.sort((a, b) => b.sentAt.compareTo(a.sentAt));
       setState(() {
         generalNotifications = data;
       });

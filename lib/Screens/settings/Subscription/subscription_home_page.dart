@@ -842,6 +842,8 @@ class _SubscriptionLandingPageState extends State<SubscriptionLandingPage> {
                               () => SubscriptionPaymentSummaryPage(
                                 currency: widget.currency,
                                 premiumPlan: allPlans[selectedIndex],
+                                enableAutoPay:
+                                    allPlans[selectedIndex].planId == 1,
                               ),
                               transition: Transition.rightToLeftWithFade,
                               duration: const Duration(milliseconds: 400),

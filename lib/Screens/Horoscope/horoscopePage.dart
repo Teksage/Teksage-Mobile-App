@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -48,6 +47,8 @@ class _HoroscopePageState extends State<HoroscopePage> {
   bool _hasCheckedAccess = false;
   bool _dialogShown = false;
   bool _debounced = false;
+  bool _isLoading = false;
+  Worker? _tabWorker;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _HoroscopePageState extends State<HoroscopePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ever(controller.currentIndex, (index) {
+    _tabWorker ??= ever(controller.currentIndex, (index) {
       if (!_debounced) {
         _debounced = true;
         Future.delayed(Duration(milliseconds: 100), () {
@@ -69,6 +70,7 @@ class _HoroscopePageState extends State<HoroscopePage> {
         if (index != 2) {
           _hasCheckedAccess = false;
           _dialogShown = false;
+          CustomLoader.hide();
         } else if (!_hasCheckedAccess && !_dialogShown) {
           _checkAccess();
         }
@@ -81,30 +83,52 @@ class _HoroscopePageState extends State<HoroscopePage> {
     }
   }
 
+  @override
+  void dispose() {
+    _tabWorker?.dispose();
+    super.dispose();
+  }
+
   Future<void> _checkAccess() async {
+    if (_isLoading || !mounted) return;
     _hasCheckedAccess = true;
+    _isLoading = true;
     isChecking.value = true;
-    await Future.delayed(Duration(milliseconds: 200));
+
+    await Future.delayed(const Duration(milliseconds: 200));
     try {
-      if (mounted) CustomLoader.show(context);
+      // Same as other tabs: dialog loader keeps bottom nav visible but blocked.
+      if (mounted) {
+        CustomLoader.show(context, loaderColor: panchangHeading);
+      }
       final token = await getAccessToken();
       if (!mounted) return;
 
       if (token.isEmpty) {
-        if (mounted) CustomLoader.hide();
-        await _showAccessDialog(const LoginPromptDialog(reDirectHome: true));
-        return;
-      } else {
-        setState(() {
-          horoscopeData = HoroscopeService().getHoroscope();
-        });
-      }
-    } catch (e) {
-      print('❌ Access check exception: $e');
-    } finally {
-      if (mounted) {
         CustomLoader.hide();
         isChecking.value = false;
+        _isLoading = false;
+        await _showAccessDialog(const LoginPromptDialog(reDirectHome: true));
+        return;
+      }
+
+      final data = await HoroscopeService().getHoroscope();
+      if (!mounted) return;
+      setState(() {
+        horoscopeData = Future.value(data);
+      });
+    } catch (e) {
+      print('❌ Access check exception: $e');
+      if (mounted) {
+        setState(() {
+          horoscopeData = Future.error(e);
+        });
+      }
+    } finally {
+      CustomLoader.hide();
+      if (mounted) {
+        isChecking.value = false;
+        _isLoading = false;
       }
     }
   }
@@ -429,37 +453,12 @@ class _HoroscopePageState extends State<HoroscopePage> {
                               FutureBuilder(
                                   future: horoscopeData,
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
+                                    // Full-screen CustomLoader covers load; keep body empty.
+                                    if (horoscopeData == null ||
+                                        snapshot.connectionState ==
+                                            ConnectionState.waiting) {
                                       return SizedBox(
-                                        height: util.height / 2,
-                                        width: util.width,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: SizedBox(
-                                            width: MyUtility(context)
-                                                .responsiveWidth(0.2668),
-                                            height: MyUtility(context)
-                                                .responsiveHeight(0.1232),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: whiteColor.withValues(
-                                                    alpha: 0.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        util.width20),
-                                              ),
-                                              child: Center(
-                                                child: LoadingAnimationWidget
-                                                    .halfTriangleDot(
-                                                  color: panchangHeading,
-                                                  size: MyUtility(context)
-                                                      .height30,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        height: util.height * 0.5,
                                       );
                                     } else if (snapshot.hasError) {
                                       // print('Snap-Error: ${snapshot.error}');
@@ -919,7 +918,9 @@ class _HoroscopePageState extends State<HoroscopePage> {
                                         ),
                                         SizedBox(height: 20),
                                         const FullHoroscopeEntryCard(),
-                                        SizedBox(height: 100),
+                                        SizedBox(
+                                          height: util.floatingBottomNavClearance,
+                                        ),
                                       ],
                                     );
                                   }),

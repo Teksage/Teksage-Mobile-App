@@ -1204,7 +1204,7 @@ class _SettingsPageState extends State<SettingsPage>
                       ],
                     ),
                   SizedBox(
-                    height: 120,
+                    height: util.floatingBottomNavClearance,
                   ),
                 ],
               ),

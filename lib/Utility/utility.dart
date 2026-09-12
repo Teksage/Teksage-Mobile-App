@@ -146,4 +146,14 @@ class MyUtility {
   double get fontSize29 => responsiveFontSize(0.049);
   double get fontSize32 => responsiveFontSize(0.054);
   double get fontSize60 => responsiveFontSize(0.1011);
+
+  /// Bottom scroll padding so content clears [AppFloatingBottomNav]
+  /// (nav height + system inset / fallback + breathing room).
+  /// Matches Home's clearance better than a fixed 100 on tall nav devices.
+  double get floatingBottomNavClearance {
+    final bottomSafe = MediaQuery.paddingOf(context).bottom;
+    return responsiveHeight(0.0863) +
+        (bottomSafe > 0 ? bottomSafe : 20) +
+        height20;
+  }
 }

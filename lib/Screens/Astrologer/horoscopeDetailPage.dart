@@ -335,7 +335,7 @@ class _FullHoroscopeWebEntry extends StatelessWidget {
   final int eventId;
   const _FullHoroscopeWebEntry({required this.eventId});
 
-  static const _origin = 'https://www.teksage.app';
+  static const _origin = 'https://my.teksage.app';
 
   Future<void> _open(BuildContext context) async {
     final uri = Uri.parse('$_origin/astrologer/meetings/$eventId/horoscope');

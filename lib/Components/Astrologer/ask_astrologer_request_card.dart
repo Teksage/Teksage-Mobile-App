@@ -8,12 +8,15 @@ import 'package:astro_prompt/Model/ask_astrologer_model.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/astrologerAskService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customLoader.dart';
+import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AskAstrologerRequestCard extends StatefulWidget {
   final AskAstrologerRequest request;
@@ -159,6 +162,64 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
             if (req.nakshatra != null) _detailRow('Nakshatra'.tr, req.nakshatra!),
             if (langs.isNotEmpty) _detailRow('Language'.tr, langs),
           ]),
+          SizedBox(height: 12),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: whiteColor,
+              border: Border.all(
+                color: blackColor.withValues(alpha: 0.08),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(meetingHoroscope, width: 22, height: 22),
+                    SizedBox(width: 10),
+                    Text(
+                      'Horoscope Details'.tr,
+                      style: TextStyle(
+                        fontFamily: AppFont.get(FontType.semiBold),
+                        fontSize: util.fontSize14,
+                        color: blackColor.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    final uri = Uri.parse(
+                      '${AskAstrologerScreenCopy.publicSiteOrigin}/astrologer/ask-requests/${req.id}',
+                    );
+                    final ok = await canLaunchUrl(uri) &&
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    if (!ok && context.mounted) {
+                      showInfoSnackBar(context, 'Could not open Horoscope Details'.tr);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: astroUserConsultBG, width: 1.0),
+                    ),
+                    child: Text(
+                      'View'.tr,
+                      style: TextStyle(
+                        fontFamily: AppFont.get(FontType.semiBold),
+                        fontSize: util.fontSize12,
+                        color: astroUserConsultBG,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
           if (req.muhurthaResult != null) ...[
             MuhurthaEventPlanAccordion(

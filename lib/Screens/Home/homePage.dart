@@ -1414,7 +1414,7 @@ class _HomePageState extends State<HomePage>
                       ),
                     ),
                     SizedBox(
-                      height: util.responsiveHeight(0.15),
+                      height: util.floatingBottomNavClearance,
                     ),
                   ],
                 ),

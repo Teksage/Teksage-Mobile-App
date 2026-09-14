@@ -37,8 +37,8 @@ const whatsAppConsentPollMs = 5000;
 
 /// UI copy for Ask Astrologer screens — mirrors website `ASK_ASTROLOGER_SCREEN`.
 class AskAstrologerScreenCopy {
-  static const publicSiteOrigin = 'https://www.teksage.app';
-  static const publicSiteHost = 'www.teksage.app';
+  static const publicSiteOrigin = 'https://my.teksage.app';
+  static const publicSiteHost = 'my.teksage.app';
   static const answeredByPrefix = 'Answered by:';
   static const answeredBySeparator = ', ';
   static const viewProfileLink = 'View profile';

@@ -476,6 +476,8 @@ class _UserConsultationDetailsHomeState
                                                             .astrologerLastName!,
                                                         meetingLink:
                                                             event.eventLink,
+                                                        isCompleted:
+                                                            !isUpcoming,
                                                       ));
                                                 },
                                                 child: Container(

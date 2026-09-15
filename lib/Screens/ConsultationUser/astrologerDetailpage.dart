@@ -1,5 +1,6 @@
 import 'package:astro_prompt/Model/AstrologerUserConsult/astrologer_detail_model.dart';
 import 'package:astro_prompt/Screens/ConsultationUser/userBookingPage.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/userAstrologer.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
@@ -51,6 +52,10 @@ class _AstrologerDetailPageState extends State<AstrologerDetailPage> {
         review = result['events'];
         isLoading = false;
       });
+      await FacebookAppEventsService.instance.logViewContent(
+        contentId: widget.astrologerId.toString(),
+        contentType: 'astrologer',
+      );
     } catch (e) {
       print('Error loadAstrologerDetails: $e');
       setState(() => isLoading = false);

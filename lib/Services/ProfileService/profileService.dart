@@ -151,7 +151,6 @@ class ProfileService {
   ///Get Profile
   Future<UserProfile?> fetchUserProfile() async {
     var response = await APIRequest.getRequest(ApiEndpoint.getProfile);
-    print('res: ${response.body}');
     if (response.statusCode == 200) {
       return UserProfile.fromJson(json.decode(response.body));
     } else if (response.statusCode == 400) {

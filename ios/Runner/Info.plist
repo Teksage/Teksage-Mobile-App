@@ -8,6 +8,21 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Teksage</string>
+	<key>FacebookAppID</key>
+	<string>1568379927830837</string>
+	<key>FacebookClientToken</key>
+	<string>e7f5538a8af219765585e9ecff862090</string>
+	<key>FacebookDisplayName</key>
+	<string>Teksage</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1568379927830837</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

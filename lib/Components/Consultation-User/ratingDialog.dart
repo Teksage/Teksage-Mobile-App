@@ -1,3 +1,4 @@
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customSnackBar.dart';
@@ -88,6 +89,10 @@ class _RatingDialogState extends State<RatingDialog> {
                                   widget.meetingId, {"rating": selectedRating});
                           if (result == 'Event updated successfully') {
                             widget.onSubmit?.call(selectedRating);
+                            await FacebookAppEventsService.instance.logRate(
+                              value: selectedRating.toDouble(),
+                              contentType: 'consultation',
+                            );
 
                             customSnackBar(
                               context: context,

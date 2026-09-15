@@ -7,18 +7,16 @@ class ApiEndpoint {
   //emulator
   // static const String mainUrl ="http://10.0.2.2:8000";
   //physical device — use your PC's current Wi‑Fi IPv4 (ipconfig). Must match same network as phone.
-//   static const String mainUrl ="http://10.122.202.187:8000";
-// static const String mainUrl ="http://192.168.1.2:8000";
+static const String mainUrl ="http://10.184.55.187:8000";
 
-  static const String mainUrl ='https://teksage-backend-latest.onrender.com';
-  static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
+  // static const String mainUrl ='https://teksage-backend-latest.onrender.com';
+  // static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
   
 
   //emulator
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
-//   static const String chatUrl ="ws://10.122.202.187:8000/chat";
-// static const String chatUrl ="ws://192.168.1.2:8000/chat";.e
+static const String chatUrl ="ws://10.184.55.187:8000/chat";
   
 
   ///
@@ -45,6 +43,14 @@ class ApiEndpoint {
   static const String profileVerifyOtp = '$auth/verify';
   static const String getRasiNakshatram = '$profile/rashi-nakshatra';
   static const String updateProfile = '$profile/update-profile';
+
+  // Partner referral
+  static const String partnerCodeRedeem = '$baseUrl/partner-codes/redeem';
+  static const String partnerMyDiscount = '$baseUrl/partner-codes/my-discount';
+
+   // App install / acquisition analytics
+  static const String analyticsInstall = '$baseUrl/analytics/install';
+  static const String analyticsAttachUser = '$baseUrl/analytics/install/attach-user';
 
   // Prediction APIs
   static const String dailyPrediction = '$prediction/daily';
@@ -86,6 +92,7 @@ class ApiEndpoint {
   static const String verifyAutoPayment = '$payment/verify-auto-payment/';
   static const String subscriptionPayment = '$payment/subscribe';
   static const String autoSubscriptionPayment = '$payment/subscribe-auto';
+  static const String cancelAutoPay = '$payment/cancel-auto-pay';
   static const String paymentUpdateIos = '$payment/ios-subscription';
 
   //Coupon

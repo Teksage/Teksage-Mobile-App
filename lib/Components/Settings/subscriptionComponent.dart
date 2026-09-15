@@ -33,7 +33,7 @@ class _SubscriptionComponentState extends State<SubscriptionComponent> {
   String selectedPlanId = '';
   String rupeeSymbol = '₹';
   String dollarSymbol = '\$';
-  bool isChecked = false;
+  bool isChecked = true;
 
   @override
   void initState() {
@@ -371,33 +371,50 @@ class _SubscriptionComponentState extends State<SubscriptionComponent> {
                   if (selectedIndex == 0)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: Checkbox(
-                              activeColor: mainColor,
-                              value: isChecked,
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity.compact,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isChecked = value!;
-                                });
-                              },
-                            ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: Checkbox(
+                                  activeColor: mainColor,
+                                  value: isChecked,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      isChecked = value ?? true;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  "I agree to recurring payments".tr,
+                                  style: TextStyle(
+                                    fontFamily: 'FontSemiBold',
+                                    fontSize: MyUtility(context).fontSize14,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Expanded(
+                          Padding(
+                            padding: const EdgeInsets.only(left: 32, top: 6),
                             child: Text(
-                              "I agree to recurring payments".tr,
+                              'You can cancel anytime through the app.'.tr,
                               style: TextStyle(
-                                fontFamily: 'FontSemiBold',
-                                fontSize: MyUtility(context).fontSize14,
-                                color: whiteColor,
+                                fontFamily: AppFont.get(FontType.medium),
+                                fontSize: MyUtility(context).fontSize12,
+                                color: whiteColor.withValues(alpha: 0.7),
+                                height: 1.3,
                               ),
                             ),
                           ),
@@ -408,23 +425,11 @@ class _SubscriptionComponentState extends State<SubscriptionComponent> {
                   GestureDetector(
                     onTap: () {
                       final plan = premiumPlans[selectedIndex];
-                      // print('Plan: $plan');
-
-                      if (selectedIndex == 0 && !isChecked) {
-                        Get.snackbar(
-                          'Recurring Payment Required',
-                          'Please agree to recurring payments to continue',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: mainColor.withOpacity(0.8),
-                          colorText: Colors.white,
-                          duration: Duration(seconds: 3),
-                        );
-                        return;
-                      }
-
                       Get.to(() => SubscriptionPaymentSummaryPage(
                             currency: widget.currency,
                             premiumPlan: plan,
+                            enableAutoPay:
+                                selectedIndex == 0 ? isChecked : false,
                           ));
                     },
                     child: Container(

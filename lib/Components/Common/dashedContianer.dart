@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:astro_prompt/Model/AstrologerUserConsult/coupon_model.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
+import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
@@ -19,6 +20,11 @@ class PromoCodeContainer extends StatefulWidget {
   final double? amount;
   final Color applyFontColor;
   final void Function(CouponModel? newAmount)? onCouponApplied;
+  /// When set, locks the field with this code and applies [lockedPricing] once.
+  final String? lockedCode;
+  final CouponModel? lockedPricing;
+  final bool isReferralLock;
+
   const PromoCodeContainer(
       {super.key,
       this.planId,
@@ -30,7 +36,10 @@ class PromoCodeContainer extends StatefulWidget {
       required this.containerBorderColor,
       required this.couponType,
       this.amount,
-      required this.applyFontColor});
+      required this.applyFontColor,
+      this.lockedCode,
+      this.lockedPricing,
+      this.isReferralLock = false});
 
   @override
   State<PromoCodeContainer> createState() => _PromoCodeContainerState();
@@ -44,11 +53,14 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
   String errorText = '';
   String _appliedCode = '';
   double discountAmount = 0.0;
+  bool _locked = false;
 
   @override
   void initState() {
     super.initState();
+    _applyLockIfNeeded();
     _controller.addListener(() {
+      if (_locked) return;
       final currentText = _controller.text.trim();
       if ((_isApplied || _isValid || errorText.isNotEmpty) &&
           currentText != _appliedCode) {
@@ -59,6 +71,31 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
           widget.onCouponApplied?.call(null);
         });
       }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant PromoCodeContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.lockedCode != widget.lockedCode ||
+        oldWidget.lockedPricing != widget.lockedPricing) {
+      _applyLockIfNeeded();
+    }
+  }
+
+  void _applyLockIfNeeded() {
+    final code = widget.lockedCode?.trim();
+    final pricing = widget.lockedPricing;
+    if (code == null || code.isEmpty || pricing == null) return;
+    _locked = true;
+    _controller.text = code;
+    _isApplied = true;
+    _isValid = true;
+    _appliedCode = code;
+    discountAmount = pricing.discount;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      widget.onCouponApplied?.call(pricing);
     });
   }
 
@@ -91,11 +128,13 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
         discountAmount = result.discount;
         print('Result: ${result.discount}');
         widget.onCouponApplied?.call(result);
+        showLoginSuccessSnackBar(context, 'Coupon applied');
       } else {
         _isApplied = false;
         _isValid = false;
         errorText = 'Invalid or expired promo code.';
         _appliedCode = '';
+        showErrorSnackBar(context, 'Invalid or expired promo code.');
       }
     });
   }
@@ -128,7 +167,8 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      // enabled: !_isApplied,
+                      enabled: !_locked,
+                      readOnly: _locked,
                       style: TextStyle(
                           color: widget.fontColor,
                           fontFamily: AppFont.get(FontType.medium),
@@ -146,7 +186,8 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
                     ),
                   ),
                   TextButton(
-                    onPressed: _isApplied || _isLoading ? null : _applyCoupon,
+                    onPressed:
+                        _locked || _isApplied || _isLoading ? null : _applyCoupon,
                     child: Text(
                       _isApplied ? 'Applied'.tr : 'Apply'.tr,
                       style: TextStyle(
@@ -161,16 +202,22 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
             ),
           ),
         ),
-        (_isApplied && widget.couponType == 'consultation')
+        (_isApplied &&
+                (widget.couponType == 'consultation' ||
+                    widget.couponType == 'subscription'))
             ? Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Coupon applied & you saved',
+                      widget.isReferralLock
+                          ? 'Referral discount applied & you saved'.tr
+                          : 'Coupon applied & you saved'.tr,
                       style: TextStyle(
-                          color: astroUserConsultBG,
+                          color: widget.couponType == 'consultation'
+                              ? astroUserConsultBG
+                              : mainColor,
                           fontSize: MyUtility(context).fontSize14,
                           fontFamily: AppFont.get(FontType.medium),
                           height: 1.0),
@@ -178,7 +225,9 @@ class _PromoCodeContainerState extends State<PromoCodeContainer> {
                     Text(
                       '${widget.currency == 'INR' ? '₹' : '\$'} ${discountAmount.toStringAsFixed(2)}/-',
                       style: TextStyle(
-                          color: astroUserConsultBG,
+                          color: widget.couponType == 'consultation'
+                              ? astroUserConsultBG
+                              : mainColor,
                           fontSize: MyUtility(context).fontSize14,
                           fontFamily: AppFont.get(FontType.medium),
                           height: 1.0),

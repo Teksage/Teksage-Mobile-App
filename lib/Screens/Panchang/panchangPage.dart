@@ -1157,7 +1157,7 @@ class _PanchangPageState extends State<PanchangPage> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 100,
+                                        height: util.floatingBottomNavClearance,
                                       ),
                                     ],
                                   ),

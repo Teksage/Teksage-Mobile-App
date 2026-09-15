@@ -25,6 +25,7 @@ class UserConsultationSummaryHome extends StatefulWidget {
   final String lastName;
   final String meetingLink;
   final String currency;
+  final bool isCompleted;
 
   const UserConsultationSummaryHome(
       {super.key,
@@ -38,7 +39,8 @@ class UserConsultationSummaryHome extends StatefulWidget {
       required this.firstName,
       required this.lastName,
       required this.meetingLink,
-      required this.currency});
+      required this.currency,
+      this.isCompleted = false});
 
   @override
   State<UserConsultationSummaryHome> createState() =>
@@ -67,7 +69,7 @@ class _UserConsultationSummaryHomeState
         questionCount = questions.length;
       });
 
-      if (questionCount < 5) {
+      if (!widget.isCompleted && questionCount < 5) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showGeneralDialog(
             context: context,
@@ -391,6 +393,7 @@ class _UserConsultationSummaryHomeState
                   SizedBox(
                     height: 20,
                   ),
+                  if (!(widget.isCompleted && questionCount == 0)) ...[
                   SvgPicture.asset(astroCalenderLine,
                       colorFilter: ColorFilter.mode(
                           Colors.black.withValues(alpha: 0.2),
@@ -431,6 +434,9 @@ class _UserConsultationSummaryHomeState
                       }
 
                       final questions = snapshot.data ?? [];
+                      if (widget.isCompleted && questions.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -497,6 +503,7 @@ class _UserConsultationSummaryHomeState
                       );
                     },
                   ),
+                  ],
                   SizedBox(
                     height: 50,
                   ),

@@ -9,7 +9,10 @@ import 'package:astro_prompt/Model/subscription_payment_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/settings/Subscription/subscription_home_page.dart';
+import 'package:astro_prompt/Services/Analytics/facebookAppEventsService.dart';
 import 'package:astro_prompt/Services/Astrologer-user/paymentService.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerDiscountHelpers.dart';
+import 'package:astro_prompt/Services/PartnerService/partnerReferralService.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/Services/SubscriptionService/subscriptionService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -30,10 +33,13 @@ import 'package:astro_prompt/config/Helper/profile_currency.dart';
 class SubscriptionPaymentSummaryPage extends StatefulWidget {
   final SubscriptionPlanModel premiumPlan;
   final String currency;
+  /// When false, monthly plan uses one-time payment instead of Razorpay subscription.
+  final bool enableAutoPay;
   const SubscriptionPaymentSummaryPage({
     super.key,
     required this.premiumPlan,
     required this.currency,
+    this.enableAutoPay = true,
   });
 
   @override
@@ -67,16 +73,20 @@ class _SubscriptionPaymentSummaryPageState
   late double originalLocalTotalCost;
   late double originalForeignTotalCost;
   bool isINR = false;
+  late bool enableAutoPay;
   String rupeeSymbol = '₹';
   String dollarSymbol = '\$';
   bool isLoading = false;
   String email = '';
   String mobileNumber = '';
   late String payCurrency;
+  bool referralLocked = false;
+  CouponModel? referralPricing;
 
   @override
   void initState() {
     super.initState();
+    enableAutoPay = widget.enableAutoPay;
     payCurrency =
         widget.currency.trim().isNotEmpty ? widget.currency.trim() : 'INR';
     _applyPlanPricing();
@@ -118,6 +128,7 @@ class _SubscriptionPaymentSummaryPageState
       }
     }
     fetchProfileData();
+    _loadPartnerDiscount();
   }
 
   void _initializeRazorpay() {
@@ -141,9 +152,46 @@ class _SubscriptionPaymentSummaryPageState
         mobileNumber = profileData.mobileNumber;
         email = profileData.email;
       });
+      final pct =
+          profileData.partnerDiscount?.yearlyPctForCheckout(widget.premiumPlan.planId) ??
+              0;
+      if (pct > 0 && !referralLocked) {
+        _applyPartnerYearlyPct(pct);
+      }
     } else {
       print("Profile data is null. Unable to update UI.");
     }
+  }
+
+  Future<void> _loadPartnerDiscount() async {
+    try {
+      final discount = await PartnerReferralService.fetchMyDiscount();
+      final pct = discount.yearlyPctForCheckout(widget.premiumPlan.planId);
+      if (pct > 0 && mounted) {
+        _applyPartnerYearlyPct(pct);
+      }
+    } catch (_) {}
+  }
+
+  void _applyPartnerYearlyPct(double pct) {
+    final pricing = partnerPricingFromFee(
+      fee: originalPlanCost,
+      currency: payCurrency,
+      partnerPct: pct,
+    );
+    setState(() {
+      referralLocked = true;
+      referralPricing = pricing;
+      planCost = pricing.planPrice;
+      discountPrice = pricing.discount;
+      cgst = pricing.cgstAmount;
+      cgstPercentage = pricing.cgstPercentage;
+      sgst = pricing.sgstAmount;
+      sgstPercentage = pricing.sgstPercentage;
+      localTotalCost = pricing.finalPrice;
+      foreignTotalCost = pricing.finalPrice;
+      couponId = '';
+    });
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -173,6 +221,19 @@ class _SubscriptionPaymentSummaryPageState
 
     CustomLoader.hide();
     if (result != null && result.status == 'success') {
+      final payAmount = isINR ? localTotalCost : foreignTotalCost;
+      final payCurrency = isINR ? 'INR' : 'USD';
+      await FacebookAppEventsService.instance.logPurchase(
+        amount: payAmount,
+        currency: payCurrency,
+        contentId: widget.premiumPlan.planId.toString(),
+        contentType: 'subscription',
+      );
+      await FacebookAppEventsService.instance.logSubscribe(
+        orderId: response.orderId ?? response.paymentId,
+        currency: payCurrency,
+        price: payAmount,
+      );
       showLoginSuccessSnackBar(context, 'Payment successful!');
       await showDialog(
         context: context,
@@ -337,16 +398,54 @@ class _SubscriptionPaymentSummaryPageState
                         SizedBox(
                           height: 20,
                         ),
-                        if (widget.premiumPlan.planId == 1)
-                          Text(
-                            'Auto-renews every month'.tr,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'FontSemiBold',
-                                fontSize: util.fontSize14,
-                                color: whiteColor,
-                                height: 1.0),
+                        if (widget.premiumPlan.planId == 1) ...[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: Checkbox(
+                                  activeColor: mainColor,
+                                  value: enableAutoPay,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      enableAutoPay = value ?? true;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'I agree to recurring payments'.tr,
+                                  style: TextStyle(
+                                    fontFamily: 'FontSemiBold',
+                                    fontSize: util.fontSize14,
+                                    color: whiteColor,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 32, top: 8),
+                            child: Text(
+                              'You can cancel anytime through the app.'.tr,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: AppFont.get(FontType.medium),
+                                fontSize: util.fontSize12,
+                                color: whiteColor.withValues(alpha: 0.7),
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                        ],
                         SizedBox(
                           height: 15,
                         ),
@@ -388,7 +487,10 @@ class _SubscriptionPaymentSummaryPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Discount'.tr,
+                                (referralLocked
+                                        ? 'Referral discount'
+                                        : 'Discount')
+                                    .tr,
                                 style: TextStyle(
                                     fontFamily: AppFont.get(FontType.medium),
                                     fontSize: MyUtility(context).fontSize16,
@@ -488,11 +590,16 @@ class _SubscriptionPaymentSummaryPageState
                             amount: isINR
                                 ? widget.premiumPlan.localPlanPrice
                                 : widget.premiumPlan.foreignPlanPrice,
+                            lockedCode:
+                                referralLocked ? kPartnerCheckoutCode : null,
+                            lockedPricing: referralPricing,
+                            isReferralLock: referralLocked,
                             onCouponApplied: (amount) {
                               print(
                                   'AmountPromo: ${amount?.planPrice} $originalPlanCost');
                               setState(() {
                                 if (amount == null) {
+                                  if (referralLocked) return;
                                   planCost = originalPlanCost;
                                   cgst = originalCGst;
                                   discountPrice = 0.0;
@@ -501,6 +608,7 @@ class _SubscriptionPaymentSummaryPageState
                                   sgstPercentage = originalSGstPercentage;
                                   localTotalCost = originalLocalTotalCost;
                                   foreignTotalCost = originalForeignTotalCost;
+                                  couponId = '';
                                 } else {
                                   var discount = double.parse(
                                       (amount.planPrice -
@@ -514,7 +622,9 @@ class _SubscriptionPaymentSummaryPageState
                                   sgstPercentage = amount.sgstPercentage;
                                   localTotalCost = amount.finalPrice;
                                   foreignTotalCost = amount.finalPrice;
-                                  couponId = amount.couponId.toString();
+                                  couponId = amount.couponId > 0
+                                      ? amount.couponId.toString()
+                                      : '';
                                 }
                               });
                             },
@@ -568,7 +678,7 @@ class _SubscriptionPaymentSummaryPageState
                             // print(
                             //     'durationUnit: ${widget.premiumPlan.durationUnit},${widget.premiumPlan.planId}');
                             try {
-                              if (isMonthlyPlan) {
+                              if (isMonthlyPlan && enableAutoPay) {
                                 // Auto-recurring subscription for 1-month plan
                                 var response = await subscriptionService
                                     .autoSubscriptionPaymentInitiate(
@@ -591,6 +701,13 @@ class _SubscriptionPaymentSummaryPageState
                                 // });
 
                                 if (response != null) {
+                                  await FacebookAppEventsService.instance
+                                      .logInitiatedCheckout(
+                                    contentId: planId.toString(),
+                                    contentType: 'subscription',
+                                    totalPrice: amount.toDouble(),
+                                    currency: currency,
+                                  );
                                   final prefill = <String, String>{
                                     'contact': mobileNumber,
                                   };
@@ -637,6 +754,13 @@ class _SubscriptionPaymentSummaryPageState
                                 // });
 
                                 if (response != null) {
+                                  await FacebookAppEventsService.instance
+                                      .logInitiatedCheckout(
+                                    contentId: planId.toString(),
+                                    contentType: 'subscription',
+                                    totalPrice: amount.toDouble(),
+                                    currency: currency,
+                                  );
                                   final prefill = <String, String>{
                                     'contact': mobileNumber,
                                   };

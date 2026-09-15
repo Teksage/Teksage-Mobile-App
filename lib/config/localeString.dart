@@ -199,6 +199,8 @@ class LocalString extends Translations {
           'Start date': 'Start date',
           'Searching the next 7 days from this date':
               'Searching the next 7 days from this date',
+          'Choose a date within the next 30 days.':
+              'Choose a date within the next 30 days.',
           'Location is required': 'Location is required',
           'Find Auspicious Dates': 'Find Auspicious Dates',
           'Sign in to find Event Planner': 'Sign in to find Event Planner',
@@ -692,6 +694,22 @@ class LocalString extends Translations {
           'Enter Promo Code': 'Enter Promo Code',
           'Applied': 'Applied',
           'Apply': 'Apply',
+          'Referral code': 'Referral code',
+          'Referral code applied': 'Referral code applied',
+          'Referral discount': 'Referral discount',
+          'Referral discount applied & you saved':
+              'Referral discount applied & you saved',
+          'Used': 'Used',
+          'Expired': 'Expired',
+          'Referral is inactive': 'Referral is inactive',
+          'Referral code inactive': 'Referral code inactive',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'This referral code is no longer active. Discount cannot be used on new purchases.',
+          'Yearly plan': 'Yearly plan',
+          'left': 'left',
+          'Invalid referral code': 'Invalid referral code',
+          'Consultation': 'Consultation',
+          'Coupon applied': 'Coupon applied',
           'I consent to share my personal information & horoscope with the astrologer':
               'I consent to share my personal information & horoscope with the astrologer',
           'I consent to share my personal information & star chart with the advisor':
@@ -941,6 +959,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ஜோதிடரிடம் கேளுங்கள்',
           'Event Planner (Muhurtha)': 'நிகழ்வு திட்டமிடுபவர் (முகூர்த்தம்)',
+          'Choose a date within the next 30 days.':
+              'அடுத்த 30 நாட்களுக்குள் ஒரு தேதியைத் தேர்ந்தெடுக்கவும்.',
           'Plan an auspicious time': 'சுபமான நேரத்தைத் திட்டமிடுங்கள்',
           'Find Auspicious Dates': 'சுப தேதிகளைக் கண்டறியுங்கள்',
           'Event Planner results': 'நிகழ்வு திட்டமிடுபவர் முடிவுகள்',
@@ -1429,6 +1449,20 @@ class LocalString extends Translations {
           'Enter Promo Code': 'Promo குறியீட்டை உள்ளிடவும்',
           'Applied': 'விண்ணப்பிக்கப்பட்டது',
           'Apply': 'Apply செய்',
+          'Referral code': 'ரெஃபரல் குறியீடு',
+          'Referral code applied': 'ரெஃபரல் குறியீடு பயன்படுத்தப்பட்டது',
+          'Referral discount': 'ரெஃபரல் தள்ளுபடி',
+          'Referral discount applied & you saved':
+              'ரெஃபரல் தள்ளுபடி பயன்படுத்தப்பட்டது & நீங்கள் சேமித்தீர்கள்',
+          'Used': 'பயன்படுத்தப்பட்டது',
+          'Expired': 'காலாவதியானது',
+          'Referral is inactive': 'ரெஃபரல் செயலில் இல்லை',
+          'Referral code inactive': 'ரெஃபரல் குறியீடு செயலில் இல்லை',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'இந்த ரெஃபரல் குறியீடு இனி செயலில் இல்லை. புதிய வாங்குதல்களில் தள்ளுபடி பயன்படுத்த முடியாது.',
+          'Yearly plan': 'ஆண்டு திட்டம்',
+          'left': 'மீதம்',
+          'Invalid referral code': 'தவறான ரெஃபரல் குறியீடு',
           'I consent to share my personal information & horoscope with the astrologer':
               'எனது தனிப்பட்ட தகவல்களையும் ஜாதகத்தையும் ஜோதிடருடன் பகிர்ந்து கொள்ள ஒப்புக்கொள்கிறேன்',
           'I consent to share my personal information & star chart with the advisor':
@@ -1686,6 +1720,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'జ్యోతిష్కుడిని అడగండి',
           'Event Planner (Muhurtha)': 'ఈవెంట్ ప్లానర్ (ముహూర్తం)',
+          'Choose a date within the next 30 days.':
+              'వచ్చే 30 రోజుల్లోపు ఒక తేదీని ఎంచుకోండి.',
           'Find Auspicious Dates': 'శుభ తేదీలను కనుగొనండి',
           'Event Planner results': 'ఈవెంట్ ప్లానర్ ఫలితాలు',
           'Your event plan': 'మీ ఈవెంట్ ప్లాన్',
@@ -2155,6 +2191,20 @@ class LocalString extends Translations {
           'Enter Promo Code': 'ప్రోమో కోడ్ నమోదు చేయండి',
           'Applied': 'వర్తింపజేయబడింది',
           'Apply': 'అప్లై చేయండి',
+          'Referral code': 'రెఫరల్ కోడ్',
+          'Referral code applied': 'రెఫరల్ కోడ్ వర్తింపజేయబడింది',
+          'Referral discount': 'రెఫరల్ డిస్కౌంట్',
+          'Referral discount applied & you saved':
+              'రెఫరల్ డిస్కౌంట్ వర్తింపజేయబడింది & మీరు ఆదా చేసారు',
+          'Used': 'ఉపయోగించబడింది',
+          'Expired': 'గడువు ముగిసింది',
+          'Referral is inactive': 'రెఫరల్ సక్రియంగా లేదు',
+          'Referral code inactive': 'రెఫరల్ కోడ్ సక్రియంగా లేదు',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'ఈ రెఫరల్ కోడ్ ఇకపై active లేదు. కొత్త కొనుగోళ్లపై డిస్కౌంట్ వర్తించదు.',
+          'Yearly plan': 'వార్షిక ప్లాన్',
+          'left': 'మిగిలింది',
+          'Invalid referral code': 'చెల్లని రెఫరల్ కోడ్',
           'I consent to share my personal information & horoscope with the astrologer':
               'నా వ్యక్తిగత వివరాలు & జాతకాన్ని జ్యోతిష్కుడితో పంచుకోవడానికి నేను అంగీకరిస్తున్నాను',
           'I consent to share my personal information & star chart with the advisor':
@@ -2407,6 +2457,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ಜ್ಯೋತಿಷಿಯನ್ನು ಕೇಳಿ',
           'Event Planner (Muhurtha)': 'ಈವೆಂಟ್ ಪ್ಲಾನರ್ (ಮುಹೂರ್ತ)',
+          'Choose a date within the next 30 days.':
+              'ಮುಂದಿನ 30 ದಿನಗಳಲ್ಲಿ ಒಂದು ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
           'Find Auspicious Dates': 'ಶುಭ ದಿನಾಂಕಗಳನ್ನು ಹುಡುಕಿ',
           'Event Planner results': 'ಈವೆಂಟ್ ಪ್ಲಾನರ್ ಫಲಿತಾಂಶಗಳು',
           'Your event plan': 'ನಿಮ್ಮ ಈವೆಂಟ್ ಯೋಜನೆ',
@@ -2875,6 +2927,20 @@ class LocalString extends Translations {
           'Enter Promo Code': 'ಪ್ರೋಮೋ ಕೋಡ್ ನಮೂದಿಸಿ',
           'Applied': 'ಅನ್ವಯಿಸಲಾಗಿದೆ',
           'Apply': 'ಅನ್ವಯಿಸಿ',
+          'Referral code': 'ರೆಫರಲ್ ಕೋಡ್',
+          'Referral code applied': 'ರೆಫರಲ್ ಕೋಡ್ ಅನ್ವಯಿಸಲಾಗಿದೆ',
+          'Referral discount': 'ರೆಫರಲ್ ರಿಯಾಯಿತಿ',
+          'Referral discount applied & you saved':
+              'ರೆಫರಲ್ ರಿಯಾಯಿತಿ ಅನ್ವಯಿಸಲಾಗಿದೆ & ನೀವು ಉಳಿಸಿದ್ದೀರಿ',
+          'Used': 'ಬಳಸಲಾಗಿದೆ',
+          'Expired': 'ಅವಧಿ ಮುಗಿದಿದೆ',
+          'Referral is inactive': 'ರೆಫರಲ್ ಸಕ್ರಿಯವಾಗಿಲ್ಲ',
+          'Referral code inactive': 'ರೆಫರಲ್ ಕೋಡ್ ಸಕ್ರಿಯವಾಗಿಲ್ಲ',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'ಈ ರೆಫರಲ್ ಕೋಡ್ ಇನ್ನು active ಅಲ್ಲ. ಹೊಸ ಖರೀದಿಗಳಲ್ಲಿ ರಿಯಾಯಿತಿ ಬಳಸಲಾಗುವುದಿಲ್ಲ.',
+          'Yearly plan': 'ವಾರ್ಷಿಕ ಯೋಜನೆ',
+          'left': 'ಉಳಿದಿದೆ',
+          'Invalid referral code': 'ಅಮಾನ್ಯ ರೆಫರಲ್ ಕೋಡ್',
           'I consent to share my personal information & horoscope with the astrologer':
               'ನನ್ನ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ ಮತ್ತು ಜಾತಕವನ್ನು ಜ್ಯೋತಿಷಿಯೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲು ನಾನು ಒಪ್ಪಿಗೆ ನೀಡುತ್ತೇನೆ.',
           'I consent to share my personal information & star chart with the advisor':
@@ -3129,6 +3195,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ജ്യോതിഷിയോട് ചോദിക്കൂ',
           'Event Planner (Muhurtha)': 'ഇവന്റ് പ്ലാനർ (മുഹൂർത്തം)',
+          'Choose a date within the next 30 days.':
+              'അടുത്ത 30 ദിവസത്തിനുള്ളിൽ ഒരു തീയതി തിരഞ്ഞെടുക്കുക.',
           'Find Auspicious Dates': 'ശുഭ തീയതികൾ കണ്ടെത്തുക',
           'Event Planner results': 'ഇവന്റ് പ്ലാനർ ഫലങ്ങൾ',
           'Your event plan': 'നിങ്ങളുടെ ഇവന്റ് പ്ലാൻ',
@@ -3604,6 +3672,20 @@ class LocalString extends Translations {
           'Enter Promo Code': 'പ്രമോ കോഡ് നൽകുക',
           'Applied': 'പ്രയോഗിച്ചു',
           'Apply': 'പ്രയോഗിക്കുക',
+          'Referral code': 'റഫറൽ കോഡ്',
+          'Referral code applied': 'റഫറൽ കോഡ് പ്രയോഗിച്ചു',
+          'Referral discount': 'റഫറൽ കിഴിവ്',
+          'Referral discount applied & you saved':
+              'റഫറൽ കിഴിവ് പ്രയോഗിച്ചു & നിങ്ങൾ സമാഹരിച്ചു',
+          'Used': 'ഉപയോഗിച്ചു',
+          'Expired': 'കാലാവധി കഴിഞ്ഞു',
+          'Referral is inactive': 'റഫറൽ സജീവമല്ല',
+          'Referral code inactive': 'റഫറൽ കോഡ് സജീവമല്ല',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'ഈ റഫറൽ കോഡ് ഇനി active അല്ല. പുതിയ വാങ്ങലുകളിൽ കിഴിവ് ഉപയോഗിക്കാൻ കഴിയില്ല.',
+          'Yearly plan': 'വാർഷിക പ്ലാൻ',
+          'left': 'ബാക്കി',
+          'Invalid referral code': 'അസാധുവായ റഫറൽ കോഡ്',
           'I consent to share my personal information & horoscope with the astrologer':
               'എന്റെ വ്യക്തിഗത വിവരങ്ങളും ജാതകവും ജ്യോതിഷനുമായി പങ്കിടുന്നതിനായി ഞാൻ സമ്മതിക്കുന്നു.',
           'I consent to share my personal information & star chart with the advisor':
@@ -3856,6 +3938,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषी से पूछें',
           'Event Planner (Muhurtha)': 'इवेंट प्लानर (मुहूर्त)',
+          'Choose a date within the next 30 days.':
+              'अगले 30 दिनों के भीतर एक तारीख चुनें।',
           'Find Auspicious Dates': 'शुभ तिथियाँ खोजें',
           'Event Planner results': 'इवेंट प्लानर परिणाम',
           'Your event plan': 'आपकी इवेंट योजना',
@@ -4310,6 +4394,19 @@ class LocalString extends Translations {
           'Enter Promo Code': 'प्रोमो कोड दर्ज करें',
           'Applied': 'लागू किया गया',
           'Apply': 'लागू करें',
+          'Referral code': 'रेफरल कोड',
+          'Referral code applied': 'रेफरल कोड लागू किया गया',
+          'Referral discount': 'रेफरल छूट',
+          'Referral discount applied & you saved': 'रेफरल छूट लागू & आपने बचाया',
+          'Used': 'उपयोग किया',
+          'Expired': 'समाप्त',
+          'Referral is inactive': 'रेफरल निष्क्रिय है',
+          'Referral code inactive': 'रेफरल कोड निष्क्रिय',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'यह रेफरल कोड अब सक्रिय नहीं है। नई खरीद पर छूट उपयोग नहीं हो सकती।',
+          'Yearly plan': 'वार्षिक योजना',
+          'left': 'शेष',
+          'Invalid referral code': 'अमान्य रेफरल कोड',
           'I consent to share my personal information & horoscope with the astrologer':
               'मैं अपनी व्यक्तिगत जानकारी और कुंडली ज्योतिषी के साथ साझा करने की सहमति देता/देती हूँ',
           'I consent to share my personal information & star chart with the advisor':
@@ -4558,6 +4655,8 @@ class LocalString extends Translations {
           // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषाला विचारा',
           'Event Planner (Muhurtha)': 'इव्हेंट प्लानर (मुहूर्त)',
+          'Choose a date within the next 30 days.':
+              'पुढील ३० दिवसांत एक तारीख निवडा.',
           'Find Auspicious Dates': 'शुभ तारखा शोधा',
           'Event Planner results': 'इव्हेंट प्लानर निकाल',
           'Your event plan': 'तुमची इव्हेंट योजना',
@@ -5022,6 +5121,19 @@ class LocalString extends Translations {
           'Enter Promo Code': 'प्रोमो कोड टाका',
           'Applied': 'अर्ज केला',
           'Apply': 'लागू करा',
+          'Referral code': 'रेफरल कोड',
+          'Referral code applied': 'रेफरल कोड लागू केला',
+          'Referral discount': 'रेफरल सवलत',
+          'Referral discount applied & you saved': 'रेफरल सवलत लागू & तुम्ही वाचवले',
+          'Used': 'वापरले',
+          'Expired': 'कालबाह्य',
+          'Referral is inactive': 'रेफरल निष्क्रिय आहे',
+          'Referral code inactive': 'रेफरल कोड निष्क्रिय',
+          'This referral code is no longer active. Discount cannot be used on new purchases.':
+              'हा रेफरल कोड आता सक्रिय नाही. नवीन खरेदीवर सवलत वापरता येत नाही.',
+          'Yearly plan': 'वार्षिक योजना',
+          'left': 'शेष',
+          'Invalid referral code': 'अवैध रेफरल कोड',
           'I consent to share my personal information & horoscope with the astrologer':
               'माझी वैयक्तिक माहिती आणि कुंडली ज्योतिषासोबत शेअर करण्यासाठी माझी संमती आहे',
           'I consent to share my personal information & star chart with the advisor':

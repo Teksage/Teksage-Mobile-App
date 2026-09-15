@@ -51,7 +51,15 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
       final userId = await getUserId();
       var fetchEventData =
           await AstroUserEventService().fetchAstroUserEvents(userId!);
-      fetchEventData.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
+      fetchEventData.sort((a, b) {
+        final aTime = DateTime.tryParse(a.startTime) ??
+            DateTime.tryParse(a.bookingDate) ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        final bTime = DateTime.tryParse(b.startTime) ??
+            DateTime.tryParse(b.bookingDate) ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return bTime.compareTo(aTime);
+      });
       setState(() {
         eventData = fetchEventData;
       });
@@ -566,6 +574,7 @@ class _MeetingDetailsPageState extends State<MeetingDetailsPage> {
                                 Get.to(() => HoroscopeDetailsPage(
                                       horoscope: horoscope,
                                       fullName: widget.name,
+                                      eventId: widget.meetingId,
                                     ));
                               }
                             },

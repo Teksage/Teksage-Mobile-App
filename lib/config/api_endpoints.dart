@@ -48,6 +48,10 @@ static const String chatUrl ="ws://10.184.55.187:8000/chat";
   static const String partnerCodeRedeem = '$baseUrl/partner-codes/redeem';
   static const String partnerMyDiscount = '$baseUrl/partner-codes/my-discount';
 
+   // App install / acquisition analytics
+  static const String analyticsInstall = '$baseUrl/analytics/install';
+  static const String analyticsAttachUser = '$baseUrl/analytics/install/attach-user';
+
   // Prediction APIs
   static const String dailyPrediction = '$prediction/daily';
   static const String weeklyPrediction = '$prediction/weekly';
@@ -62,7 +66,6 @@ static const String chatUrl ="ws://10.184.55.187:8000/chat";
 
   //Horoscope
   static const String horoscope = '$profile/horoscope';
-  static const String horoscopeCharts = '$profile/horoscope/charts';
   static const String horoscopeDownload = '$baseUrl/horoscope/download';
 
   //Rashi&Nakshatra

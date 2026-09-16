@@ -12,7 +12,6 @@ import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class HoroscopeDetailsPage extends StatefulWidget {
   final UserHoroscope horoscope;
   final String fullName;
@@ -342,7 +341,7 @@ class _FullHoroscopeWebEntry extends StatelessWidget {
     final ok = await canLaunchUrl(uri) &&
         await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && context.mounted) {
-      showInfoSnackBar(context, 'Could not open Full Horoscope');
+      showInfoSnackBar(context, 'Could not open Full Horoscope'.tr);
     }
   }
 
@@ -375,7 +374,8 @@ class _FullHoroscopeWebEntry extends StatelessWidget {
                 color: whiteColor,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.grid_view_rounded, size: 20, color: mainColor),
+              child: const Icon(Icons.grid_view_rounded,
+                  size: 20, color: mainColor),
             ),
             SizedBox(width: util.width12),
             Expanded(

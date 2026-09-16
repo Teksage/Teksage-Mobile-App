@@ -396,57 +396,6 @@ class _SubscriptionPaymentSummaryPageState
                           ),
                         ),
                         SizedBox(
-                          height: 20,
-                        ),
-                        if (widget.premiumPlan.planId == 1) ...[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: Checkbox(
-                                  activeColor: mainColor,
-                                  value: enableAutoPay,
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  visualDensity: VisualDensity.compact,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      enableAutoPay = value ?? true;
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'I agree to recurring payments'.tr,
-                                  style: TextStyle(
-                                    fontFamily: 'FontSemiBold',
-                                    fontSize: util.fontSize14,
-                                    color: whiteColor,
-                                    height: 1.2,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 32, top: 8),
-                            child: Text(
-                              'You can cancel anytime through the app.'.tr,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontFamily: AppFont.get(FontType.medium),
-                                fontSize: util.fontSize12,
-                                color: whiteColor.withValues(alpha: 0.7),
-                                height: 1.3,
-                              ),
-                            ),
-                          ),
-                        ],
-                        SizedBox(
                           height: 15,
                         ),
                         DashedLine(

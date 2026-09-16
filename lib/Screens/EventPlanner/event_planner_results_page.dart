@@ -21,6 +21,7 @@ import 'package:astro_prompt/config/event_planner_share_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -117,22 +118,29 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
       }
     } catch (e) {
       if (mounted) {
-        final raw = e is Exception
-            ? e.toString().replaceFirst('Exception: ', '')
-            : 'Could not load Event Planner';
         setState(() {
-          _error = raw.tr;
+          _error = _localizedError(e);
           _loading = false;
         });
       }
     }
   }
 
+  String _localizedError(Object error) {
+    final raw = error.toString().replaceFirst('Exception: ', '').trim();
+    if (raw == EventPlannerConfig.startDateOutOfRange ||
+        raw.contains('30 days')) {
+      return EventPlannerConfig.startDateOutOfRange.tr;
+    }
+    return 'Could not load Event Planner'.tr;
+  }
+
   String _formatRange(String start, String end) {
     try {
       final s = DateTime.parse(start);
       final e = DateTime.parse(end);
-      final fmt = DateFormat('MMM d, yyyy');
+      initializeDateFormatting(EventPlannerConfig.currentIntlLocale);
+      final fmt = DateFormat.yMMMd(EventPlannerConfig.currentIntlLocale);
       return '${fmt.format(s)} – ${fmt.format(e)}';
     } catch (_) {
       return '$start – $end';
@@ -143,10 +151,16 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
     final result = _data?.result;
     if (result == null) return;
     final dateRange = result.startDate.isNotEmpty && result.endDate.isNotEmpty
-        ? '${result.startDate} to ${result.endDate}'
+        ? '@start to @end'.trParams({
+            'start': result.startDate,
+            'end': result.endDate,
+          })
         : result.startDate;
-    final question =
-        'Event Planner: ${result.event} — $dateRange — ${result.location}';
+    final question = 'Event Planner: @event — @dateRange — @location'.trParams({
+      'event': result.event.tr,
+      'dateRange': dateRange,
+      'location': result.location,
+    });
     await writeAskAstrologerFlow(AskAstrologerFlowState(
       userQuestion: question,
       aiResponse: '',
@@ -195,7 +209,8 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
         children: [
           EventPlannerHeader(title: 'Event Planner (Muhurtha)'.tr),
           const Expanded(
-              child: Center(child: CircularProgressIndicator(color: mainColor))),
+              child:
+                  Center(child: CircularProgressIndicator(color: mainColor))),
         ],
       );
     }
@@ -222,8 +237,8 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                         _retryToken++;
                         _load();
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: mainColor),
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: mainColor),
                       child: Text('Try again'.tr,
                           style: const TextStyle(color: whiteColor)),
                     ),
@@ -270,7 +285,7 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                             fontSize: util.fontSize18)),
                     const SizedBox(height: 8),
                     Text(
-                      'No days in this window passed all Vedic filters. Try another start date or event.'
+                      'No days in this window passed all Vedic filters for your event. Try another start date or event.'
                           .tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -281,8 +296,8 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                     ElevatedButton(
                       onPressed: () =>
                           Get.off(() => const EventPlannerFormPage()),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: mainColor),
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: mainColor),
                       child: Text('New search'.tr,
                           style: const TextStyle(color: whiteColor)),
                     ),
@@ -321,7 +336,8 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                             children: [
                               Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.fromLTRB(16, 16, 48, 16),
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 16, 48, 16),
                                 decoration: _cardDecoration(),
                                 child: Column(
                                   children: [
@@ -374,21 +390,25 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
                                         children: [
                                           Expanded(
                                               flex: 3,
-                                              child: Text('DATE'.tr,
+                                              child: Text(
+                                                  'Date'.tr.toUpperCase(),
                                                   style: _colHeadStyle())),
                                           Expanded(
                                               flex: 3,
-                                              child: Text('STATUS'.tr,
+                                              child: Text(
+                                                  'Status'.tr.toUpperCase(),
                                                   style: _colHeadStyle())),
                                           Expanded(
                                               flex: 4,
-                                              child: Text('DETAILS'.tr,
+                                              child: Text(
+                                                  'Details'.tr.toUpperCase(),
                                                   textAlign: TextAlign.right,
                                                   style: _colHeadStyle())),
                                         ],
                                       ),
                                     ),
-                                    ...rows.map((d) => EventPlannerDayRow(day: d)),
+                                    ...rows
+                                        .map((d) => EventPlannerDayRow(day: d)),
                                   ],
                                 ),
                               ),
@@ -479,8 +499,7 @@ class _EventPlannerResultsPageState extends State<EventPlannerResultsPage> {
   BoxDecoration _cardDecoration() => BoxDecoration(
         color: whiteColor,
         borderRadius: BorderRadius.circular(20),
-        border:
-            Border.all(color: mainColor.withValues(alpha: 0.3), width: 2.5),
+        border: Border.all(color: mainColor.withValues(alpha: 0.3), width: 2.5),
       );
 
   TextStyle _colHeadStyle() => TextStyle(

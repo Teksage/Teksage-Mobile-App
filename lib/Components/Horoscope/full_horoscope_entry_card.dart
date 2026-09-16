@@ -20,7 +20,7 @@ class FullHoroscopeEntryCard extends StatelessWidget {
     final ok = await canLaunchUrl(uri) &&
         await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && context.mounted) {
-      showInfoSnackBar(context, 'Could not open Full Horoscope');
+      showInfoSnackBar(context, 'Could not open Full Horoscope'.tr);
     }
   }
 

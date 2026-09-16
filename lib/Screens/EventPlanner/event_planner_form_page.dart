@@ -14,6 +14,7 @@ import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:astro_prompt/config/event_planner_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class EventPlannerFormPage extends StatefulWidget {
@@ -103,6 +104,12 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
           startDate: DateFormat('yyyy-MM-dd').format(_startDate),
           location: location,
         ));
+  }
+
+  String _formatDisplayDate(DateTime date) {
+    final locale = Get.locale?.toString() ?? 'en_US';
+    initializeDateFormatting(locale);
+    return DateFormat.yMd(locale).format(date);
   }
 
   @override
@@ -205,8 +212,8 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
                         color: (iconColor ?? mainColor).withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(icon,
-                          color: iconColor ?? mainColor, size: 28),
+                      child:
+                          Icon(icon, color: iconColor ?? mainColor, size: 28),
                     ),
                     const SizedBox(height: 16),
                     Text(title,
@@ -279,7 +286,7 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
                   _fieldLabel(util, 'Event type'.tr),
                   const SizedBox(height: 6),
                   DropdownButtonFormField<String>(
-                    value: _event,
+                    initialValue: _event,
                     decoration: _inputDecoration(),
                     items: EventPlannerConfig.eventTypes
                         .map((e) => DropdownMenuItem(
@@ -328,7 +335,7 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              DateFormat('dd-MM-yyyy').format(_startDate),
+                              _formatDisplayDate(_startDate),
                               style: TextStyle(
                                   fontFamily: AppFont.get(FontType.medium),
                                   fontSize: util.fontSize14),
@@ -345,8 +352,7 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
                   Text(
                     'Searching the next 7 days from this date'.tr,
                     style: TextStyle(
-                        fontSize: 11,
-                        color: blackColor.withValues(alpha: 0.5)),
+                        fontSize: 11, color: blackColor.withValues(alpha: 0.5)),
                   ),
                   SizedBox(height: util.height20),
                   Row(
@@ -413,12 +419,10 @@ class _EventPlannerFormPageState extends State<EventPlannerFormPage> {
   InputDecoration _inputDecoration() => InputDecoration(
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                BorderSide(color: blackColor.withValues(alpha: 0.15))),
+            borderSide: BorderSide(color: blackColor.withValues(alpha: 0.15))),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                BorderSide(color: blackColor.withValues(alpha: 0.15))),
+            borderSide: BorderSide(color: blackColor.withValues(alpha: 0.15))),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         fillColor: whiteColor,

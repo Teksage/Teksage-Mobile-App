@@ -1,8 +1,11 @@
 import 'package:astro_prompt/Model/muhurtha_model.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/event_planner_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class EventPlannerDayRow extends StatelessWidget {
   final MuhurthaDayResult day;
@@ -13,7 +16,7 @@ class EventPlannerDayRow extends StatelessWidget {
     if (period == 'Morning') return 'Morning'.tr.toUpperCase();
     if (period == 'Evening') return 'Evening'.tr.toUpperCase();
     if (period == 'Full day') return 'Full day'.tr.toUpperCase();
-    return period.toUpperCase();
+    return period.tr.toUpperCase();
   }
 
   List<String> _reasons(MuhurthaDayResult d) {
@@ -40,6 +43,17 @@ class EventPlannerDayRow extends StatelessWidget {
     return [];
   }
 
+  String _dateLabel(MuhurthaDayResult d) {
+    try {
+      final date = DateTime.parse(d.isoDate.isNotEmpty ? d.isoDate : d.date);
+      final locale = EventPlannerConfig.currentIntlLocale;
+      initializeDateFormatting(locale);
+      return DateFormat.yMMMd(locale).format(date);
+    } catch (_) {
+      return d.date;
+    }
+  }
+
   /// Morning/Evening only when the day is not a full weekday exclusion.
   List<MuhurthaDaySegment> _displaySegments(MuhurthaDayResult d) {
     if (d.segments.length <= 1) return const [];
@@ -57,11 +71,13 @@ class EventPlannerDayRow extends StatelessWidget {
   }
 
   String _statusLabel(bool suitable, {String? rating}) {
-    if (!suitable) return '🔴 Not Suitable';
+    if (!suitable) return '🔴 ${'Not Suitable'.tr}';
     final r = (rating ?? '').toLowerCase();
-    if (r.contains('average')) return '🟠 Average';
-    if (r.contains('good') && !r.contains('very')) return '🟡 Good';
-    return '🟢 Very Good';
+    if (r.contains('average')) return '🟠 ${'Average'.tr}';
+    if (r.contains('good') && !r.contains('very')) {
+      return '🟡 ${'Good'.tr}';
+    }
+    return '🟢 ${'Very Good'.tr}';
   }
 
   Widget _statusChip(bool suitable, {String? rating}) {
@@ -149,7 +165,7 @@ class EventPlannerDayRow extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 2, left: 8, bottom: 4),
               child: Text(
-                '+$extra more',
+                '+@count more'.trParams({'count': '$extra'}),
                 style: TextStyle(
                   fontSize: 10,
                   fontFamily: AppFont.get(FontType.semiBold),
@@ -198,12 +214,12 @@ class EventPlannerDayRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(day.date,
+                Text(_dateLabel(day),
                     style: TextStyle(
                         fontFamily: AppFont.get(FontType.semiBold),
                         fontSize: 12)),
                 if (day.weekday != null)
-                  Text(day.weekday!,
+                  Text(day.weekday!.tr,
                       style: TextStyle(
                           fontSize: 10,
                           color: blackColor.withValues(alpha: 0.5))),
@@ -226,8 +242,7 @@ class EventPlannerDayRow extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 9,
                                     fontFamily: AppFont.get(FontType.semiBold),
-                                    color:
-                                        blackColor.withValues(alpha: 0.45))),
+                                    color: blackColor.withValues(alpha: 0.45))),
                             const SizedBox(height: 3),
                             _statusChip(s.isSuitable, rating: s.rating),
                           ],
@@ -257,8 +272,7 @@ class EventPlannerDayRow extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 9,
                                     fontFamily: AppFont.get(FontType.semiBold),
-                                    color:
-                                        blackColor.withValues(alpha: 0.45))),
+                                    color: blackColor.withValues(alpha: 0.45))),
                             if (s.isSuitable && wins.isNotEmpty)
                               _windowsBlock(wins)
                             else

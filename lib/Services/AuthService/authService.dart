@@ -15,6 +15,7 @@ import 'package:astro_prompt/config/LocallySavedData/userId.dart';
 import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/LocallySavedData/welcomeMessage.dart';
 import 'package:astro_prompt/config/api_endpoints.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -34,10 +35,6 @@ class AuthService {
   Future<Map<String, dynamic>> login(String keyValue, String variable,
       {String? countryCode}) async {
     // String tz = await _readOrEnsureTimezone();
-    var headers = {
-      'Content-Type': 'application/json',
-      // 'X-Timezone': tz,
-    };
     Map<String, dynamic> body = {keyValue: variable};
 
     if (keyValue == 'mobile_number') {
@@ -51,6 +48,13 @@ class AuthService {
       print('Login body: $body');
     }
     try {
+      final appCheckToken = await FirebaseAppCheck.instance.getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'X-Client-Platform': Platform.isAndroid ? 'android' : 'ios',
+        if (appCheckToken != null && appCheckToken.isNotEmpty)
+          'X-Firebase-AppCheck': appCheckToken,
+      };
       var response = await http.post(
         Uri.parse(ApiEndpoint.login),
         headers: headers,
@@ -60,13 +64,16 @@ class AuthService {
       if (response.statusCode == 200) {
         return responseBody;
       } else {
-        return {'error': responseBody['detail'] ?? 'Unknown error occurred'};
+        return {
+          'error': responseBody['detail'] ??
+              'Something went wrong. Please try again.'
+        };
       }
     } catch (e) {
       if (kDebugMode) {
         print('Error: $e');
       }
-      return {'error': e.toString()};
+      return {'error': 'Something went wrong. Please try again.'};
     }
   }
 

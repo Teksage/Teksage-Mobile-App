@@ -117,8 +117,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _selectedDialCode =
             result['dialCode'] ?? LoginConstants.defaultDialCode;
-        _selectedCountryCodeNumeric =
-            _selectedDialCode.replaceAll('+', '');
+        _selectedCountryCodeNumeric = _selectedDialCode.replaceAll('+', '');
         _mobileLength = int.tryParse(result['mobileNumberLength'] ?? '') ??
             LoginConstants.defaultMobileLength;
         _countryFlag = result['countryFlag'];
@@ -158,7 +157,9 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         showErrorSnackBar(
           context,
-          response['error'] ?? 'Something went wrong',
+          (response['error'] ?? 'Something went wrong. Please try again.')
+              .toString()
+              .tr,
         );
       }
     } catch (_) {
@@ -191,7 +192,9 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         showErrorSnackBar(
           context,
-          response['error'] ?? 'Error: Contact Teksage.',
+          (response['error'] ?? 'Something went wrong. Please try again.')
+              .toString()
+              .tr,
         );
       }
     } catch (_) {
@@ -310,15 +313,15 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: util.responsiveHeight(0.0567),
       child: TextField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      onChanged: _validateEmail,
-      style: TextStyle(
-        fontFamily: AppFont.get(FontType.bold),
-        fontSize: util.fontSize16,
-      ),
-      decoration: _fieldDecoration(util, LoginConstants.emailPlaceholder),
+        controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
+        autocorrect: false,
+        onChanged: _validateEmail,
+        style: TextStyle(
+          fontFamily: AppFont.get(FontType.bold),
+          fontSize: util.fontSize16,
+        ),
+        decoration: _fieldDecoration(util, LoginConstants.emailPlaceholder),
       ),
     );
   }
@@ -508,9 +511,8 @@ class _LoginPageState extends State<LoginPage> {
                                     : Text(
                                         LoginConstants.continueCta,
                                         style: TextStyle(
-                                          color: canTap
-                                              ? whiteColor
-                                              : mainColor,
+                                          color:
+                                              canTap ? whiteColor : mainColor,
                                           fontFamily:
                                               AppFont.get(FontType.medium),
                                           fontSize: util.fontSize18,

@@ -1,0 +1,40 @@
+---
+description: Required workflow for localizing new Flutter features and copy
+alwaysApply: true
+---
+
+# Mobile Localization Workflow
+
+Follow `D:\teksage-website\docs\TRANSLATION_WORKFLOW.md` for the complete procedure.
+
+Localization is mandatory for every new feature with user-visible copy. Apply
+this workflow automatically even when the user does not mention languages, and
+do not mark the feature complete until its locale keys and dry-run are done.
+
+- Wire user-facing Flutter text through GetX `.tr` or `.trParams`.
+- Include localization in the initial implementation; do not defer it as a separate task.
+- Add the English key/value to the `en_US` map in `lib/config/localeString.dart`.
+- Add the same English stub to `ta`, `hi`, `te_IN`, `kn_IN`, `ml_IN`, and `mr_IN`.
+- Reuse an existing key before adding a duplicate or punctuation variant.
+- Preserve placeholders exactly, including `@name`, `{count}`, interpolation tokens, arrows, and escaped newlines.
+- Keep native language names, product names, and approved acronyms unchanged when appropriate.
+- Do not add runtime Google Translation calls.
+- Never request that an API key be pasted into chat or committed.
+
+After adding keys, run from `D:\teksage-website`:
+
+```powershell
+node translate-locales.mjs --dry-run --mobile-only --show-keys
+```
+
+Tell the user the pending character count. Translate the physical mobile catalog with:
+
+```powershell
+node translate-locales.mjs --mobile-only
+```
+
+The script scans `localeString.dart` but sends only new English stubs, so no feature manifest is required.
+
+After translation, check for Unicode replacement characters and temporary placeholder markers, run `dart analyze lib/config/localeString.dart`, and run `git diff --check`.
+
+The final agent response must state keys added, dry-run character count, exact next command, analyzer baseline/new issues, and screens requiring manual language QA.

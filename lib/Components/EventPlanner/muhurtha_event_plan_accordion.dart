@@ -2,8 +2,10 @@ import 'package:astro_prompt/Components/EventPlanner/event_planner_day_row.dart'
 import 'package:astro_prompt/Model/muhurtha_model.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/event_planner_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class MuhurthaEventPlanAccordion extends StatefulWidget {
@@ -16,14 +18,16 @@ class MuhurthaEventPlanAccordion extends StatefulWidget {
       _MuhurthaEventPlanAccordionState();
 }
 
-class _MuhurthaEventPlanAccordionState extends State<MuhurthaEventPlanAccordion> {
+class _MuhurthaEventPlanAccordionState
+    extends State<MuhurthaEventPlanAccordion> {
   bool _open = false;
 
   String _formatRange(String start, String end) {
     try {
       final s = DateTime.parse(start);
       final e = DateTime.parse(end);
-      final fmt = DateFormat('d MMM yyyy');
+      initializeDateFormatting(EventPlannerConfig.currentIntlLocale);
+      final fmt = DateFormat.yMMMd(EventPlannerConfig.currentIntlLocale);
       return '${fmt.format(s)} – ${fmt.format(e)}';
     } catch (_) {
       return '$start – $end';
@@ -83,9 +87,7 @@ class _MuhurthaEventPlanAccordionState extends State<MuhurthaEventPlanAccordion>
                     ),
                   ),
                   Text(
-                    _open
-                        ? 'Hide event plan'.tr
-                        : 'View event plan'.tr,
+                    _open ? 'Hide event plan'.tr : 'View event plan'.tr,
                     style: TextStyle(
                       fontSize: 12,
                       fontFamily: AppFont.get(FontType.semiBold),

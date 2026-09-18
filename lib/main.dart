@@ -13,7 +13,9 @@ import 'package:astro_prompt/config/LocallySavedData/appLanguage.dart';
 import 'package:astro_prompt/config/localeString.dart';
 import 'package:astro_prompt/config/networkCheck.dart';
 import 'package:astro_prompt/config/noInternetScreen.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,6 +24,11 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: kDebugMode
+        ? const AndroidDebugProvider()
+        : const AndroidPlayIntegrityProvider(),
+  );
   // Capture deep link params (?ref=, ?utm_source=facebook, etc.) and report install attribution
   await InstallAttributionService.instance.initDeepLinkAndAttribution();
   if (Platform.isAndroid) {

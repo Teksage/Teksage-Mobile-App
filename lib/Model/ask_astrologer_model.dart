@@ -62,6 +62,51 @@ class AskAstrologerOrderResponse {
   }
 }
 
+class AskAstrologerPreviousQa {
+  final int id;
+  final String? answeredAt;
+  final String requestKind;
+  final String userQuestion;
+  final String? answerText;
+  final String? answerVoiceUrl;
+  final int? answerVoiceDurationSec;
+  final String? astrologerName;
+  final int? astrologerId;
+  final Map<String, dynamic>? muhurthaResult;
+
+  AskAstrologerPreviousQa({
+    required this.id,
+    this.answeredAt,
+    required this.requestKind,
+    required this.userQuestion,
+    this.answerText,
+    this.answerVoiceUrl,
+    this.answerVoiceDurationSec,
+    this.astrologerName,
+    this.astrologerId,
+    this.muhurthaResult,
+  });
+
+  factory AskAstrologerPreviousQa.fromJson(Map<String, dynamic> json) {
+    return AskAstrologerPreviousQa(
+      id: json['id'] as int,
+      answeredAt: json['answered_at'] as String?,
+      requestKind: (json['request_kind'] as String?) ?? 'chat',
+      userQuestion: json['user_question'] as String? ?? '',
+      answerText: json['answer_text'] as String?,
+      answerVoiceUrl: json['answer_voice_url'] as String?,
+      answerVoiceDurationSec: json['answer_voice_duration_sec'] as int?,
+      astrologerName: AskAstrologerRequest._nullableString(
+        json['astrologer_name'],
+      ),
+      astrologerId: json['astrologer_id'] as int?,
+      muhurthaResult: json['muhurtha_result'] is Map
+          ? Map<String, dynamic>.from(json['muhurtha_result'] as Map)
+          : null,
+    );
+  }
+}
+
 class AskAstrologerRequest {
   final int id;
   final String status;
@@ -85,6 +130,8 @@ class AskAstrologerRequest {
   final String? placeOfBirth;
   final String? rashi;
   final String? nakshatra;
+  final int previousQaCount;
+  final List<AskAstrologerPreviousQa> previousQa;
 
   AskAstrologerRequest({
     required this.id,
@@ -109,9 +156,20 @@ class AskAstrologerRequest {
     this.placeOfBirth,
     this.rashi,
     this.nakshatra,
+    this.previousQaCount = 0,
+    this.previousQa = const [],
   });
 
   factory AskAstrologerRequest.fromJson(Map<String, dynamic> json) {
+    final previousRaw = json['previous_qa'];
+    final previousList = previousRaw is List
+        ? previousRaw
+            .whereType<Map>()
+            .map((e) => AskAstrologerPreviousQa.fromJson(
+                  Map<String, dynamic>.from(e),
+                ))
+            .toList()
+        : <AskAstrologerPreviousQa>[];
     return AskAstrologerRequest(
       id: json['id'] as int,
       status: json['status'] as String,
@@ -139,6 +197,8 @@ class AskAstrologerRequest {
       placeOfBirth: json['place_of_birth'] as String?,
       rashi: json['rashi'] as String?,
       nakshatra: json['nakshatra'] as String?,
+      previousQaCount: (json['previous_qa_count'] as num?)?.toInt() ?? 0,
+      previousQa: previousList,
     );
   }
 

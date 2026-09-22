@@ -1,13 +1,13 @@
 class ApiEndpoint {
  // static const String mainUrl = 'https://anwshecjj0.execute-api.ap-south-1.amazonaws.com';
   ///Production Environment
-  // static const String mainUrl = 'http://ec2-15-206-194-79.ap-south-1.compute.amazonaws.com:8000';
-  // static const String chatUrl = 'ws://ec2-15-206-194-79.ap-south-1.compute.amazonaws.com:8000/chat';
+  static const String mainUrl = 'https://api.teksage.app';
+  static const String chatUrl = 'wss://api.teksage.app/chat';
   ///Dev Environment
   //emulator
   // static const String mainUrl ="http://10.0.2.2:8000";
   //physical device — use your PC's current Wi‑Fi IPv4 (ipconfig). Must match same network as phone.
-static const String mainUrl ="http://10.184.55.187:8000";
+// static const String mainUrl ="http://10.35.122.187:8000";
 
   // static const String mainUrl ='https://teksage-backend-latest.onrender.com';
   // static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
@@ -16,7 +16,7 @@ static const String mainUrl ="http://10.184.55.187:8000";
   //emulator
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
-static const String chatUrl ="ws://10.184.55.187:8000/chat";
+// static const String chatUrl ="ws://10.35.122.187:8000/chat";
   
 
   ///

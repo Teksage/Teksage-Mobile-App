@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:astro_prompt/Components/Astrologer/ask_answer_voice_input.dart';
+import 'package:astro_prompt/Components/Astrologer/ask_request_previous_qa_section.dart';
 import 'package:astro_prompt/Components/EventPlanner/muhurtha_event_plan_accordion.dart';
 import 'package:astro_prompt/Model/muhurtha_model.dart';
 import 'package:astro_prompt/Components/Common/voice_answer_player.dart';
@@ -36,6 +37,9 @@ class AskAstrologerRequestCard extends StatefulWidget {
 class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
   bool _expanded = false;
   bool _submitting = false;
+  bool _historyLoading = false;
+  bool _historyLoaded = false;
+  List<AskAstrologerPreviousQa> _previousQa = const [];
   String _answerText = '';
   File? _voiceFile;
   int? _voiceDurationSec;
@@ -45,6 +49,18 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
     if (widget.request.status == 'assigned') return 'Awaiting answer'.tr;
     if (widget.request.status == 'answered') return 'Answered'.tr;
     return widget.request.status;
+  }
+
+  Future<void> _loadPreviousQa() async {
+    if (_historyLoaded || widget.request.previousQaCount <= 0) return;
+    setState(() => _historyLoading = true);
+    final detail = await _service.fetchRequestDetail(widget.request.id);
+    if (!mounted) return;
+    setState(() {
+      _historyLoading = false;
+      _historyLoaded = true;
+      _previousQa = detail?.previousQa ?? const [];
+    });
   }
 
   Future<void> _submit() async {
@@ -147,12 +163,43 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
             ],
           ),
           SizedBox(height: 8),
-          Text(_statusLabel,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: req.status == 'answered' ? mainColor : Colors.amber.shade800,
-                  fontFamily: AppFont.get(FontType.semiBold))),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(_statusLabel,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: req.status == 'answered'
+                          ? mainColor
+                          : Colors.amber.shade800,
+                      fontFamily: AppFont.get(FontType.semiBold))),
+              if (req.previousQaCount > 0)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: mainColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Returning'.tr,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: mainColor,
+                      fontFamily: AppFont.get(FontType.semiBold),
+                    ),
+                  ),
+                ),
+            ],
+          ),
           Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
+          AskRequestPreviousQaSection(
+            count: req.previousQaCount,
+            items: _previousQa,
+            loading: _historyLoading,
+            onExpand: _loadPreviousQa,
+          ),
           _detailSection('Client details'.tr, [
             if (req.customerName != null) _detailRow('Name'.tr, req.customerName!),
             if (req.dateOfBirth != null) _detailRow('DOB'.tr, req.dateOfBirth!),

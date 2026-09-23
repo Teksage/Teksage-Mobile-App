@@ -22,11 +22,13 @@ import 'package:url_launcher/url_launcher.dart';
 class AskAstrologerRequestCard extends StatefulWidget {
   final AskAstrologerRequest request;
   final VoidCallback onAnswered;
+  final bool isDetailPage;
 
   const AskAstrologerRequestCard({
     super.key,
     required this.request,
     required this.onAnswered,
+    this.isDetailPage = false,
   });
 
   @override
@@ -44,6 +46,20 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
   File? _voiceFile;
   int? _voiceDurationSec;
   final _service = AstrologerAskService();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isDetailPage) {
+      _expanded = widget.request.status == 'assigned';
+      _previousQa = widget.request.previousQa;
+      _historyLoaded = widget.request.previousQa.isNotEmpty ||
+          widget.request.previousQaCount <= 0;
+      if (!_historyLoaded && widget.request.previousQaCount > 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _loadPreviousQa());
+      }
+    }
+  }
 
   String get _statusLabel {
     if (widget.request.status == 'assigned') return 'Awaiting answer'.tr;
@@ -155,7 +171,7 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
                   ],
                 ),
               ),
-              if (req.status == 'assigned')
+              if (!widget.isDetailPage && req.status == 'assigned')
                 TextButton(
                   onPressed: () => setState(() => _expanded = !_expanded),
                   child: Text(_expanded ? 'Cancel'.tr : 'Answer'.tr),
@@ -306,7 +322,8 @@ class _AskAstrologerRequestCardState extends State<AskAstrologerRequestCard> {
               ),
             ],
           ],
-          if (_expanded && req.status == 'assigned') ...[
+          if ((_expanded || widget.isDetailPage) &&
+              req.status == 'assigned') ...[
             Divider(height: 24, color: blackColor.withValues(alpha: 0.1)),
             Text('Record your answer (required)'.tr,
                 style: TextStyle(fontFamily: AppFont.get(FontType.semiBold))),

@@ -33,6 +33,22 @@ class AstrologerAskService {
     }
   }
 
+  Future<AskAstrologerRequest?> fetchRequestDetail(int requestId) async {
+    try {
+      final response = await APIRequest.getRequest(
+        '${ApiEndpoint.astrologerAskRequests}/$requestId',
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return AskAstrologerRequest.fromJson(data);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Astrologer ask request detail error: $e');
+      return null;
+    }
+  }
+
   Future<bool> submitAnswer({
     required int requestId,
     String? answerText,

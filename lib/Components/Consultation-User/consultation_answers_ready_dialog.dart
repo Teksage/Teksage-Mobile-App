@@ -1,17 +1,26 @@
-import 'package:astro_prompt/Model/ask_astrologer_model.dart';
-import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_summary_page.dart';
-import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
+import 'package:astro_prompt/Screens/ConsultationUser/userBookingComplete.dart';
+import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-Future<void> showAskAnswerReadyDialog(
+/// Suppress answers-ready popup while viewing this booking details event.
+int? viewingConsultationAnswersEventId;
+
+Future<void> showConsultationAnswersReadyDialog(
   BuildContext context,
-  AskAstrologerRequest request,
+  Map<String, dynamic> event,
 ) async {
   final util = MyUtility(context);
+  final eventId = event['id'] as int? ?? 0;
+  final astrologerName =
+      (event['astrologer_name'] as String?)?.trim().isNotEmpty == true
+          ? (event['astrologer_name'] as String).trim()
+          : 'Astrologer'.tr;
+
   await showDialog<void>(
     context: context,
     barrierDismissible: true,
@@ -42,7 +51,7 @@ Future<void> showAskAnswerReadyDialog(
             ),
             SizedBox(height: util.height20),
             Text(
-              'Your answer is ready'.tr,
+              'Your answers are ready'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: AppFont.get(FontType.semiBold),
@@ -51,7 +60,8 @@ Future<void> showAskAnswerReadyDialog(
             ),
             SizedBox(height: 8),
             Text(
-              'An astrologer has replied to your question.'.tr,
+              'Your astrologer has submitted answers to your consultation questions.'
+                  .tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: util.fontSize14,
@@ -60,7 +70,7 @@ Future<void> showAskAnswerReadyDialog(
             ),
             SizedBox(height: 4),
             Text(
-              'Read or listen to the answer now — or find it later in Notifications.'
+              'Open Booking Details to read them — you can also leave a review there.'
                   .tr,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -80,7 +90,8 @@ Future<void> showAskAnswerReadyDialog(
                 ),
               ),
               child: Text(
-                request.userQuestion,
+                astrologerName,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: AppFont.get(FontType.medium),
                   fontSize: util.fontSize14,
@@ -92,13 +103,11 @@ Future<void> showAskAnswerReadyDialog(
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => _dismissAndAcknowledge(
-                      dialogContext,
-                      request.id,
-                    ),
+                    onPressed: () => _dismissAndAck(dialogContext, eventId),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: blackColor.withValues(alpha: 0.6),
-                      side: BorderSide(color: blackColor.withValues(alpha: 0.12)),
+                      side: BorderSide(
+                          color: blackColor.withValues(alpha: 0.12)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
@@ -111,13 +120,8 @@ Future<void> showAskAnswerReadyDialog(
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await _dismissAndAcknowledge(
-                        dialogContext,
-                        request.id,
-                      );
-                      Get.to(() => AskAstrologerSummaryPage(
-                            requestId: request.id,
-                          ));
+                      await _dismissAndAck(dialogContext, eventId);
+                      _openBookingDetails(event);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: mainColor,
@@ -127,7 +131,7 @@ Future<void> showAskAnswerReadyDialog(
                       minimumSize: Size(0, 44),
                     ),
                     child: Text(
-                      'Open answer'.tr,
+                      'View answers'.tr,
                       style: TextStyle(
                         color: whiteColor,
                         fontFamily: AppFont.get(FontType.semiBold),
@@ -144,10 +148,54 @@ Future<void> showAskAnswerReadyDialog(
   );
 }
 
-Future<void> _dismissAndAcknowledge(
-  BuildContext dialogContext,
-  int requestId,
-) async {
-  await AskAstrologerService().acknowledgeAnswerReady(requestId);
+Future<void> _dismissAndAck(BuildContext dialogContext, int eventId) async {
+  await AstroUserEventService().acknowledgeAnswersReady(eventId);
   if (dialogContext.mounted) Navigator.pop(dialogContext);
+}
+
+void _openBookingDetails(Map<String, dynamic> event) {
+  final start = event['start_datetime']?.toString() ?? '';
+  final end = event['end_datetime']?.toString() ?? '';
+  String bookingDate = '';
+  String bookingTime = '';
+  try {
+    if (start.isNotEmpty) {
+      final s = DateTime.parse(start).toLocal();
+      bookingDate = DateFormat('dd MMM yyyy').format(s);
+      if (end.isNotEmpty) {
+        final e = DateTime.parse(end).toLocal();
+        bookingTime =
+            '${DateFormat('hh:mm a').format(s)} - ${DateFormat('hh:mm a').format(e)}';
+      }
+    }
+  } catch (_) {}
+
+  final name = (event['astrologer_name'] as String?)?.trim() ?? '';
+  final parts = name.split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+  final first = parts.isNotEmpty ? parts.first : '';
+  final last = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+  final fee = event['consultation_fee'];
+  final currency = event['currency']?.toString() ?? 'INR';
+  final categories = (event['category'] as List?)
+          ?.map((e) => e.toString())
+          .toList() ??
+      <String>[];
+  final languages = (event['languages'] as List?)
+          ?.map((e) => e.toString())
+          .toList() ??
+      <String>[];
+
+  Get.to(() => UserConsultationBookingComplete(
+        eventId: event['id'] as int? ?? 0,
+        categories: categories,
+        languages: languages,
+        bookingDate: bookingDate,
+        bookingTime: bookingTime,
+        consultingFee: fee?.toString() ?? '0',
+        profileImage: event['astrologer_picture']?.toString() ?? '',
+        firstName: first,
+        lastName: last,
+        currency: currency,
+        rating: (event['rating'] as num?)?.toInt() ?? 0,
+      ));
 }

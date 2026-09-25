@@ -1,5 +1,5 @@
-import 'dart:ui';
-import 'package:astro_prompt/Components/Consultation-User/ratingDialog.dart';
+import 'package:astro_prompt/Components/Consultation-User/consultation_answers_ready_dialog.dart';
+import 'package:astro_prompt/Components/Consultation-User/consultation_review_card.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astrologer_consult_event_model.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/question_model.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
@@ -57,8 +57,17 @@ class _UserConsultationBookingCompleteState
   @override
   void initState() {
     super.initState();
+    viewingConsultationAnswersEventId = widget.eventId;
     eventFuture = astroService.fetchAstroSingleUserEvent(widget.eventId);
     getQuestions();
+  }
+
+  @override
+  void dispose() {
+    if (viewingConsultationAnswersEventId == widget.eventId) {
+      viewingConsultationAnswersEventId = null;
+    }
+    super.dispose();
   }
 
   void getQuestions() {
@@ -349,7 +358,7 @@ class _UserConsultationBookingCompleteState
                   SizedBox(
                     height: 20,
                   ),
-//Rating Section
+//Rating / Review Section
                   FutureBuilder<ConsultationEventModel?>(
                     future: eventFuture,
                     builder: (context, snapshot) {
@@ -367,113 +376,25 @@ class _UserConsultationBookingCompleteState
                       }
 
                       final eventData = snapshot.data!;
-                      final rating =
-                          eventData.rating ?? 0; // fallback in case null
-
-                      return rating == 0
-                          ? GestureDetector(
-                              onTap: () async {
-                                final shouldRefresh =
-                                    await showGeneralDialog<bool>(
-                                  context: context,
-                                  barrierLabel: "RatingDialog",
-                                  barrierDismissible: true,
-                                  barrierColor:
-                                      Colors.black.withValues(alpha: 0.4),
-                                  transitionDuration:
-                                      const Duration(milliseconds: 200),
-                                  pageBuilder:
-                                      (context, animation1, animation2) {
-                                    return BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 4, sigmaY: 4),
-                                      child: Center(
-                                        child: RatingDialog(
-                                          meetingId: widget.eventId,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                                if (shouldRefresh == true) {
-                                  refreshRating(); // This triggers the FutureBuilder to rebuild
-                                }
-                              },
-                              child: Container(
-                                width: util.width,
-                                padding: EdgeInsets.symmetric(vertical: 13),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: const Color(0xff85AD0A),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Give Rating'.tr,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily:
-                                            AppFont.get(FontType.semiBold),
-                                        fontSize: util.fontSize16,
-                                        height: 1.0,
-                                        color: whiteColor,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    SvgPicture.asset(
-                                      customerRatingSelect,
-                                      width: 15,
-                                      height: 15,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Column(
-                              children: [
-                                Text(
-                                  'Ratings'.tr,
-                                  style: TextStyle(
-                                    fontFamily: AppFont.get(FontType.semiBold),
-                                    fontSize: util.fontSize14,
-                                    height: 1.0,
-                                    color: blackColor.withValues(alpha: 0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      rating.toString(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily:
-                                            AppFont.get(FontType.semiBold),
-                                        fontSize: util.fontSize24,
-                                        height: 1.0,
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    SvgPicture.asset(
-                                      customerRatingSelect,
-                                      width: 23,
-                                      height: 23,
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                SvgPicture.asset(
-                                  astroCalenderLine,
-                                  colorFilter: ColorFilter.mode(
-                                    Colors.black.withValues(alpha: 0.2),
-                                    BlendMode.srcIn,
-                                  ),
-                                ),
-                              ],
-                            );
+                      return Column(
+                        children: [
+                          ConsultationReviewCard(
+                            eventId: widget.eventId,
+                            rating: eventData.rating,
+                            feedback: eventData.feedback,
+                            reviewStatus: eventData.reviewStatus,
+                            onUpdated: refreshRating,
+                          ),
+                          const SizedBox(height: 16),
+                          SvgPicture.asset(
+                            astroCalenderLine,
+                            colorFilter: ColorFilter.mode(
+                              Colors.black.withValues(alpha: 0.2),
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ],
+                      );
                     },
                   ),
 
@@ -625,18 +546,22 @@ class _UserConsultationBookingCompleteState
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      if (questions[index].answer != null &&
-                                          questions[index].answer!.isNotEmpty)
-                                        Text(
-                                          questions[index].answer!,
-                                          style: TextStyle(
-                                              fontFamily:
-                                                  AppFont.get(FontType.medium),
-                                              fontSize: util.fontSize14,
-                                              height: 1.2,
-                                              color: blackColor.withValues(
-                                                  alpha: 0.5)),
-                                        ),
+                                      Text(
+                                        (questions[index].answer != null &&
+                                                questions[index]
+                                                    .answer!
+                                                    .trim()
+                                                    .isNotEmpty)
+                                            ? questions[index].answer!.trim()
+                                            : 'No answer provided yet.'.tr,
+                                        style: TextStyle(
+                                            fontFamily:
+                                                AppFont.get(FontType.medium),
+                                            fontSize: util.fontSize14,
+                                            height: 1.2,
+                                            color: blackColor.withValues(
+                                                alpha: 0.5)),
+                                      ),
                                     ],
                                   ),
                                 ),

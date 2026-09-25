@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:astro_prompt/Components/AskAstrologer/ask_answer_ready_prompt.dart';
+import 'package:astro_prompt/Components/Consultation-User/consultation_answers_ready_prompt.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
 import 'package:astro_prompt/Screens/auth/login_page.dart';
@@ -173,11 +174,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           routingCallback: (_) => AskAnswerReadyScheduler.notifyRouteChanged(),
           builder: (context, child) {
             return AskAnswerReadyPrompt(
-              child: Stack(
-                children: [
-                  child!,
-                  if (isConnected == false) const FullScreenNoInternet(),
-                ],
+              child: ConsultationAnswersReadyPrompt(
+                child: Stack(
+                  children: [
+                    child!,
+                    if (isConnected == false) const FullScreenNoInternet(),
+                  ],
+                ),
               ),
             );
           },

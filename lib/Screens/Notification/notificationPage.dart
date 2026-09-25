@@ -1,14 +1,15 @@
 import 'dart:ui';
-import 'package:astro_prompt/Components/AskAstrologer/ask_astrologer_answer_dialog.dart';
 import 'package:astro_prompt/Components/AskAstrologer/ask_astrologer_notification_card.dart';
 import 'package:astro_prompt/Components/Notification/notification_card_shell.dart';
 import 'package:astro_prompt/Components/Consultation-User/timeConversion.dart';
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
+import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_summary_page.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/notification_model.dart';
 import 'package:astro_prompt/Model/weekly_prediction_model.dart';
 import 'package:astro_prompt/Model/yearly_prediction_model.dart';
+import 'package:astro_prompt/Screens/ConsultationUser/UserBookingSummaryHome.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/prediction/dailyPrediction.dart';
 import 'package:astro_prompt/Screens/prediction/weeklyPrediction.dart';
@@ -54,7 +55,6 @@ class _NotificationPageState extends State<NotificationPage>
   List<AskAstrologerRequest> askRequests = [];
   List<NotificationModel> generalNotifications = [];
   late TabController _tabController;
-  int selectedTabIndex = 0;
   final PredictionService predictionService = PredictionService();
   Future<Map<String, dynamic>>? dailyPredictions;
   Future<({int predictionId, List<WeeklyPredictionModel> predictions})>?
@@ -106,7 +106,7 @@ class _NotificationPageState extends State<NotificationPage>
     if (requestId == null || !mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      showAskAstrologerAnswerDialog(context, requestId);
+      Get.to(() => AskAstrologerSummaryPage(requestId: requestId));
     });
   }
 
@@ -151,21 +151,18 @@ class _NotificationPageState extends State<NotificationPage>
   @override
   void initState() {
     super.initState();
-    selectedTabIndex = widget.selectedTab;
-    if (widget.selectedTab == 1 && widget.openAskRequestId != null) {
+    final initialTab = widget.selectedTab.clamp(0, 2);
+    if (widget.selectedTab == 2 && widget.openAskRequestId != null) {
       setViewingAskAnswerRequestId(widget.openAskRequestId);
     }
     fetchUserId();
     fetchGeneralNotifications();
-    _tabController =
-        TabController(length: 2, vsync: this, initialIndex: selectedTabIndex);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging == false) {
-        setState(() {
-          selectedTabIndex = _tabController.index;
-        });
-      }
-    });
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: initialTab,
+      animationDuration: const Duration(milliseconds: 280),
+    );
   }
 
   @override
@@ -207,79 +204,128 @@ class _NotificationPageState extends State<NotificationPage>
             },
           ),
         ),
-        actions: selectedTabIndex == 0
-            ? [
-                TextButton(
-                  child: Text(
-                    'Clear All'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: AppFont.get(FontType.semiBold),
-                        fontSize: util.fontSize16,
-                        color: errorColor,
-                        height: 1.0),
-                  ),
-                  onPressed: () async {
-                    CustomLoader.show(context);
-                    try {
-                      final message =
-                          await NotificationService().clearAllNotification();
-                      if (message == "Notification statuses updated.") {
-                        setState(() {
-                          generalNotifications.clear();
-                        });
-                        // Navigator.pop(context);
-                        CustomLoader.hide();
-                        showInfoSnackBarDual(
-                            context, "All Notification has been cleared");
-                        await fetchGeneralNotifications();
-                      } else {
-                        CustomLoader.hide();
-                        showErrorSnackBar(
-                            context, 'Failed to update notification status');
-                      }
-                    } catch (e) {
-                      // Navigator.pop(context);
-                      showErrorSnackBar(
-                          context, 'Please try again after sometime');
-                    }
-                  },
+        actions: [
+          ListenableBuilder(
+            listenable: _tabController,
+            builder: (context, _) {
+              if (_tabController.index != 0) {
+                return const SizedBox.shrink();
+              }
+              return TextButton(
+                child: Text(
+                  'Clear All'.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: AppFont.get(FontType.semiBold),
+                      fontSize: util.fontSize16,
+                      color: errorColor,
+                      height: 1.0),
                 ),
-              ]
-            : null,
+                onPressed: () async {
+                  CustomLoader.show(context);
+                  try {
+                    final message =
+                        await NotificationService().clearAllNotification();
+                    if (message == "Notification statuses updated.") {
+                      setState(() {
+                        generalNotifications.clear();
+                      });
+                      CustomLoader.hide();
+                      showInfoSnackBarDual(
+                          context, "All Notification has been cleared");
+                      await fetchGeneralNotifications();
+                    } else {
+                      CustomLoader.hide();
+                      showErrorSnackBar(
+                          context, 'Failed to update notification status');
+                    }
+                  } catch (e) {
+                    showErrorSnackBar(
+                        context, 'Please try again after sometime');
+                  }
+                },
+              );
+            },
+          ),
+        ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: whiteColor,
-              unselectedLabelColor: blackColor,
-              dividerHeight: 0,
-              labelStyle: TextStyle(
-                  fontFamily: AppFont.get(FontType.semiBold),
-                  fontSize: util.fontSize16),
-              unselectedLabelStyle: TextStyle(
-                  fontFamily: AppFont.get(FontType.medium),
-                  fontSize: util.fontSize16),
-              indicator: BoxDecoration(
-                color: mainColor,
-                borderRadius: BorderRadius.circular(30),
+          preferredSize: const Size.fromHeight(68),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: blackColor.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(12),
               ),
-              indicatorPadding: EdgeInsets.zero,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(text: "General".tr),
-                Tab(text: "Consultation".tr),
-              ],
+              child: TabBar(
+                controller: _tabController,
+                isScrollable: false,
+                labelColor: whiteColor,
+                unselectedLabelColor: blackColor.withValues(alpha: 0.75),
+                dividerHeight: 0,
+                labelPadding:
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                labelStyle: TextStyle(
+                  fontFamily: AppFont.get(FontType.semiBold),
+                  fontSize: util.fontSize12,
+                  height: 1.15,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontFamily: AppFont.get(FontType.medium),
+                  fontSize: util.fontSize12,
+                  height: 1.15,
+                ),
+                splashFactory: NoSplash.splashFactory,
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                indicator: BoxDecoration(
+                  color: mainColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                indicatorPadding: EdgeInsets.zero,
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: [
+                  Tab(
+                    height: 42,
+                    child: Text(
+                      "General".tr,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Tab(
+                    height: 42,
+                    child: Text(
+                      "30 Mins Consultation".tr,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Tab(
+                    height: 42,
+                    child: Text(
+                      "Single-Query Consultation".tr,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
       body: TabBarView(
         controller: _tabController,
+        physics: const BouncingScrollPhysics(
+          parent: PageScrollPhysics(),
+        ),
         children: [
-           generalNotifications.isEmpty
+          _NotificationKeepAlive(
+            child: generalNotifications.isEmpty
               ? Container(
                   margin: EdgeInsets.only(top: util.height50),
                   padding: EdgeInsets.all(util.width20),
@@ -296,6 +342,9 @@ class _NotificationPageState extends State<NotificationPage>
               : ListView.builder(
                   padding: EdgeInsets.symmetric(
                       horizontal: util.width20, vertical: util.height10),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   itemCount: generalNotifications.length,
                   itemBuilder: (context, index) {
                     final notify = generalNotifications[index];
@@ -540,96 +589,181 @@ class _NotificationPageState extends State<NotificationPage>
                     );
                   },
                 ),
-          (eventGetData.isEmpty && askRequests.isEmpty)
-              ? Container(
-                  margin: EdgeInsets.only(top: util.height50),
-                  padding: EdgeInsets.all(util.width20),
-                  child: Text(
-                    'There are no Consultation updates.'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: util.fontSize14,
-                        fontFamily: AppFont.get(FontType.medium),
-                        color: Colors.grey),
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Container(
+          ),
+          _NotificationKeepAlive(
+            child: eventGetData.isEmpty
+                ? Container(
+                    margin: EdgeInsets.only(top: util.height50),
+                    padding: EdgeInsets.all(util.width20),
+                    child: Text(
+                      'There are no 30 Mins Consultation updates.'.tr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: util.fontSize14,
+                          fontFamily: AppFont.get(FontType.medium),
+                          color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
                     padding: EdgeInsets.symmetric(
                         horizontal: util.width20, vertical: util.width10),
-                    child: Column(
-                      children: [
-                        SizedBox(height: util.height10),
-                        ...askRequests.map(
-                          (req) => AskAstrologerNotificationCard(request: req),
-                        ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: eventGetData.length,
-                            itemBuilder: (context, index) {
-                              final event = eventGetData[index];
-                              final date = DateFormat("dd MMM, yyyy - h:mm a")
-                                  .format(parseWithoutOffset(event.startTime));
-                              return NotificationCardShell(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    NotificationCircleAvatar(
-                                      imageUrl: event.profileImage.isNotEmpty
-                                          ? event.profileImage
-                                          : null,
-                                    ),
-                                    SizedBox(width: 9),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            isAstrologer
-                                                ? "Astrologer appointment on".tr
-                                                : "You have an appointment on".tr,
-                                            style: TextStyle(
-                                                fontFamily: AppFont.get(
-                                                    FontType.medium),
-                                                fontSize: util.fontSize14,
-                                                height: 1.0,
-                                                color: blackColor.withValues(
-                                                    alpha: 0.8)),
-                                          ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            date,
-                                            style: TextStyle(
-                                                fontFamily: AppFont.get(
-                                                    FontType.semiBold),
-                                                fontSize: util.fontSize14,
-                                                color: blackColor,
-                                                height: 1.0),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: util.width8),
-                                    if (event.eventLink.isNotEmpty)
-                                      NotificationActionPill(
-                                        label: 'Meeting Link'.tr,
-                                        onTap: () {
-                                          launchGoogleMeet(event.eventLink);
-                                        },
-                                      ),
-                                  ],
-                                ),
-                              );
-                            })
-                      ],
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
                     ),
+                    itemCount: eventGetData.length,
+                    itemBuilder: (context, index) {
+                      final event = eventGetData[index];
+                      final date = DateFormat("dd MMM, yyyy - h:mm a")
+                          .format(parseWithoutOffset(event.startTime));
+                      return NotificationCardShell(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            NotificationCircleAvatar(
+                              imageUrl: event.profileImage.isNotEmpty
+                                  ? event.profileImage
+                                  : null,
+                            ),
+                            SizedBox(width: 9),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    isAstrologer
+                                        ? "Astrologer appointment on".tr
+                                        : "You have an appointment on".tr,
+                                    style: TextStyle(
+                                        fontFamily:
+                                            AppFont.get(FontType.medium),
+                                        fontSize: util.fontSize14,
+                                        height: 1.0,
+                                        color: blackColor.withValues(
+                                            alpha: 0.8)),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    date,
+                                    style: TextStyle(
+                                        fontFamily:
+                                            AppFont.get(FontType.semiBold),
+                                        fontSize: util.fontSize14,
+                                        color: blackColor,
+                                        height: 1.0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: util.width8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                if (!isAstrologer)
+                                  NotificationActionPill(
+                                    label: 'View Details'.tr,
+                                    outlined: true,
+                                    onTap: () {
+                                      final DateTime eventDt =
+                                          parseWithoutOffset(event.startTime);
+                                      final DateTime endDt =
+                                          parseWithoutOffset(event.endTime);
+                                      final outputFormat =
+                                          DateFormat("hh:mm a");
+                                      final bookingDateLabel =
+                                          DateFormat("d MMMM, y")
+                                              .format(eventDt);
+                                      final formattedTime =
+                                          "${outputFormat.format(eventDt)} - ${outputFormat.format(endDt)}";
+                                      Get.to(() => UserConsultationSummaryHome(
+                                            eventId: event.id,
+                                            categories: event.category ?? [],
+                                            languages: event.languages ?? [],
+                                            bookingDate: bookingDateLabel,
+                                            bookingTime: formattedTime,
+                                            consultingFee: event
+                                                .consultationFee
+                                                .toString(),
+                                            currency: event.currency,
+                                            profileImage: event.profileImage,
+                                            firstName:
+                                                event.astrologerFirstName ?? '',
+                                            lastName:
+                                                event.astrologerLastName ?? '',
+                                            meetingLink: event.eventLink,
+                                            isCompleted:
+                                                event.status == 'completed',
+                                          ));
+                                    },
+                                  ),
+                                if (!isAstrologer &&
+                                    event.eventLink.isNotEmpty)
+                                  SizedBox(height: 6),
+                                if (event.eventLink.isNotEmpty)
+                                  NotificationActionPill(
+                                    label: 'Meeting Link'.tr,
+                                    onTap: () {
+                                      launchGoogleMeet(event.eventLink);
+                                    },
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                ),
-         
+          ),
+          _NotificationKeepAlive(
+            child: askRequests.isEmpty
+                ? Container(
+                    margin: EdgeInsets.only(top: util.height50),
+                    padding: EdgeInsets.all(util.width20),
+                    child: Text(
+                      'There are no Single-Query Consultation updates.'.tr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: util.fontSize14,
+                          fontFamily: AppFont.get(FontType.medium),
+                          color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: util.width20, vertical: util.width10),
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    itemCount: askRequests.length,
+                    itemBuilder: (context, index) {
+                      return AskAstrologerNotificationCard(
+                        request: askRequests[index],
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );
+  }
+}
+
+/// Keeps each notifications tab mounted so swipe/tap switches stay smooth.
+class _NotificationKeepAlive extends StatefulWidget {
+  final Widget child;
+  const _NotificationKeepAlive({required this.child});
+
+  @override
+  State<_NotificationKeepAlive> createState() => _NotificationKeepAliveState();
+}
+
+class _NotificationKeepAliveState extends State<_NotificationKeepAlive>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }

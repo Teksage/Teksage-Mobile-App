@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
 /// Consultation language options — mirrors website `consultation-languages.ts`.
-class AskAstrologerLanguages {  static const List<Map<String, String>> options = [
-    {'id': 'tamil', 'label': 'Tamil'},
-    {'id': 'english', 'label': 'English'},
-    {'id': 'telugu', 'label': 'Telugu'},
-    {'id': 'malayalam', 'label': 'Malayalam'},
-    {'id': 'kannada', 'label': 'Kannada'},
-    {'id': 'hindi', 'label': 'Hindi'},
-    {'id': 'bengali', 'label': 'Bengali'},
-    {'id': 'marathi', 'label': 'Marathi'},
-    {'id': 'urdu', 'label': 'Urdu'},
-    {'id': 'gujarati', 'label': 'Gujarati'},
-    {'id': 'odia', 'label': 'Odia'},
-    {'id': 'punjabi', 'label': 'Punjabi'},
-    {'id': 'assamese', 'label': 'Assamese'},
-    {'id': 'bhojpuri', 'label': 'Bhojpuri'},
-    {'id': 'kashmiri', 'label': 'Kashmiri'},
-    {'id': 'nepali', 'label': 'Nepali'},
-    {'id': 'sindhi', 'label': 'Sindhi'},
-    {'id': 'sinhala', 'label': 'Sinhala'},
-    {'id': 'maithili', 'label': 'Maithili'},
-    {'id': 'manipuri', 'label': 'Manipuri'},
-    {'id': 'santali', 'label': 'Santali'},
+class AskAstrologerLanguages {
+  static const List<Map<String, String>> options = [
+    {'id': 'tamil', 'label': 'Tamil', 'native': 'தமிழ்'},
+    {'id': 'english', 'label': 'English', 'native': 'English'},
+    {'id': 'telugu', 'label': 'Telugu', 'native': 'తెలుగు'},
+    {'id': 'malayalam', 'label': 'Malayalam', 'native': 'മലയാളം'},
+    {'id': 'kannada', 'label': 'Kannada', 'native': 'ಕನ್ನಡ'},
+    {'id': 'hindi', 'label': 'Hindi', 'native': 'हिन्दी'},
+    {'id': 'bengali', 'label': 'Bengali', 'native': 'বাংলা'},
+    {'id': 'marathi', 'label': 'Marathi', 'native': 'मराठी'},
+    {'id': 'urdu', 'label': 'Urdu', 'native': 'اردو'},
+    {'id': 'gujarati', 'label': 'Gujarati', 'native': 'ગુજરાતી'},
+    {'id': 'odia', 'label': 'Odia', 'native': 'ଓଡ଼ିଆ'},
+    {'id': 'punjabi', 'label': 'Punjabi', 'native': 'ਪੰਜਾਬੀ'},
+    {'id': 'assamese', 'label': 'Assamese', 'native': 'অসমীয়া'},
+    {'id': 'bhojpuri', 'label': 'Bhojpuri', 'native': 'भोजपुरी'},
+    {'id': 'kashmiri', 'label': 'Kashmiri', 'native': 'کٲشُر'},
+    {'id': 'nepali', 'label': 'Nepali', 'native': 'नेपाली'},
+    {'id': 'sindhi', 'label': 'Sindhi', 'native': 'سنڌي'},
+    {'id': 'sinhala', 'label': 'Sinhala', 'native': 'සිංහල'},
+    {'id': 'maithili', 'label': 'Maithili', 'native': 'मैथिली'},
+    {'id': 'manipuri', 'label': 'Manipuri', 'native': 'মৈতৈলোন্'},
+    {'id': 'santali', 'label': 'Santali', 'native': 'ᱥᱟᱱᱛᱟᱲᱤ'},
   ];
 
   static String labelFor(String id) {
@@ -30,6 +31,26 @@ class AskAstrologerLanguages {  static const List<Map<String, String>> options =
       (o) => o['id'] == id,
       orElse: () => {'id': id, 'label': id},
     )['label']!;
+  }
+
+  /// Normalize API values (`தமிழ்` / `Tamil` / `tamil`) to canonical id.
+  static String normalizeId(String value) {
+    final raw = value.trim();
+    if (raw.isEmpty) return '';
+    final lower = raw.toLowerCase();
+    for (final opt in options) {
+      final id = opt['id']!;
+      if (id == lower) return id;
+      if (opt['native'] == raw) return id;
+      if (opt['label']!.toLowerCase() == lower) return id;
+    }
+    return lower;
+  }
+
+  static bool speaksLanguage(List<String> languages, String filterId) {
+    final needle = normalizeId(filterId);
+    if (needle.isEmpty) return true;
+    return languages.any((lang) => normalizeId(lang) == needle);
   }
 }
 
@@ -45,7 +66,7 @@ class AskAstrologerScreenCopy {
   static const languageNotes = [
     'Your answer will be delivered within 4 hours.',
     'An expert astrologer will review your question and horoscope, then reply with a personalized voice message.',
-    'You can view your answer anytime under Notifications → Consultation.',
+    'You can view your answer anytime under Notifications → Single-Query Consultation.',
   ];
 }
 

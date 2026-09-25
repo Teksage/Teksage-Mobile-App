@@ -104,12 +104,14 @@ class AstrologerUser {
 
 class Event {
   final int? rating;
+  final String? feedback;
   final int customerId;
   final String firstName;
   final String lastName;
 
   Event({
     required this.rating,
+    this.feedback,
     required this.customerId,
     required this.firstName,
     required this.lastName,
@@ -118,6 +120,7 @@ class Event {
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       rating: json['rating'],
+      feedback: json['feedback']?.toString(),
       customerId: json['customer_id'],
       firstName: json['first_name'],
       lastName: json['last_name'],

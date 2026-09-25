@@ -136,4 +136,47 @@ class AskAstrologerService {
       return false;
     }
   }
+
+  Future<AskAstrologerRequest?> submitReview(
+    int requestId, {
+    required int rating,
+    String? feedback,
+  }) async {
+    try {
+      final body = <String, dynamic>{
+        'rating': rating,
+        if (feedback != null && feedback.trim().isNotEmpty)
+          'feedback': feedback.trim(),
+      };
+      final response = await APIRequest.putRequest(
+        '${ApiEndpoint.askAstrologerBase}/$requestId/review',
+        body,
+      );
+      if (response.statusCode == 200) {
+        return AskAstrologerRequest.fromJson(
+            json.decode(response.body) as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      print('Ask review submit error: $e');
+      return null;
+    }
+  }
+
+  Future<AskAstrologerRequest?> clearReview(int requestId) async {
+    try {
+      final response = await APIRequest.putRequest(
+        '${ApiEndpoint.askAstrologerBase}/$requestId/review',
+        {'clear_review': true},
+      );
+      if (response.statusCode == 200) {
+        return AskAstrologerRequest.fromJson(
+            json.decode(response.body) as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      print('Ask review clear error: $e');
+      return null;
+    }
+  }
 }

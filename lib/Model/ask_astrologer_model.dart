@@ -132,6 +132,11 @@ class AskAstrologerRequest {
   final String? nakshatra;
   final int previousQaCount;
   final List<AskAstrologerPreviousQa> previousQa;
+  final double? basePrice;
+  final String? currency;
+  final int? rating;
+  final String? feedback;
+  final String? reviewStatus;
 
   AskAstrologerRequest({
     required this.id,
@@ -158,6 +163,11 @@ class AskAstrologerRequest {
     this.nakshatra,
     this.previousQaCount = 0,
     this.previousQa = const [],
+    this.basePrice,
+    this.currency,
+    this.rating,
+    this.feedback,
+    this.reviewStatus,
   });
 
   factory AskAstrologerRequest.fromJson(Map<String, dynamic> json) {
@@ -199,6 +209,11 @@ class AskAstrologerRequest {
       nakshatra: json['nakshatra'] as String?,
       previousQaCount: (json['previous_qa_count'] as num?)?.toInt() ?? 0,
       previousQa: previousList,
+      basePrice: (json['base_price'] as num?)?.toDouble(),
+      currency: json['currency'] as String?,
+      rating: (json['rating'] as num?)?.toInt(),
+      feedback: json['feedback'] as String?,
+      reviewStatus: json['review_status'] as String?,
     );
   }
 

@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/login_constants.dart';
 import 'package:astro_prompt/config/otp_contact_helpers.dart';
 
 class DeleteOTPScreen extends StatefulWidget {
@@ -31,9 +32,10 @@ class _DeleteOTPScreenState extends State<DeleteOTPScreen> {
   bool otpSent = false;
   int timerSeconds = 30;
   Timer? timer;
-  final List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
+  final List<FocusNode> focusNodes =
+      List.generate(LoginConstants.otpLength, (index) => FocusNode());
   final List<TextEditingController> otpController =
-      List.generate(6, (index) => TextEditingController());
+      List.generate(LoginConstants.otpLength, (index) => TextEditingController());
   DeleteAccountService deleteService = DeleteAccountService();
   AuthService authService = AuthService();
   bool isVerifying = false;
@@ -62,7 +64,7 @@ class _DeleteOTPScreenState extends State<DeleteOTPScreen> {
       isVerifying = true;
     });
     String otp = otpController.map((controller) => controller.text).join();
-    if (otp.length == 6) {
+    if (otp.length == LoginConstants.otpLength) {
       try {
         var result = await deleteService.deleteAccountVerifyOtp(
             otp, widget.deleteReason);
@@ -182,7 +184,7 @@ class _DeleteOTPScreenState extends State<DeleteOTPScreen> {
                   SizedBox(height: util.responsiveHeight(0.0533)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(6, (index) {
+                    children: List.generate(LoginConstants.otpLength, (index) {
                       return SizedBox(
                         width: util.responsiveWidth(0.134),
                         child: KeyboardListener(
@@ -235,17 +237,19 @@ class _DeleteOTPScreenState extends State<DeleteOTPScreen> {
                               setState(() {
                                 errorMessage = null;
                               });
-                              if (value.isNotEmpty && index < 5) {
+                              if (value.isNotEmpty &&
+                                  index < LoginConstants.otpLength - 1) {
                                 focusNodes[index + 1].requestFocus();
                               }
                               if (value.isEmpty && index > 0) {
                                 focusNodes[index - 1].requestFocus();
                               }
-                              if (index == 5 && value.isNotEmpty) {
+                              if (index == LoginConstants.otpLength - 1 &&
+                                  value.isNotEmpty) {
                                 verifyOtp();
                               }
                             },
-                            textInputAction: index < 5
+                            textInputAction: index < LoginConstants.otpLength - 1
                                 ? TextInputAction.next
                                 : TextInputAction.done,
                           ),

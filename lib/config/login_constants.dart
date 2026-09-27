@@ -18,6 +18,7 @@ class LoginConstants {
   static const defaultDialCode = '+91';
   static const defaultCountryCodeNumeric = '91';
   static const defaultMobileLength = 10;
+  static const otpLength = 4;
   static const countryDialPickerTitle = 'Select Country Dial Code';
 
   static final RegExp emailRegex = RegExp(

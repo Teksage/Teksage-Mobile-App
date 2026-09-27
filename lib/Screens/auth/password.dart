@@ -30,6 +30,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/login_constants.dart';
 import 'package:astro_prompt/config/otp_contact_helpers.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -67,9 +68,10 @@ class _OTPScreenState extends State<OTPScreen> {
   int timerSeconds = 60;
   Timer? timer;
   String newTitle = '';
-  final List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
+  final List<FocusNode> focusNodes =
+      List.generate(LoginConstants.otpLength, (index) => FocusNode());
   final List<TextEditingController> otpController =
-      List.generate(6, (index) => TextEditingController());
+      List.generate(LoginConstants.otpLength, (index) => TextEditingController());
   AuthService authService = AuthService();
   ProfileService profileService = ProfileService();
   bool isVerifying = false;
@@ -123,7 +125,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
     try {
       String otp = otpController.map((controller) => controller.text).join();
-      if (otp.length != 6) {
+      if (otp.length != LoginConstants.otpLength) {
         showErrorSnackBar(context, "Please enter a valid OTP");
         setState(() {
           isVerifying = false;
@@ -615,7 +617,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   SizedBox(height: util.responsiveHeight(0.0533)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(6, (index) {
+                    children: List.generate(LoginConstants.otpLength, (index) {
                       return SizedBox(
                         width: util.responsiveWidth(0.134),
                         child: KeyboardListener(
@@ -671,17 +673,19 @@ class _OTPScreenState extends State<OTPScreen> {
                               setState(() {
                                 errorMessage = null;
                               });
-                              if (value.isNotEmpty && index < 5) {
+                              if (value.isNotEmpty &&
+                                  index < LoginConstants.otpLength - 1) {
                                 focusNodes[index + 1].requestFocus();
                               }
                               if (value.isEmpty && index > 0) {
                                 focusNodes[index - 1].requestFocus();
                               }
-                              if (index == 5 && value.isNotEmpty) {
+                              if (index == LoginConstants.otpLength - 1 &&
+                                  value.isNotEmpty) {
                                 verifyOtp();
                               }
                             },
-                            textInputAction: index < 5
+                            textInputAction: index < LoginConstants.otpLength - 1
                                 ? TextInputAction.next
                                 : TextInputAction.done,
                           ),

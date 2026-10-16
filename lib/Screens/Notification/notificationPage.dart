@@ -115,7 +115,9 @@ class _NotificationPageState extends State<NotificationPage>
       var fetchEventData =
           await AstroUserEventService().fetchAstroUserEvents(userId);
       var data = fetchEventData
-          .where((e) => e.status == 'confirmed' || e.status == 'completed')
+          .where((e) =>
+              (e.status == 'confirmed' || e.status == 'completed') &&
+              e.consultationDuration != 10)
           .toList()
         ..sort((a, b) {
           final aTime = DateTime.tryParse(a.startTime) ??

@@ -43,3 +43,10 @@ const questionButtonColor = Color(0xff85AD0A);
 const eventPlannerBannerTop = Color(0xffD4F1D1);
 const eventPlannerBannerBottom = Color(0xffECF9EB);
 const eventPlannerBannerBorder = Color(0xffCFEFCC);
+/** Home marathon card — matches website mint tokens. */
+const homeScreenMint = Color(0xffc6e7b9);
+const marathonHomeCardStart = Color(0xffE8F6E3);
+const marathonHomeCardBorder = Color(0xffD4EFCF);
+const marathonBannerStart = Color(0xff14C207);
+const marathonBannerEnd = Color(0xff0B8C00);
+const marathonWealth = Color(0xffB8860B);

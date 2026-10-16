@@ -1,13 +1,14 @@
 class ApiEndpoint {
  // static const String mainUrl = 'https://anwshecjj0.execute-api.ap-south-1.amazonaws.com';
   ///Production Environment
-  static const String mainUrl = 'https://api.teksage.app';
-  static const String chatUrl = 'wss://api.teksage.app/chat';
+  // static const String mainUrl = 'https://api.teksage.app';
+  // static const String chatUrl = 'wss://api.teksage.app/chat';
   ///Dev Environment
   //emulator
   // static const String mainUrl ="http://10.0.2.2:8000";
   //physical device — use your PC's current Wi‑Fi IPv4 (ipconfig). Must match same network as phone.
-// static const String mainUrl ="http://10.35.122.187:8000";
+static const String mainUrl ="http://10.35.122.187:8000";
+
 
   // static const String mainUrl ='https://teksage-backend-latest.onrender.com';
   // static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
@@ -16,7 +17,7 @@ class ApiEndpoint {
   //emulator
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
-// static const String chatUrl ="ws://10.35.122.187:8000/chat";
+static const String chatUrl ="ws://10.35.122.187:8000/chat";
   
 
   ///
@@ -64,6 +65,10 @@ class ApiEndpoint {
   // Event Planner (Muhurtha)
   static const String eventPlanner = '$prediction/event-planner';
 
+  // Consultation marathon
+  static const String marathon = '$baseUrl/marathon';
+  static const String marathonPublic = '$marathon/public';
+
   //Horoscope
   static const String horoscope = '$profile/horoscope';
   static const String horoscopeDownload = '$baseUrl/horoscope/download';
@@ -103,6 +108,8 @@ class ApiEndpoint {
 
   //Events
   static const String astroEvents = events;
+  static const String consultationPendingAnswersPopup =
+      '$events/pending-answers-popup';
 
   //Questions
   static const String astrologerAnswerUpdate = '$astrologer/questions';

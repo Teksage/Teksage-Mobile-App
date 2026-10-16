@@ -27,8 +27,10 @@ void main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     providerAndroid: kDebugMode
-        ? const AndroidDebugProvider()
-        : const AndroidPlayIntegrityProvider(),
+    ? const AndroidDebugProvider(
+        debugToken: '1c34dc91-770c-4026-bfe9-56d07a62326a',
+      )
+    : const AndroidPlayIntegrityProvider(),
   );
   // Capture deep link params (?ref=, ?utm_source=facebook, etc.) and report install attribution
   await InstallAttributionService.instance.initDeepLinkAndAttribution();

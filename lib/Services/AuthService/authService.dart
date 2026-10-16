@@ -47,8 +47,15 @@ class AuthService {
     if (kDebugMode) {
       print('Login body: $body');
     }
+    String? appCheckToken;
     try {
-      final appCheckToken = await FirebaseAppCheck.instance.getToken();
+      appCheckToken = await FirebaseAppCheck.instance.getToken();
+    } catch (e) {
+      if (kDebugMode) {
+        print('App Check token unavailable: $e');
+      }
+    }
+    try {
       final headers = {
         'Content-Type': 'application/json',
         'X-Client-Platform': Platform.isAndroid ? 'android' : 'ios',

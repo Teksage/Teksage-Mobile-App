@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.0+52
+version: 3.0.0+53
 
 environment:
   sdk: ^3.6.1
@@ -71,6 +71,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/marathon_hero_wheel.jpg
     - assets/svg/
 
   fonts:

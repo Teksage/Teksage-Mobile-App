@@ -1,6 +1,7 @@
 import 'package:astro_prompt/Components/Common/customAnimationImage.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Screens/Astrologer/astrologerAskRequestsPage.dart';
+import 'package:astro_prompt/Screens/Marathon/marathon_astrologer_page.dart';
 import 'package:astro_prompt/Screens/Astrologer/myAvailabilityPage.dart';
 import 'package:astro_prompt/Screens/Astrologer/myMeetingsPage.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -99,63 +100,32 @@ class _DashboardCardsState extends State<DashboardCards> {
             ],
           ),
           SizedBox(height: util.height20),
-          _buildWideCard(
-            context: context,
-            title: 'Ask Requests',
-            subtitle:
-                'Review client details and submit text or voice answers.',
-            onTap: () => Get.to(() => const AstrologerAskRequestsPage()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _buildCard(
+                  title: 'Ask Requests',
+                  subtitle: 'Review client details and submit text or voice answers.',
+                  imagePath: questions,
+                  iconSize: 48,
+                  context: context,
+                  onTap: () => Get.to(() => const AstrologerAskRequestsPage()),
+                ),
+              ),
+              SizedBox(width: util.width20),
+              Expanded(
+                child: _buildCard(
+                  title: 'Consultation marathon',
+                  subtitle: 'Paid seats you can accept',
+                  imagePath: astroMarathon,
+                  context: context,
+                  onTap: () => Get.to(() => const MarathonAstrologerPage()),
+                ),
+              ),
+            ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildWideCard({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: const Color(0xffFAFFDE),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: blackColor.withValues(alpha: 0.06)),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title.tr,
-                    style: TextStyle(
-                      fontFamily: AppFont.get(FontType.bold),
-                      fontSize: MyUtility(context).fontSize16,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    subtitle.tr,
-                    style: TextStyle(
-                      fontFamily: AppFont.get(FontType.semiBold),
-                      fontSize: MyUtility(context).fontSize13,
-                      height: 1.3,
-                      color: blackColor.withValues(alpha: 0.4),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.chevron_right, color: mainColor),
-          ],
-        ),
       ),
     );
   }
@@ -166,6 +136,7 @@ class _DashboardCardsState extends State<DashboardCards> {
     required String imagePath,
     required BuildContext context,
     required VoidCallback onTap,
+    double? iconSize,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -228,8 +199,9 @@ class _DashboardCardsState extends State<DashboardCards> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(bottom: 5),
-                  child: CustomAnimationAstrologerIcon(
+                  child:                   CustomAnimationAstrologerIcon(
                     imagePath: imagePath,
+                    size: iconSize,
                   ),
                 ),
               ],

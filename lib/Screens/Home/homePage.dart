@@ -14,6 +14,7 @@ import 'package:astro_prompt/Screens/Astrologer/homePage.dart';
 import 'package:astro_prompt/Screens/Chat/chat.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Components/EventPlanner/event_planner_home_banner.dart';
+import 'package:astro_prompt/Components/Marathon/marathon_home_banner.dart';
 import 'package:astro_prompt/Components/Home/partnerDiscountBanner.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingDetails.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
@@ -1342,6 +1343,10 @@ class _HomePageState extends State<HomePage>
                       height: util.responsiveHeight(0.0296),
                     ),
                     const EventPlannerHomeBanner(),
+                    SizedBox(
+                      height: util.responsiveHeight(0.0296),
+                    ),
+                    const MarathonHomeBanner(),
                     SizedBox(
                       height: util.responsiveHeight(0.0296),
                     ),

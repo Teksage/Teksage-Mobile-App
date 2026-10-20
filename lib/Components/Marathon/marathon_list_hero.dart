@@ -59,7 +59,7 @@ class MarathonListHero extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Consultation marathon'.tr,
+                  'Teksage Expert Hours'.tr,
                   style: TextStyle(
                     fontFamily: AppFont.get(FontType.bold),
                     fontSize: util.fontSize16,

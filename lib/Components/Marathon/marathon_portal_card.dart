@@ -59,6 +59,7 @@ class MarathonPortalCard extends StatelessWidget {
     this.endsAt,
     this.timezone,
     this.categories = const [],
+    this.lines = const [],
     this.status,
     this.closesAt,
     this.onTap,
@@ -70,6 +71,7 @@ class MarathonPortalCard extends StatelessWidget {
   final String? timezone;
   final String title;
   final List<String> categories;
+  final List<String> lines;
   final String? status;
   final String? closesAt;
   final VoidCallback? onTap;
@@ -83,8 +85,8 @@ class MarathonPortalCard extends StatelessWidget {
     final when = start == null
         ? ''
         : end == null
-            ? _stamp(start)
-            : '${_stamp(start)} – ${_stamp(end)}';
+            ? marathonTimeWithIst(_stamp(start))
+            : marathonTimeRange(_stamp(start), _stamp(end));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -121,7 +123,7 @@ class MarathonPortalCard extends StatelessWidget {
                                 const SizedBox(width: 6),
                                 Expanded(
                                   child: Text(
-                                    title,
+                                    marathonDisplayName(title),
                                     style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize15, color: blackColor, height: 1.25),
                                   ),
                                 ),
@@ -138,6 +140,10 @@ class MarathonPortalCard extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                            ],
+                            for (final line in lines) ...[
+                              const SizedBox(height: 6),
+                              Text(line, style: TextStyle(fontFamily: AppFont.get(FontType.medium), fontSize: util.fontSize13, color: blackColor.withValues(alpha: 0.7))),
                             ],
                             if (categories.isNotEmpty) ...[
                               const SizedBox(height: 8),

@@ -7,6 +7,8 @@ import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
+import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:astro_prompt/config/marathon_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,10 +34,14 @@ class MarathonSummaryPage extends StatefulWidget {
 class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
   Map<String, dynamic>? booking;
   bool loaded = false;
+  String? viewerZone;
 
   @override
   void initState() {
     super.initState();
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => viewerZone = zone);
+    });
     _load();
     if (widget.justPaid) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -66,15 +72,17 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
   Widget build(BuildContext context) {
     final util = MyUtility(context);
     final row = booking;
-    final zone = row?['timezone']?.toString();
-    final start = marathonWallParts(row?['starts_at']?.toString(), zone: zone);
-    final end = marathonWallParts(row?['ends_at']?.toString(), zone: zone);
+    final start = marathonWallParts(row?['starts_at']?.toString(), zone: viewerZone);
+    final end = marathonWallParts(row?['ends_at']?.toString(), zone: viewerZone);
     final link = '${row?['meeting_link'] ?? ''}'.trim();
     final currency = '${row?['currency'] ?? 'INR'}';
     final parts = marathonFeeIncluded(double.tryParse('${row?['fee']}') ?? 0, currency);
     String money(double amount) => currency == 'USD' ? '\$${amount.toStringAsFixed(2)}' : '₹${amount.toStringAsFixed(2)}';
     final category = (row?['categories'] as List?)?.isNotEmpty == true ? '${(row?['categories'] as List).first}' : '';
     final astrologer = '${row?['astrologer_name'] ?? ''}'.trim();
+    final query = '${row?['customer_query'] ?? ''}'.trim();
+    final languageId = '${row?['preferred_language'] ?? ''}'.trim();
+    final language = languageId.isEmpty ? '' : AskAstrologerLanguages.labelFor(languageId).tr;
     return Scaffold(
       backgroundColor: const Color(0xffF4FBF3),
       appBar: AppBar(
@@ -92,7 +100,7 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
       body: !loaded
           ? const Center(child: CircularProgressIndicator(color: mainColor))
           : row == null
-              ? Center(child: Text('No marathon is open right now.'.tr))
+              ? Center(child: Text('No Expert Hours event is open right now.'.tr))
               : ListView(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   children: [
@@ -121,7 +129,7 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
                           Text('Payment completed'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize18, color: blackColor)),
                           const SizedBox(height: 4),
                           Text(
-                            '${row['event_name'] ?? ''}',
+                            marathonDisplayName(row['event_name']?.toString()),
                             textAlign: TextAlign.center,
                             style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize16, color: mainColor),
                           ),
@@ -154,7 +162,7 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Text(
-                                'Your astrologer will be assigned and the meeting link will be shared within 8 hours.'.tr,
+                                'Your astrologer will be assigned and the meeting link will be shared within 1 hour.'.tr,
                                 style: TextStyle(color: blackColor, fontSize: util.fontSize13, height: 1.4),
                               ),
                             ),
@@ -182,12 +190,14 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
                             child: Text('Your meeting details'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize16)),
                           ),
                           _row('Date'.tr, _dateLabel(start), util, last: false),
-                          _row('Time'.tr, start == null || end == null ? '' : '${start.time} – ${end.time}', util, last: false),
+                          _row('Time'.tr, start == null || end == null ? '' : marathonTimeRange(start.time, end.time), util, last: false),
                           _row('Duration'.tr, '10 minutes'.tr, util, last: false),
                           _row('Consultation fee'.tr, money(parts.base), util, last: false),
                           if (parts.taxed) _row('${'CGST'.tr} (${parts.cgstPct}%)', money(parts.cgst), util, last: false),
                           if (parts.taxed) _row('${'SGST'.tr} (${parts.sgstPct}%)', money(parts.sgst), util, last: false),
-                          _row('Total'.tr, money(parts.total), util, last: astrologer.isEmpty),
+                          _row('Total'.tr, money(parts.total), util, last: language.isEmpty && query.isEmpty && astrologer.isEmpty),
+                          if (language.isNotEmpty) _row('Preferred consultation language'.tr, language, util, last: query.isEmpty && astrologer.isEmpty),
+                          if (query.isNotEmpty) _row('Your question'.tr, query, util, last: astrologer.isEmpty),
                           if (astrologer.isNotEmpty) _row('Astrologer'.tr, astrologer, util, last: true),
                         ],
                       ),

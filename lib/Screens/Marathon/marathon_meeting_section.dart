@@ -34,7 +34,7 @@ class MarathonMeetingSection extends StatelessWidget {
               subtitle: Text(
                 link.isNotEmpty
                     ? 'Meeting Link'.tr
-                    : 'Your astrologer will be assigned and the meeting link will be shared within 8 hours.'.tr,
+                    : 'Your astrologer will be assigned and the meeting link will be shared within 1 hour.'.tr,
               ),
               onTap: bookingId > 0
                   ? () => Get.to(() => MarathonSummaryPage(bookingId: bookingId))

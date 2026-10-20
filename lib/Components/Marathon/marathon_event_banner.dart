@@ -2,11 +2,12 @@ import 'package:astro_prompt/Screens/Marathon/marathon_summary_page.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class MarathonEventBanner extends StatelessWidget {
+class MarathonEventBanner extends StatefulWidget {
   const MarathonEventBanner({
     super.key,
     required this.event,
@@ -21,15 +22,31 @@ class MarathonEventBanner extends StatelessWidget {
   final bool linked;
 
   @override
+  State<MarathonEventBanner> createState() => _MarathonEventBannerState();
+}
+
+class _MarathonEventBannerState extends State<MarathonEventBanner> {
+  String? _viewerZone;
+
+  @override
+  void initState() {
+    super.initState();
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => _viewerZone = zone);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final event = widget.event;
     final util = MyUtility(context);
     final categories = (event['categories'] as List?)?.map((item) => item.toString()).toList() ?? [];
     final category = categories.isEmpty ? '' : categories.first;
     final description = event['description']?.toString() ?? '';
     final ended = event['admin_ended'] == true;
-    final canOpen = linked && (!ended || bookings.isNotEmpty);
-    final start = _wallParts(event['starts_at']?.toString(), zone: event['timezone']?.toString());
-    final end = _wallParts(event['ends_at']?.toString(), zone: event['timezone']?.toString());
+    final canOpen = widget.linked && (!ended || widget.bookings.isNotEmpty);
+    final start = _wallParts(event['starts_at']?.toString(), zone: _viewerZone);
+    final end = _wallParts(event['ends_at']?.toString(), zone: _viewerZone);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -66,7 +83,7 @@ class MarathonEventBanner extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
-                              (event['name']?.toString() ?? '').tr,
+                              marathonDisplayName(event['name']?.toString()).tr,
                               style: TextStyle(
                                 fontFamily: AppFont.get(FontType.bold),
                                 fontSize: util.fontSize16,
@@ -116,7 +133,7 @@ class MarathonEventBanner extends StatelessWidget {
                               const SizedBox(width: 6),
                               Flexible(
                                 child: Text(
-                                  '${start.time} – ${end.time}',
+                                  marathonTimeRange(start.time, end.time),
                                   style: TextStyle(
                                     fontFamily: AppFont.get(FontType.medium),
                                     fontSize: util.fontSize13,
@@ -144,7 +161,7 @@ class MarathonEventBanner extends StatelessWidget {
                 ],
               ),
             ),
-            if (canOpen || bookings.isNotEmpty)
+            if (canOpen || widget.bookings.isNotEmpty)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
@@ -156,7 +173,7 @@ class MarathonEventBanner extends StatelessWidget {
                   children: [
                     if (canOpen)
                       OutlinedButton(
-                        onPressed: onTap,
+                        onPressed: widget.onTap,
                         style: OutlinedButton.styleFrom(
                           foregroundColor: mainColor,
                           side: const BorderSide(color: mainColor),
@@ -171,8 +188,8 @@ class MarathonEventBanner extends StatelessWidget {
                           style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13),
                         ),
                       ),
-                    if (canOpen && bookings.isNotEmpty) const SizedBox(height: 8),
-                    if (bookings.isNotEmpty) _BookingsButton(bookings: bookings, util: util),
+                    if (canOpen && widget.bookings.isNotEmpty) const SizedBox(height: 8),
+                    if (widget.bookings.isNotEmpty) _BookingsButton(bookings: widget.bookings, util: util),
                   ],
                 ),
               ),
@@ -337,20 +354,28 @@ class _WallParts {
   return (day: parts.day, month: parts.month, time: parts.time);
 }
 
-const _ist = Duration(hours: 5, minutes: 30);
-
-Duration _zoneOffset(String? zone) {
-  final name = (zone ?? '').trim();
-  if (name == 'UTC' || name == 'Etc/UTC') return Duration.zero;
-  return _ist;
+/// Strip legacy "(IST)" from titles.
+String marathonDisplayName(String? name) {
+  final cleaned = (name ?? '').trim();
+  if (cleaned.isEmpty) return '';
+  return cleaned.replaceFirst(RegExp(r'\s*\(IST\)\s*$', caseSensitive: false), '').trim();
 }
+
+/// Same style as consultation: local clock times, no zone suffix.
+String marathonTimeRange(String start, String end) => '$start – $end';
+
+String marathonTimeWithIst(String time) => time;
 
 _WallParts? _wallParts(String? iso, {String? zone}) {
   if (iso == null || iso.isEmpty) return null;
-  final parsed = DateTime.tryParse(iso);
-  if (parsed == null) return null;
-  final shifted = parsed.toUtc().add(_zoneOffset(zone));
-  final date = DateTime(shifted.year, shifted.month, shifted.day, shifted.hour, shifted.minute);
+  // Same rules as 30-min consultation + website:
+  // profile timezone (Current Location) when set, else API wall-clock.
+  DateTime date;
+  try {
+    date = displayDateTimeFromIso(iso, zone: zone);
+  } catch (_) {
+    return null;
+  }
   final locale = Get.locale?.toString() ?? 'en_US';
   try {
     return _WallParts(

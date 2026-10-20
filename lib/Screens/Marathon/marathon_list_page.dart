@@ -25,6 +25,7 @@ class _MarathonListPageState extends State<MarathonListPage> {
   List<Map<String, dynamic>> mine = [];
   bool loading = true;
   String error = '';
+  bool showUpcoming = true;
 
   @override
   void initState() {
@@ -72,7 +73,7 @@ class _MarathonListPageState extends State<MarathonListPage> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Consultation marathon'.tr,
+          'Teksage Expert Hours'.tr,
           style: TextStyle(
             fontFamily: AppFont.get(FontType.bold),
             fontSize: util.fontSize16,
@@ -82,18 +83,53 @@ class _MarathonListPageState extends State<MarathonListPage> {
       ),
       body: loading
           ? Center(child: CircularProgressIndicator(color: mainColor))
-          : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                const MarathonListHero(),
-                const SizedBox(height: 16),
-                if (error.isNotEmpty)
-                  Text(error, style: const TextStyle(color: Colors.red)),
-                if (events.isEmpty)
-                  Text('No marathon is open right now.'.tr)
-                else
-                  ...events.map(
-                    (event) {
+          : Builder(
+              builder: (context) {
+                final now = DateTime.now();
+                bool upcoming(Map<String, dynamic> event) {
+                  final end = DateTime.tryParse('${event['ends_at'] ?? ''}');
+                  final ended = event['admin_ended'] == true;
+                  return !ended && (end == null || !end.isBefore(now));
+                }
+
+                final visible = events.where((event) => showUpcoming ? upcoming(event) : !upcoming(event)).toList();
+                final pastCount = events.where((event) => !upcoming(event)).length;
+                return ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    const MarathonListHero(),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => setState(() => showUpcoming = true),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: showUpcoming ? mainColor : whiteColor,
+                              foregroundColor: showUpcoming ? whiteColor : mainColor,
+                              side: const BorderSide(color: mainColor),
+                            ),
+                            child: Text('Upcoming'.tr),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => setState(() => showUpcoming = false),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: !showUpcoming ? mainColor : whiteColor,
+                              foregroundColor: !showUpcoming ? whiteColor : mainColor,
+                              side: const BorderSide(color: mainColor),
+                            ),
+                            child: Text('${'Past'.tr} ($pastCount)'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
+                    if (visible.isEmpty) Text('No Expert Hours event is open right now.'.tr),
+                    ...visible.map((event) {
                       final ended = event['admin_ended'] == true;
                       final bookedRows = mine.where((row) => row['marathon_id'] == event['id']).toList();
                       return MarathonEventBanner(
@@ -104,9 +140,10 @@ class _MarathonListPageState extends State<MarathonListPage> {
                           Get.to(() => MarathonDetailPage(id: event['id'] as int));
                         },
                       );
-                    },
-                  ),
-              ],
+                    }),
+                  ],
+                );
+              },
             ),
     );
   }

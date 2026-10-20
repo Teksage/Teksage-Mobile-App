@@ -15,18 +15,12 @@ class LocalString extends Translations {
           'My Profile': 'My Profile',
           'Marriage\nMatch Making': 'Marriage\nMatch Making',
           'Explore Other Predictions': 'Explore Other Predictions',
-          PlatformTextConfig.yearlyPrediction: 'Yearly\nPrediction',
-          PlatformTextConfig.weeklyPrediction: 'Weekly\nPrediction',
-          PlatformTextConfig.lifePrediction: 'Life\nPrediction',
-          PlatformTextConfig.dailyPrediction: 'Daily\nPrediction',
-          PlatformTextConfig.chatHomePage: 'AI Voice Astro Chat',
           'ChatTitle': 'AI Voice Astro Chat',
           'Chat Now': 'Chat Now',
           'Thara Bala': 'Thara Bala',
           'Chandra Bala': 'Chandra Bala',
           'Astrologer\nConsultation': 'Astrologer\nConsultation',
           'Astrologer Consultation': 'Astrologer Consultation',
-          //settings
           'Profile': 'Profile',
           'Push Notifications': 'Push Notifications',
           'Language': 'Language',
@@ -55,7 +49,6 @@ class LocalString extends Translations {
           'Continue to Payment': 'Continue to Payment',
           'Booking Details': 'Booking Details',
           'Question details': 'Question details',
-          'Language': 'Language',
           'Answer within': 'Answer within',
           '4 hours': '4 hours',
           'Payment summary': 'Payment summary',
@@ -201,12 +194,10 @@ class LocalString extends Translations {
               'Your question, answer, and turnaround details.',
           'Request details': 'Request details',
           'Answered on': 'Answered on',
-          "Astrologer's answer": "Astrologer's answer",
           'In progress': 'In progress',
           'Rate your answer': 'Rate your answer',
           'Could not load this Ask request. Please try again.':
               'Could not load this Ask request. Please try again.',
-          "Astrologer's Answer": "Astrologer's Answer",
           'Answered by:': 'Answered by:',
           'Voice answer': 'Voice answer',
           'Play voice answer': 'Play voice answer',
@@ -216,7 +207,6 @@ class LocalString extends Translations {
               'Could not load answer. Please try again.',
           'Session expired. Please try again.':
               'Session expired. Please try again.',
-          // Event Planner (Muhurtha)
           'Event Planner (Muhurtha)': 'Event Planner (Muhurtha)',
           'Plan an auspicious time': 'Plan an auspicious time',
           'Select a life event and start date. We scan the next 7 days to find auspicious dates for you using your birth chart and panchang.':
@@ -282,7 +272,22 @@ class LocalString extends Translations {
           'Open': 'Open',
           'Could not open Full Horoscope': 'Could not open Full Horoscope',
           'Event Planner': 'Event Planner',
-          'Consultation marathon': 'Consultation marathon',
+          'Teksage Expert Hours': 'Teksage Expert Hours',
+          'IST': 'IST',
+          'No Expert Hours event is open right now.': 'No Expert Hours event is open right now.',
+          'Your Expert Hours bookings': 'Your Expert Hours bookings',
+          'Upcoming': 'Upcoming',
+          'Past': 'Past',
+          'Login email': 'Login email',
+          'Login phone': 'Login phone',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'Tell us what you want to ask. Your assigned astrologer will see this.',
+          'Enter your question before payment.': 'Enter your question before payment.',
+          'Preferred consultation language': 'Preferred consultation language',
+          'Select your preferred consultation language.':
+              'Select your preferred consultation language.',
+          'Customer question': 'Customer question',
+          'Consultation time has not ended yet.': 'Consultation time has not ended yet.',
+          'Waiting for admin assignment': 'Waiting for admin assignment',
           'Your Next Session': 'Your Next Session',
           'Better guidance': 'Better guidance',
           'Brighter tomorrows': 'Brighter tomorrows',
@@ -294,7 +299,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10-minute sessions. Pay first. An astrologer is assigned after payment.',
           'See times': 'See times',
           '10 minutes': '10 minutes',
-          'No marathon is open right now.': 'No marathon is open right now.',
           'Booked': 'Booked',
           'Booking for this event has closed.': 'Booking for this event has closed.',
           'Event ended by admin': 'Event ended by admin',
@@ -350,7 +354,7 @@ class LocalString extends Translations {
           '@count completed': '@count completed',
           'Pay': 'Pay',
           'Payment did not go through. This seat is still open. Try again.': 'Payment did not go through. This seat is still open. Try again.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': 'Your astrologer will be assigned and the meeting link will be shared within 8 hours.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'Your astrologer will be assigned and the meeting link will be shared within 1 hours.',
           'Get it on Android': 'Get it on Android',
           'Contact via WhatsApp': 'Contact via WhatsApp',
           'Get on website': 'Get on website',
@@ -405,7 +409,6 @@ class LocalString extends Translations {
           'Use another number': 'Use another number',
           'Start over': 'Start over',
           'Starting over…': 'Starting over…',
-          'Resend message': 'Resend message',
           'Verify your mobile number': 'Verify your mobile number',
           'Verify your phone to receive the WhatsApp consent message.':
               'Verify your phone to receive the WhatsApp consent message.',
@@ -418,7 +421,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'App language has been changed successfully',
           'Click to view': 'Click to view',
-          //Profile
           'First Name': 'First Name',
           'Last Name': 'Last Name',
           'Email': 'Email',
@@ -446,22 +448,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'How did you first hear about Teksage?',
           'Select a language': 'Select a language',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google Search",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)":
-              "WhatsApp / Telegram (friends or groups)",
-          "Word of mouth (friends/family)": "Word of mouth (friends/family)",
-          "Product Hunt": "Product Hunt",
-          "Other": "Other",
-          //Push Notification
           'Push Notification': 'Push Notification',
-          PlatformTextConfig.dailyTitle: 'Daily Predictions',
-          PlatformTextConfig.weeklyTitle: 'Weekly Predictions',
-          PlatformTextConfig.yearlyTitle: 'Yearly Prediction',
-          PlatformTextConfig.lifePredictionLanding: 'Life Prediction',
           'Promotions & Offers': 'Promotions & Offers',
           'Warnings': 'Warnings',
           'Consultation': 'Consultation',
@@ -490,19 +477,14 @@ class LocalString extends Translations {
               'There are no Consultation updates.',
           'There are no recent general updates from your astrological guidance':
               'There are no recent general updates from your astrological guidance',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'Got a question?\nOur support team is here to guide your path',
           'Enter feedback or query here...': 'Enter feedback or query here...',
-          'Submit': 'Submit',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'Find answers to common questions\nabout our astrology services.',
           'Still have questions?': 'Still have questions?',
           'Contact Support': 'Contact Support',
           'search_help': 'search_help',
-          //panchang
-          PlatformTextConfig.panchangPageTitle: 'Personalized Panchang',
           'WeekDay': 'WeekDay',
           'Thithi': 'Thithi',
           'Karna': 'Karna',
@@ -515,19 +497,12 @@ class LocalString extends Translations {
           'Paksha': 'Paksha',
           'Amirthathi Yoga': 'Amirthathi Yoga',
           'COMING SOON': 'COMING SOON',
-          "panchang_single_format": "(name) upto (time) (next)",
           'otp_response': "(title) Verification\n(message)",
-          //Horoscope
-          PlatformTextConfig.horoscope: 'Horoscope',
           'Name': 'Name',
           'Place': 'Place',
           'Lagna': 'Lagna',
           'South Indian Chart': 'South Indian Chart',
           'North Indian Chart': 'North Indian Chart',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "Hope you're having a wonderful start to your day.",
-          "Good morning,": 'Good morning,',
           'Sunday': 'Sunday',
           'Monday': 'Monday',
           'Tuesday': 'Tuesday',
@@ -538,7 +513,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'Chandrashtama',
           'Predictions are based on birth details in your profile section':
               'Predictions are based on birth details in your profile section',
-          //yearly prediction
           'Planetary Transits': 'Planetary Transits',
           'Categorized Predictions': 'Categorized Predictions',
           'Jupiter': 'Jupiter',
@@ -559,15 +533,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'Astrology Consultation',
           'First Half of': 'First Half of',
           'Second Half of': 'Second Half of',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'Life Predictions',
           'General\nCharacteristics': 'General\nCharacteristics',
           'Career\nPredictions': 'Career\nPredictions',
           'Relationship\nPredictions': 'Relationship\nPredictions',
           'Wealth\nPredictions': 'Wealth\nPredictions',
           'Health\nPredictions': 'Health\nPredictions',
           'Current\nTime Period': 'Current\nTime Period',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'Upgrade to receive daily predictions at 6 AM',
           'Your daily predictions was scheduled for 6 AM':
@@ -576,7 +547,6 @@ class LocalString extends Translations {
           'Relationship': 'Relationship',
           'Wealth': 'Wealth',
           'Health': 'Health',
-          //Marriage Match Making
           'Marriage Match Making': 'Marriage Match Making',
           'Boy Name': 'Boy Name',
           'Girl Name': 'Girl Name',
@@ -594,7 +564,6 @@ class LocalString extends Translations {
           'Calculate Match': 'Calculate Match',
           'Enter boy\'s name': 'Enter boy\'s name',
           'Enter girl\'s name': 'Enter girl\'s name',
-          //Subscriptions
           'Subscription': 'Subscription',
           'Auto Schedule Daily Predictions': 'Auto Schedule Daily Predictions',
           'Auto Schedule Weekly Predictions':
@@ -640,7 +609,6 @@ class LocalString extends Translations {
           'days left': 'days left',
           'Recommended': 'Recommended',
           'membership': 'membership',
-          //Dialog box
           'Plan Expired': 'Plan Expired',
           'Premium Feature': 'Premium Feature',
           'Unlock all features by choosing a plan':
@@ -664,7 +632,6 @@ class LocalString extends Translations {
           'Discard': 'Discard',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'You have unsaved changes.\nDo you want to discard them and go back?',
-          //Error Validate
           'Please Enter the First Name': 'Please Enter the First Name',
           'Please Enter the Second Name': 'Please Enter the Second Name',
           'Please enter a valid Email': 'Please enter a valid Email',
@@ -692,15 +659,8 @@ class LocalString extends Translations {
               'Kindly select one or more categories',
           'Error loading questions': 'Error loading questions',
           'No questions found': 'No questions found',
-          "Please enter Boy's name": "Please enter Boy's name",
-          "Please select Boy's Nakshatram": "Please select Boy's Nakshatram",
-          "Please select Girl's Nakshatram": "Please select Girl's Nakshatram",
-          "Please enter Girl's name": "Please enter Girl's name",
-          "Please select Girl's Rasi": "Please select Girl's Rasi",
-          "Please select Boy's Rasi": "Please select Boy's Rasi",
           'Second language must be different from first':
               'Second language must be different from first',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'Permission permanently denied. Please enable it in settings.',
           'Permission Denied': 'Permission Denied',
@@ -785,7 +745,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'Network error. Please check your connection and try again.',
           'OTP Verified': 'OTP Verified',
-          //Astrology consultations
           'What do you\nneed guidance on?': 'What do you\nneed guidance on?',
           'Select the categories and continue':
               'Select the categories and continue',
@@ -803,13 +762,11 @@ class LocalString extends Translations {
           'Expert Profile': 'Expert Profile',
           'Reviews': 'Reviews',
           'No reviews available': 'No reviews available',
-          'Book Consultation': 'Book Consultation',
           'No slots available': 'No slots available',
           'Find & Consult Astrologers': 'Find & Consult Astrologers',
           '100+ Astrologers': '100+ Astrologers',
           'Explore and find your perfect match':
               'Explore and find your perfect match',
-          'Upcoming': 'Upcoming',
           'Completed': 'Completed',
           'View Details': 'View Details',
           'View\nDetails': 'View\nDetails',
@@ -818,7 +775,6 @@ class LocalString extends Translations {
           'Choose how AI replies': 'Choose how AI replies',
           'Concise': 'Concise',
           'Book Now': 'Book Now',
-          'Booking Details': 'Booking Details',
           'Consultation Fee': 'Consultation Fee',
           'Total Fee': 'Total Fee',
           'Confirm & Proceed to Pay': 'Confirm & Proceed to Pay',
@@ -850,7 +806,6 @@ class LocalString extends Translations {
           'Yearly plan': 'Yearly plan',
           'left': 'left',
           'Invalid referral code': 'Invalid referral code',
-          'Consultation': 'Consultation',
           'Coupon applied': 'Coupon applied',
           'I consent to share my personal information & horoscope with the astrologer':
               'I consent to share my personal information & horoscope with the astrologer',
@@ -876,8 +831,6 @@ class LocalString extends Translations {
           'Type your answer here...': 'Type your answer here...',
           'Done': 'Done',
           'booked a slot on': 'booked a slot on',
-          "meeting_with": "Meeting with {name}",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'Jyotish voice guide for all your needs. Start you conversation today',
           'Jyotish voice guide for all your needs':
@@ -914,7 +867,6 @@ class LocalString extends Translations {
           'No response.': 'No response.',
           'Retry': 'Retry',
           'Subscribe Now': 'Subscribe Now',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'We value your experience.\nWhat made you decide to leave?',
           'I am having another account': 'I am having another account',
@@ -927,7 +879,6 @@ class LocalString extends Translations {
               'All data associated with this account (including your profile, service, bookings, horoscopes, predictions) will be permanently deleted in 45 days',
           'Delete Account Now': 'Delete Account Now',
           'No, I have changed my mind': 'No, I have changed my mind',
-          //Astrologer
           'You logged in as Astrologer': 'You logged in as Astrologer',
           'Meetings': 'Meetings',
           'View your scheduled appointments & completed ones':
@@ -943,12 +894,7 @@ class LocalString extends Translations {
           'Horoscope Details': 'Horoscope Details',
           'Horoscope details are not available':
               'Horoscope details are not available',
-          'Answer': 'Answer',
           'View': 'View',
-          "Queries asked - Time to share your thoughts!":
-              "Queries asked - Time to share your thoughts!",
-          "Queries asked - You’ve already shared your thoughts!":
-              "Queries asked - You’ve already shared your thoughts!",
           'Date': 'Date',
           'Time': 'Time',
           'Fees Paid': 'Fees Paid',
@@ -978,8 +924,6 @@ class LocalString extends Translations {
           'Years of Experience': 'Years of Experience',
           'years': 'years',
           'Showing Availability': 'Showing Availability',
-          //OTP Screen
-          "resend_otp_in_seconds": "Resend OTP in {seconds} sec",
           'Enter Mobile Number': 'Enter Mobile Number',
           'Enter Email': 'Enter Email',
           'Enter your new email and verify it using OTP':
@@ -997,7 +941,6 @@ class LocalString extends Translations {
           'We have sent OTP to': 'We have sent OTP to',
           'OTP is valid for 5 Minutes.': 'OTP is valid for 5 Minutes.',
           'Resend OTP': 'Resend OTP',
-          //Internet
           'No Internet Connection': 'No Internet Connection',
           'Please check your\nnetwork settings':
               'Please check your\nnetwork settings',
@@ -1096,7 +1039,6 @@ class LocalString extends Translations {
           'Please log in to view your profile.': 'Please log in to view your profile.',
           'Updating Rasi & Nakshatram…': 'Updating Rasi & Nakshatram…',
           'Could not update Rasi/Nakshatram. Check birth details.': 'Could not update Rasi/Nakshatram. Check birth details.',
-        
           'Your answers are ready': 'Your answers are ready',
           'Your astrologer has submitted answers to your consultation questions.': 'Your astrologer has submitted answers to your consultation questions.',
           'Open Booking Details to read them — you can also leave a review there.': 'Open Booking Details to read them — you can also leave a review there.',
@@ -1118,14 +1060,13 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'Could not submit your review. Please try again.',
           'Review submitted for approval.': 'Review submitted for approval.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'Thanks! Your review will show on the astrologer\'s profile once approved.',
-
           'Delete': 'Delete',
           'Save changes': 'Save changes',
           'Delete your review?': 'Delete your review?',
           'Could not delete your review. Please try again.': 'Could not delete your review. Please try again.',
           'Published': 'Published',
           'Write a short review (optional)': 'Write a short review (optional)',
-},
+        },
         'ta': {
           'Good day': 'வணக்கம்',
           'Astrologer': 'ஜோதிடர் ',
@@ -1135,20 +1076,13 @@ class LocalString extends Translations {
           'Settings': 'அமைப்புகள்',
           'Marriage\nMatch Making': 'திருமண\nபொருத்தம்',
           'Explore Other Predictions': 'பிற கணிப்புகள் ',
-          PlatformTextConfig.yearlyPrediction: 'வருட\nபலன்கள்',
-          PlatformTextConfig.weeklyPrediction: 'வார\nபலன்கள்',
-          PlatformTextConfig.lifePrediction: 'வாழ்க்கை\nபலன்கள்',
-          PlatformTextConfig.dailyPrediction: 'தின\nபலன்கள்',
-          PlatformTextConfig.chatHomePage: 'AI - யுடன்\nவாய்ஸ் சாட் செய்ய',
           'ChatTitle': 'AI குரல் அரட்டை',
-          // PlatformTextConfig.chatTitle: 'AI வாய்ஸ் சாட்',
           'Chat Now': 'அரட்டை',
           'Thara Bala': 'தாரா பலம்',
           'Chandra Bala': 'சந்திர பலம்',
           'Astrologer\nConsultation': 'ஜோதிடர்\nஆலோசனை',
           'Astrologer Consultation': 'ஜோதிடர் ஆலோசனை',
           'My Profile': 'எனது சுயவிவரம்',
-          //settings
           'Profile': 'சுயவிவரம்',
           'Push Notifications': 'அறிவிப்புகள்',
           'Language': 'மொழி',
@@ -1225,7 +1159,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'பயன்பாட்டின் மொழி வெற்றிகரமாக மாற்றப்பட்டது.',
           'Click to view': 'பார்க்க கிளிக் செய்யவும்',
-          // Ask Astrologer
           'Ask Astrologer': 'ஜோதிடரிடம் கேளுங்கள்',
           'Event Planner (Muhurtha)': 'நிகழ்வு திட்டமிடுபவர் (முஹூர்த்தம்)',
           'Choose a date within the next 30 days.':
@@ -1296,7 +1229,23 @@ class LocalString extends Translations {
           'Could not open Full Horoscope': 'முழு ஜாதகத்தைத் திறக்க முடியவில்லை',
           'Plan Now': 'இப்போது திட்டமிடுங்கள்',
           'Event Planner': 'நிகழ்வு திட்டமிடுபவர்',
-          'Consultation marathon': 'ஆலோசனை மாரத்தான்',
+          'Teksage Expert Hours': 'டெக்ஸேஜ் நிபுணர் மணிநேரங்கள்',
+          'IST': 'ஐஎஸ்டி',
+          'No Expert Hours event is open right now.': 'தற்போது நிபுணர் நேர நிகழ்வு எதுவும் திறந்திருக்கவில்லை.',
+          'Your Expert Hours bookings': 'உங்கள் நிபுணர் நேர முன்பதிவுகள்',
+          'Upcoming': 'வரவிருக்கும்',
+          'Past': 'கடந்த',
+          'Login email': 'உள்நுழைவு மின்னஞ்சல்',
+          'Login phone': 'உள்நுழைவு தொலைபேசி',
+          'Your question': 'உங்கள் கேள்வி',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'நீங்கள் என்ன கேட்க விரும்புகிறீர்கள் என்பதை எங்களிடம் கூறுங்கள். உங்களுக்கு நியமிக்கப்பட்ட ஜோதிடர் இதைப் பார்ப்பார்.',
+          'Enter your question before payment.': 'பணம் செலுத்துவதற்கு முன் உங்கள் கேள்வியை உள்ளிடவும்.',
+          'Preferred consultation language': 'விருப்பமான கலந்தாய்வு மொழி',
+          'Select your preferred consultation language.':
+              'உங்களுக்கு விருப்பமான கலந்தாய்வு மொழியைத் தேர்ந்தெடுக்கவும்.',
+          'Customer question': 'வாடிக்கையாளர் கேள்வி',
+          'Consultation time has not ended yet.': 'ஆலோசனை நேரம் இன்னும் முடிவடையவில்லை.',
+          'Waiting for admin assignment': 'நிர்வாகப் பணிக்காகக் காத்திருக்கிறது',
           'Your Next Session': 'உங்கள் அடுத்த அமர்வு',
           'Better guidance': 'சிறந்த வழிகாட்டுதல்',
           'Brighter tomorrows': 'பிரகாசமான நாளைய தினங்கள்',
@@ -1308,7 +1257,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10 நிமிட அமர்வுகள். முதலில் பணம் செலுத்துங்கள். பணம் செலுத்திய பிறகு ஜோதிடர் நியமிக்கப்படுவார்.',
           'See times': 'நேரங்களைப் பார்க்கவும்',
           '10 minutes': '10 நிமிடங்கள்',
-          'No marathon is open right now.': 'தற்போது எந்த மராத்தானும் நடைபெறவில்லை.',
           'Booked': 'முன்பதிவு செய்யப்பட்டது',
           'Booking for this event has closed.': 'இந்த நிகழ்ச்சிக்கான முன்பதிவு முடிவடைந்துவிட்டது.',
           'Event ended by admin': 'நிர்வாகியால் நிகழ்வு முடிவுக்குக் கொண்டுவரப்பட்டது',
@@ -1364,7 +1312,7 @@ class LocalString extends Translations {
           '@count completed': '@count நிறைவடைந்தது',
           'Pay': 'பணம் செலுத்துங்கள்',
           'Payment did not go through. This seat is still open. Try again.': 'பணம் செலுத்தப்படவில்லை. இந்த இடம் இன்னும் காலியாக உள்ளது. மீண்டும் முயற்சிக்கவும்.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': 'உங்கள் ஜோதிடர் நியமிக்கப்பட்டு, சந்திப்புக்கான இணைப்பு 8 மணி நேரத்திற்குள் பகிரப்படும்.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'உங்கள் ஜோதிடர் நியமிக்கப்பட்டு, சந்திப்புக்கான இணைப்பு 1 மணி நேரத்திற்குள் பகிரப்படும்.',
           'Get it on Android': 'ஆண்ட்ராய்டில் பெறுங்கள்',
           'Contact via WhatsApp': 'வாட்ஸ்அப் வழியாகத் தொடர்பு கொள்ளவும்',
           'Get on website': 'வலைத்தளத்திற்குச் செல்லவும்',
@@ -1400,7 +1348,6 @@ class LocalString extends Translations {
           'no_auspicious_window':
               'அசுப காலங்களுக்குப் பிறகு சுப நேரம் இல்லை',
           'Book Consultation': 'ஆலோசனை முன்பதிவு',
-          'Your question': 'உங்கள் கேள்வி',
           'Select your preferred language':
               'உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்',
           'We will match you with an astrologer who speaks your language.':
@@ -1463,7 +1410,6 @@ class LocalString extends Translations {
               'இன்னும் ஜோதிடர் கேள்விகள் எதுவும் இல்லை.',
           'Answer ready': 'பதில் தயார்',
           'Assigned': 'நியமிக்கப்பட்டது',
-          //Profile
           'First Name': 'பெயர் (முதல் பகுதி)',
           'Last Name': 'பெயர் (பிற்பகுதி)',
           'Email': 'மின்னஞ்சல்',
@@ -1492,22 +1438,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage':
               'Teksage பற்றி நீங்கள் முதன்முதலில் எப்படித்\nதெரிந்துகொண்டீர்கள்',
           'Select a language': 'ஒரு மொழியைத் தேர்ந்தெடுக்கவும்',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google தேடல்",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)":
-              "வாய்மொழி பரிந்துரை (நண்பர்கள் / குடும்பம்)",
-          "Product Hunt": "Product Hunt மூலம் கண்டறியப்பட்டது",
-          "Other": "மற்றவை",
-          //Push Notification
           'Push Notification': 'அறிவிப்பு',
-          PlatformTextConfig.dailyTitle: 'தின பலன்கள்',
-          PlatformTextConfig.weeklyTitle: 'வார பலன்கள்',
-          PlatformTextConfig.yearlyTitle: 'வருட பலன்கள்',
-          PlatformTextConfig.lifePredictionLanding: 'வாழ்க்கை பலன்',
           'Promotions & Offers': 'விளம்பரம் & சலுகைகள்',
           'Warnings': 'எச்சரிக்கைகள்',
           'Consultation': 'ஆலோசனை',
@@ -1537,18 +1468,15 @@ class LocalString extends Translations {
               'ஆலோசனை தொடர்பான புதிய தகவல்கள் எதுவும் இல்லை.',
           'There are no recent general updates from your astrological guidance':
               'உங்கள் ஜோதிட வழிகாட்டுதலிலிருந்து சமீபத்திய பொதுவான புதுப்பிப்புகள் எதுவும் இல்லை.',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'கேள்விகள் உள்ளதா?\nஉங்களை வழிநடத்த எங்கள் குழுவினர் உள்ளனர்',
           'Enter feedback or query here...': 'உங்கள் கேள்வியை இங்கே உள்ளிடவும்',
           'Submit': 'சமர்ப்பிக்க',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'எங்கள் ஜோதிட சேவைகள் பற்றிய பொதுவான கேள்விகளுக்கான\nபதில்களைக் கண்டறியவும்.',
           'Still have questions?': 'இன்னும் கேள்விகள் உள்ளதா?',
           'Contact Support': 'எங்கள் support டீம்-ஐ தொடர்பு கொள்ளவும்',
           'search_help': 'தேடல் உதவி',
-          //panchang
           'WeekDay': 'கிழமை',
           'Thithi': 'திதி',
           'Karna': 'கரணம்',
@@ -1561,18 +1489,12 @@ class LocalString extends Translations {
           'Paksha': 'பக்ஷம்',
           'Amirthathi Yoga': 'அமிர்தாதி யோகம்',
           'COMING SOON': 'விரைவில் வருகிறது',
-          "panchang_single_format": "(name) (time) வரை (next)",
           'otp_response': "(title) சரிபார்ப்பு\nOTP வெற்றிகரமாக அனுப்பப்பட்டது",
-          //Horoscope
-          PlatformTextConfig.horoscope: 'ஜாதகம்',
           'Name': 'பெயர்',
           'Place': 'இடம்',
           'Lagna': 'லக்னம்',
           'South Indian Chart': 'தென்னிந்திய ஜாதகம்',
           'North Indian Chart': 'வட இந்திய ஜாதகம்',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "உங்கள் நாளை அற்புதமாகத் தொடங்குவீர்கள் என்று நம்புகிறேன்.",
           'Good morning,': 'காலை வணக்கம்,',
           'Sunday': 'ஞாயிறு',
           'Monday': 'திங்கள்',
@@ -1584,7 +1506,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'சந்திராஷ்டமம்',
           'Predictions are based on birth details in your profile section':
               'இந்த கணிப்புகள், உங்கள் profile-ல் உள்ள பிறப்பு விவரங்களை அடிப்படையாகக் கொண்டு உருவாக்கப்பட்டுள்ளது.',
-          //yearly prediction
           'Planetary Transits': 'கிரக கோச்சாரம்',
           'Categorized Predictions': 'வகைப்படுத்தப்பட்ட\nகணிப்புகள்',
           'Jupiter': 'குரு',
@@ -1605,15 +1526,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'ஜோதிட ஆலோசனை',
           'First Half of': 'முதல் பாதி',
           'Second Half of': 'இரண்டாம் பாதி',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'வாழ்க்கை பலன்கள்',
           'General\nCharacteristics': 'பொதுவான\nபண்புகள்   ',
           'Career\nPredictions': 'தொழில்\nகணிப்புகள்',
           'Relationship\nPredictions': 'உறவு\nகணிப்புகள்',
           'Wealth\nPredictions': 'செல்வ\nகணிப்புகள்',
           'Health\nPredictions': 'ஆரோக்கிய\nகணிப்புகள்',
           'Current\nTime Period': 'தற்போதைய\nகாலகட்டம்',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'தினசரி கணிப்புகளை காலை 6 மணிக்குப் பெற upgrade செய்யவும் ',
           'Your daily predictions was scheduled for 6 AM':
@@ -1622,7 +1540,6 @@ class LocalString extends Translations {
           'Relationship': 'உறவுகள்',
           'Wealth': 'செல்வம்',
           'Health': 'ஆரோக்கியம்',
-          //Marriage Match Making
           'Marriage Match Making': 'திருமண பொருத்தம்',
           'Boy Name': 'ஆண் பெயர்',
           'Girl Name': 'பெண் பெயர்',
@@ -1640,8 +1557,6 @@ class LocalString extends Translations {
           'Calculate Match': 'பொருத்தத்தைக் கணக்கிடு',
           'Enter boy\'s name': 'ஆணின் பெயர்',
           'Enter girl\'s name': 'பெண்ணின் பெயர்',
-
-          //Subscriptions
           'Subscription': 'சந்தாக்கள்',
           'Auto Schedule Daily Predictions': 'தானியங்கு தினசரி கணிப்புகள்',
           'Auto Schedule Weekly Predictions': 'தானியங்கு வார கணிப்புகள்',
@@ -1685,7 +1600,6 @@ class LocalString extends Translations {
           'days left': 'மீதமுள்ள நாட்கள்',
           'Recommended': 'பரிந்துரைக்கப்படுகிறது',
           'membership': 'உறுப்பினர் நிலை',
-          //Dialog box
           'Plan Expired': 'plan காலாவதி ஆகிவிட்டது',
           'Premium Feature': 'பிரீமியம் அம்சங்கள்',
           'Unlock all features by choosing a plan':
@@ -1709,7 +1623,6 @@ class LocalString extends Translations {
           'Discard': 'நிராகரிக்கவும்',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'நீங்கள் சேமிக்காத மாற்றங்கள் உள்ளன.\nஅவற்றை நிராகரித்துவிட்டுத் திரும்பிச் செல்ல விரும்புகிறீர்களா?',
-          //Error Validate
           'Please Enter the First Name': 'பெயர் முதல் பகுதி உள்ளிடவும்',
           'Please Enter the Second Name': 'பெயர் பிற்பகுதி உள்ளிடவும்',
           'Please enter a valid Email':
@@ -1740,20 +1653,8 @@ class LocalString extends Translations {
               'ஒன்று அல்லது அதற்கு மேற்பட்ட category-யை தேர்ந்தெடுக்கவும்.',
           'Error loading questions': 'கேள்விகளை ஏற்றுவதில் பிழை ஏற்பட்டது',
           'No questions found': 'கேள்விகள் எதுவும் காணப்படவில்லை.',
-          "Please enter Boy's name": 'தயவுசெய்து ஆணின் பெயரை உள்ளிடவும்',
-          "Please select Boy's Nakshatram":
-              'தயவுசெய்து ஆணின் நட்சத்திரத்தைத் தேர்ந்தெடுக்கவும்',
-          "Please select Girl's Nakshatram":
-              'தயவுசெய்து பெண்ணின் நட்சத்திரத்தைத் தேர்ந்தெடுக்கவும்.',
-          "Please enter Girl's name": 'தயவுசெய்து பெண்ணின் பெயரை உள்ளிடவும்',
-          "Please select Girl's Rasi":
-              'தயவுசெய்து பெண்ணின் ராசியைத் தேர்ந்தெடுக்கவும்.',
-          "Please select Boy's Rasi":
-              'தயவுசெய்து ஆணின் ராசியைத் தேர்ந்தெடுக்கவும்.',
           'Second language must be different from first':
               'இரண்டாவது மொழி முதல் மொழியிலிருந்து வேறுபட்டதாக இருக்க வேண்டும்.',
-
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'அனுமதி நிரந்தரமாக மறுக்கப்பட்டுள்ளது. settings-ல் அதை enable செய்யவும். ',
           'Permission Denied': 'அனுமதி மறுக்கப்பட்டுள்ளது',
@@ -1845,7 +1746,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'இணையப் பிழை. உங்கள் இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
           'OTP Verified': 'OTP சரிபார்க்கப்பட்டது',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'உங்களுக்கு\nஎதில் வழிகாட்டுதல் தேவை?',
           'Select the categories and continue':
@@ -1865,14 +1765,12 @@ class LocalString extends Translations {
           'Expert Profile': 'நிபுணர் சுயவிவரம்',
           'Reviews': 'மதிப்பாய்வு',
           'No reviews available': 'மதிப்பாய்வு இல்லை',
-          'Book Consultation': 'ஆலோசனை முன்பதிவு ',
           'No slots available': 'Slots இல்லை.',
           'Find & Consult Astrologers':
               'ஜோதிடர்களைக் கண்டுபிடித்து\nஆலோசனை பெறுங்கள்',
           '100+ Astrologers': '100+ ஜோதிடர்கள்',
           'Explore and find your perfect match':
               'உங்கள் சரியான\nஜோதிடரை கண்டறியவும்',
-          'Upcoming': 'வரவிருக்கும்',
           'Completed': 'நிறைவுப் பெற்ற',
           'View Details': 'விவரங்களைப்\nபார்க்கவும்',
           'View\nDetails': 'விவரங்களைப்\nபார்க்கவும்',
@@ -1882,7 +1780,6 @@ class LocalString extends Translations {
               'AI எவ்வாறு பதிலளிக்கவேண்டும் என்பதைத் தேர்வுசெய்யவும் ',
           'Concise': 'சுருக்கமான',
           'Book Now': 'முன்பதிவு\nசெய்யுங்கள்',
-          'Booking Details': 'முன்பதிவு விவரங்கள்',
           'Consultation Fee': 'ஆலோசனை கட்டணம்',
           'Total Fee': 'மொத்த கட்டணம்',
           'Confirm & Proceed to Pay': 'உறுதிப்படுத்தி பணம் செலுத்தவும் ',
@@ -1939,8 +1836,6 @@ class LocalString extends Translations {
               'உங்கள் பதிலை இங்கே தட்டச்சு செய்யவும்...',
           'Done': 'முடிந்தது',
           'booked a slot on': 'ஒரு\nஇடத்தைப் பதிவு\nசெய்துள்ளார்',
-          "meeting_with": "{name} உடன் சந்திப்பு",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'உங்கள் அனைத்து தேவைகளுக்கும் ஜோதிட குரல் வழிகாட்டி. இன்றே உங்கள் உரையாடலைத் தொடங்குங்கள்.',
           'Jyotish voice guide for all your needs':
@@ -1979,10 +1874,8 @@ class LocalString extends Translations {
           'No response.': 'பதில் இல்லை.',
           'Retry': 'மீண்டும் முயற்சிக்கவும்',
           'Subscribe Now': 'சந்தா பெறுங்கள்',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'உங்கள் அனுபவத்தை நாங்கள் மதிக்கிறோம்.\nநீங்கள் வெளியேற முடிவு செய்தது ஏன்?',
-          "I am having another account": 'எனக்கு வேறொரு கணக்கு இருக்கிறது',
           'App not working properly': 'App சரியாக வேலை செய்யவில்லை',
           'I don’t like the app': 'எனக்கு இந்த App பிடிக்கவில்லை',
           'I am worried about my privacy':
@@ -1994,7 +1887,6 @@ class LocalString extends Translations {
           'Delete Account Now': 'இப்போது கணக்கை நீக்கு',
           'No, I have changed my mind':
               'இல்லை, நான் என் மனதை மாற்றிக்கொள்கிறேன்',
-          //Astrologer
           'You logged in as Astrologer':
               'நீங்கள் ஜோதிடராக\nஉள்நுழைந்துள்ளீர்கள்',
           'Meetings': 'முன்பதிவுகள்',
@@ -2012,12 +1904,6 @@ class LocalString extends Translations {
           'Horoscope details are not available': 'ஜாதக விவரங்கள் கிடைக்கவில்லை',
           'Answer': 'பதில்',
           'View': 'பார்க்க',
-
-          "Queries asked - Time to share your thoughts!":
-              "கேள்விகள் கேட்கப்பட்டுள்ளன - உங்கள் எண்ணங்களைப் பகிர்ந்துகொள்ள இதுவே நேரம்!",
-
-          "Queries asked - You've already shared your thoughts!":
-              "கேட்கப்பட்ட கேள்விகள் - உங்கள் கருத்துக்களை நீங்கள் ஏற்கனவே பகிர்ந்துவிட்டீர்கள்!",
           'Date': 'தேதி',
           'Time': 'நேரம்',
           'Fees Paid': 'செலுத்தப்பட்ட கட்டணங்கள்',
@@ -2047,8 +1933,6 @@ class LocalString extends Translations {
           'Years of Experience': 'அனுபவம்',
           'years': 'ஆண்டுகள்',
           'Showing Availability': 'Availability\nகாட்டுகிறது',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP மீண்டும் அனுப்ப {seconds} விநாடிகள்",
           'Enter Mobile Number': 'கைபேசி எண்ணை உள்ளிடவும்',
           'Enter Email': 'மின்னஞ்சலை உள்ளிடவும்',
           'Enter your new email and verify it using OTP':
@@ -2068,7 +1952,6 @@ class LocalString extends Translations {
           'OTP is valid for 5 Minutes.':
               'ஓடிபி 5 நிமிடங்களுக்குச் செல்லுபடியாகும்.',
           'Resend OTP': 'OTP-ஐ மீண்டும் அனுப்பவும்',
-          //Internet
           'No Internet Connection': 'இணைய இணைப்பு இல்லை',
           'Please check your\nnetwork settings':
               'தயவுசெய்து உங்கள்\nநெட்வொர்க் அமைப்புகளைச் சரிபார்க்கவும்.',
@@ -2224,7 +2107,6 @@ class LocalString extends Translations {
               'உங்கள் கேள்வி, பதில் மற்றும் செயலாக்க காலக்கெடு குறித்த விவரங்கள்.',
           'Request details': 'கோரிக்கை விவரங்கள்',
           'Answered on': 'பதிலளிக்கப்பட்டது',
-          "Astrologer's answer": 'ஜோதிடரின் பதில்',
           'In progress': 'செயல்பாட்டில் உள்ளது',
           'Rate your answer': 'உங்கள் பதிலை மதிப்பிடுங்கள்',
           'Could not load this Ask request. Please try again.':
@@ -2237,7 +2119,6 @@ class LocalString extends Translations {
           'Session expired. Please try again.': 'அமர்வு முடிவடைந்தது. மீண்டும் முயற்சிக்கவும்.',
           'Coupon applied': 'கூப்பன் பயன்படுத்தப்பட்டது',
           'Astrologer\'s Answer': 'ஜோதிடரின் பதில்',
-        
           'Your answers are ready': 'உங்கள் பதில்கள் தயாராக உள்ளன.',
           'Your astrologer has submitted answers to your consultation questions.': 'உங்கள் ஜோதிடர், உங்களுடைய ஆலோசனைக் கேள்விகளுக்கான பதில்களைச் சமர்ப்பித்துள்ளார்.',
           'Open Booking Details to read them — you can also leave a review there.': 'அவற்றை வாசிக்க முன்பதிவு விவரங்கள் பக்கத்தைத் திறக்கவும் — அங்கே நீங்கள் ஒரு மதிப்பாய்வையும் பதிவிடலாம்.',
@@ -2259,14 +2140,14 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'உங்கள் மதிப்பாய்வைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
           'Review submitted for approval.': 'மதிப்பாய்வு ஒப்புதலுக்காகச் சமர்ப்பிக்கப்பட்டது.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'நன்றி! உங்கள் விமர்சனம் அங்கீகரிக்கப்பட்டவுடன், அது ஜோதிடரின் சுயவிவரத்தில் காட்டப்படும்.',
-
           'Delete': 'நீக்கு',
           'Save changes': 'மாற்றங்களைச் சேமிக்கவும்',
           'Delete your review?': 'உங்கள் மதிப்பாய்வை நீக்கவா?',
           'Could not delete your review. Please try again.': 'உங்கள் மதிப்பாய்வை நீக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
           'Published': 'வெளியிடப்பட்டது',
           'Write a short review (optional)': 'ஒரு சிறு விமர்சனம் எழுதவும் (விருப்பப்பட்டால்)',
-},
+          'I am having another account': 'எனக்கு இன்னொரு கணக்கு இருக்கிறது.',
+        },
         'te_IN': {
           'Good day': 'శుభదినం',
           'Astrologer': 'జ్యోతిష్కుడు',
@@ -2276,11 +2157,6 @@ class LocalString extends Translations {
           'Settings': 'సెట్టింగ్స్',
           'Marriage\nMatch Making': 'వివాహ\nపొంతన',
           'Explore Other Predictions': 'ఇతర భవిష్యవాణులను\nఅన్వేషించండి',
-          PlatformTextConfig.yearlyPrediction: 'వార్షిక\nఫలితాలు',
-          PlatformTextConfig.weeklyPrediction: 'వార\nభవిష్యవాణులు',
-          PlatformTextConfig.lifePrediction: 'జీవిత\nభవిష్యవాణులు',
-          PlatformTextConfig.dailyPrediction: 'రోజువారీ\nభవిష్యవాణులు',
-          PlatformTextConfig.chatHomePage: 'AI వాయిస్\nజ్యోతిష్య చాట్',
           'ChatTitle': 'AI వాయిస్ చాట్',
           'Chat Now': 'చాట్ చేయండి',
           'Thara Bala': 'తారాబలం',
@@ -2288,7 +2164,6 @@ class LocalString extends Translations {
           'Astrologer\nConsultation': 'పుష్\nనోటిఫికేషన్',
           'Astrologer Consultation': 'పుష్ నోటిఫికేషన్',
           'My Profile': 'నా వివరాలు',
-          //settings
           'Profile': 'ప్రొఫైల్',
           'Push Notifications': 'పుష్ నోటిఫికేషన్',
           'Language': 'భాష',
@@ -2366,7 +2241,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'యాప్ భాష విజయవంతంగా మార్చబడింది.',
           'Click to view': 'చూడడానికి క్లిక్ చేయండి',
-          // Ask Astrologer
           'Ask Astrologer': 'జ్యోతిష్కుడిని అడగండి',
           'Event Planner (Muhurtha)': 'కార్యక్రమ ప్రణాళిక (ముహూర్తం)',
           'Choose a date within the next 30 days.':
@@ -2435,7 +2309,23 @@ class LocalString extends Translations {
           'Could not open Full Horoscope': 'పూర్తి జాతకాన్ని తెరవలేకపోయాను',
           'Plan Now': 'ఇప్పుడే ప్లాన్ చేయండి',
           'Event Planner': 'కార్యక్రమ ప్రణాళిక',
-          'Consultation marathon': 'సంప్రదింపుల మారథాన్',
+          'Teksage Expert Hours': 'టెక్సేజ్ నిపుణుల గంటలు',
+          'IST': 'IST',
+          'No Expert Hours event is open right now.': 'ప్రస్తుతం ఎక్స్‌పర్ట్ అవర్స్ ఈవెంట్ ఏదీ అందుబాటులో లేదు.',
+          'Your Expert Hours bookings': 'మీ ఎక్స్‌పర్ట్ అవర్స్ బుకింగ్‌లు',
+          'Upcoming': 'రాబోయే',
+          'Past': 'గతం',
+          'Login email': 'లాగిన్ ఇమెయిల్',
+          'Login phone': 'ఫోన్‌కు లాగిన్ చేయండి',
+          'Your question': 'మీ ప్రశ్న',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'మీరు ఏమి అడగాలనుకుంటున్నారో మాకు చెప్పండి. మీకు కేటాయించిన జ్యోతిష్యుడు దీనిని చూస్తారు.',
+          'Enter your question before payment.': 'చెల్లింపుకు ముందు మీ ప్రశ్నను నమోదు చేయండి.',
+          'Preferred consultation language': 'ఇష్టపడే సంప్రదింపు భాష',
+          'Select your preferred consultation language.':
+              'మీకు నచ్చిన సంప్రదింపు భాషను ఎంచుకోండి.',
+          'Customer question': 'కస్టమర్ ప్రశ్న',
+          'Consultation time has not ended yet.': 'సంప్రదింపుల సమయం ఇంకా ముగియలేదు.',
+          'Waiting for admin assignment': 'నిర్వాహక కేటాయింపు కోసం వేచి ఉంది',
           'Your Next Session': 'మీ తదుపరి సెషన్',
           'Better guidance': 'మెరుగైన మార్గదర్శకత్వం',
           'Brighter tomorrows': 'ఉజ్వల భవిష్యత్తు',
@@ -2447,7 +2337,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10 నిమిషాల సెషన్‌లు. ముందుగా చెల్లించండి. చెల్లింపు తర్వాత ఒక జ్యోతిష్యుడిని కేటాయిస్తారు.',
           'See times': 'సమయాలను చూడండి',
           '10 minutes': '10 నిమిషాలు',
-          'No marathon is open right now.': 'ప్రస్తుతం ఏ మారథాన్ కూడా అందుబాటులో లేదు.',
           'Booked': 'బుక్ చేయబడింది',
           'Booking for this event has closed.': 'ఈ కార్యక్రమానికి బుకింగ్ ముగిసింది.',
           'Event ended by admin': 'ఈవెంట్‌ను నిర్వాహకుడు ముగించారు',
@@ -2503,7 +2392,7 @@ class LocalString extends Translations {
           '@count completed': '@count పూర్తయింది',
           'Pay': 'చెల్లించండి',
           'Payment did not go through. This seat is still open. Try again.': 'చెల్లింపు జరగలేదు. ఈ సీటు ఇంకా ఖాళీగా ఉంది. మళ్ళీ ప్రయత్నించండి.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': '8 గంటలలోపు మీ జ్యోతిష్యుడిని కేటాయించి, సమావేశ లింక్‌ను పంపడం జరుగుతుంది.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hour.': '1 గంటలలోపు మీ జ్యోతిష్యుడిని కేటాయించి, సమావేశ లింక్‌ను పంపడం జరుగుతుంది.',
           'Get it on Android': 'ఆండ్రాయిడ్‌లో పొందండి',
           'Contact via WhatsApp': 'వాట్సాప్ ద్వారా సంప్రదించండి',
           'Get on website': 'వెబ్‌సైట్‌లోకి వెళ్లండి',
@@ -2537,7 +2426,6 @@ class LocalString extends Translations {
           'chandra_bala_excluded': 'చంద్ర బలం అనుకూలం కాదు (చంద్రాష్టమం)',
           'no_auspicious_window': 'అశుభ కాలాల తర్వాత శుభ సమయం మిగలలేదు',
           'Book Consultation': 'కన్సల్టేషన్ బుక్ చేయండి',
-          'Your question': 'మీ ప్రశ్న',
           'Select your preferred language': 'మీ ఇష్టమైన భాషను ఎంచుకోండి',
           'We will match you with an astrologer who speaks your language.':
               'మీరు మాట్లాడే భాషను మాట్లాడే జ్యోతిష్యుడిని మేము మీకు పరిచయం చేస్తాము..',
@@ -2597,7 +2485,6 @@ class LocalString extends Translations {
           'No Ask Astrologer requests yet.': 'ఇంకా జ్యోతిష్కుడి ప్రశ్నలు లేవు.',
           'Answer ready': 'సమాధానం సిద్ధం',
           'Assigned': 'అసైన్ చేయబడింది',
-          //Profile
           'First Name': 'మొదటి పేరు',
           'Last Name': 'చివరి పేరు',
           'Email': 'ఈమెయిల్',
@@ -2625,22 +2512,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'మీరు Teksage గురించి తొలిసారిగా ఎలా తెలుసుకున్నారు?',
           'Select a language': 'ఒక భాషను ఎంచుకోండి',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google శోధన",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)":
-              "నోటి మాట ద్వారా (స్నేహితులు / కుటుంబం)",
-          "Product Hunt": "Product Hunt",
-          "Other": "ఇతరవి",
-          //Push Notification
           'Push Notification': 'పుష్ నోటిఫికేషన్',
-          PlatformTextConfig.dailyTitle: 'దినఫలితాలు',
-          PlatformTextConfig.weeklyTitle: 'వారఫలితాలు',
-          PlatformTextConfig.yearlyTitle: 'వార్షిక ఫలితాలు',
-          PlatformTextConfig.lifePredictionLanding: 'జీవిత ఫలితం',
           'Promotions & Offers': 'ప్రచారాలు & ఆఫర్లు',
           'Warnings': 'హెచ్చరికలు',
           'Consultation': 'సంప్రదింపులు',
@@ -2670,19 +2542,16 @@ class LocalString extends Translations {
               'సంప్రదింపులకు సంబంధించిన ఎలాంటి నవీకరణలు లేవు.',
           'There are no recent general updates from your astrological guidance':
               'మీ జ్యోతిష్య మార్గదర్శకత్వం నుండి ఇటీవల ఎలాంటి సాధారణ నవీకరణలు లేవు.',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'మీకు ఏమైనా ప్రశ్న ఉందా?\nమీకు మార్గనిర్దేశం చేయడానికి మా సహాయక బృందం సిద్ధంగా ఉంది',
           'Enter feedback or query here...':
               'ఇక్కడ మీ అభిప్రాయం లేదా ప్రశ్నని నమోదు చేయండి',
           'Submit': 'సమర్పించండి',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'మా జ్యోతిష్య సేవల గురించి సాధారణ ప్రశ్నలకు సమాధానాలు కనుగొనండి',
           'Still have questions?': 'ఇంకా ప్రశ్నలున్నాయా?',
           'Contact Support': 'సపోర్ట్‌ను సంప్రదించండి',
           'search_help': 'సహాయం కోసం శోధించండి',
-          //panchang
           'WeekDay': 'వారం',
           'Thithi': 'తిథి',
           'Karna': 'కరణం',
@@ -2695,20 +2564,12 @@ class LocalString extends Translations {
           'Paksha': 'పక్ష',
           'Amirthathi Yoga': 'అమృత యోగం',
           'COMING SOON': 'త్వరలో వస్తుంది',
-          "panchang_single_format": "(name) వరకు (time) (next)",
           'otp_response': "(title) ధృవీకరణ\nOTP విజయవంతంగా పంపబడింది.",
-
-          //Horoscope
-          PlatformTextConfig.horoscope: 'జాతకం',
           'Name': 'పేరు',
           'Place': 'స్థలం',
           'Lagna': 'లగ్నం',
           'South Indian Chart': 'దక్షిణ భారత జాతక పట్టిక',
           'North Indian Chart': 'ఉత్తర భారత జాతక పట్టిక',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "మీ రోజును అద్భుతంగా ప్రారంభించాలని ఆశిస్తున్నాను.",
-          "Good morning,": 'శుభోదయం,',
           'Sunday': 'ఆదివారం',
           'Monday': 'సోమవారం',
           'Tuesday': 'మంగళవారం',
@@ -2719,7 +2580,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'చంద్రాష్టమం',
           'Predictions are based on birth details in your profile section':
               'మీ ప్రొఫైల్ విభాగంలో ఉన్న జన్మ వివరాల ఆధారంగా భవిష్యవాణులు ఇవ్వబడతాయి',
-          //yearly prediction
           'Planetary Transits': 'గ్రహ సంచారాలు',
           'Categorized Predictions': 'వర్గీకృత భవిష్యవాణులు',
           'Jupiter': 'గురువు',
@@ -2740,15 +2600,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'జ్యోతిష్య సంప్రదింపులు',
           'First Half of': 'మొదటి సగం',
           'Second Half of': 'రెండవ సగం',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'జీవిత భవిష్యవాణులు',
           'General\nCharacteristics': 'సాధారణ\nలక్షణాలు',
           'Career\nPredictions': 'వృత్తి\nభవిష్యవాణులు',
           'Relationship\nPredictions': 'సంబంధ\nభవిష్యవాణులు',
           'Wealth\nPredictions': 'సంపద\nభవిష్యవాణులు',
           'Health\nPredictions': 'ఆరోగ్య\nభవిష్యవాణులు',
           'Current\nTime Period': 'ప్రస్తుత\nకాలం',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'రోజువారీ అంచనాలను ఉదయం 6 గంటలకు స్వీకరించడానికి అప్‌గ్రేడ్ చేయండి',
           'Your daily predictions was scheduled for 6 AM':
@@ -2757,7 +2614,6 @@ class LocalString extends Translations {
           'Relationship': 'సంబంధాలు',
           'Wealth': 'సంపద',
           'Health': 'ఆరోగ్యం',
-          //Marriage Match Making
           'Marriage Match Making': 'వివాహ పొంతన',
           'Boy Name': 'వరుని పేరు',
           'Girl Name': 'వధువు పేరు',
@@ -2775,7 +2631,6 @@ class LocalString extends Translations {
           'Calculate Match': 'జాతకం పోల్చు',
           'Enter boy\'s name': 'పురుషుడి పేరు',
           'Enter girl\'s name': 'మహిళ పేరు',
-          //Subscriptions
           'Subscription': 'సభ్యత్వాలు',
           'Auto Schedule Daily Predictions':
               'రోజువారీ ఫలితాలను ఆటో షెడ్యూల్ చేయండి',
@@ -2821,7 +2676,6 @@ class LocalString extends Translations {
           'days left': 'రోజులు మిగిలాయి',
           'Recommended': 'సిఫార్సు చేయబడింది',
           'membership': 'సభ్యత్వం',
-          //Dialog box
           'Plan Expired': 'ప్లాన్ గడువు ముగిసింది',
           'Premium Feature': 'ప్రీమియం ఫీచర్',
           'Unlock all features by choosing a plan':
@@ -2845,7 +2699,6 @@ class LocalString extends Translations {
           'Discard': 'విస్మరించండి',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'మీరు సేవ్ చేయని మార్పులు ఉన్నాయి.\nమీరు వాటిని విస్మరించి వెనక్కి వెళ్లాలనుకుంటున్నారా?',
-          //Error Validate
           'Please Enter the First Name': 'దయచేసి మొదటి పేరును నమోదు చేయండి',
           'Please Enter the Second Name': 'దయచేసి చివరి పేరును నమోదు చేయండి',
           'Please enter a valid Email': 'దయచేసి సరైన ఈమెయిల్‌ను నమోదు చేయండి',
@@ -2874,17 +2727,8 @@ class LocalString extends Translations {
               'దయచేసి ఒకటి లేదా అంతకంటే ఎక్కువ కేటగిరీలను ఎంచుకోండి',
           'Error loading questions': 'ప్రశ్నలను లోడ్ చేయడంలో లోపం ఏర్పడింది',
           'No questions found': 'ప్రశ్నలు ఏవీ కనుగొనబడలేదు',
-          "Please enter Boy's name": 'దయచేసి అబ్బాయి పేరు నమోదు చేయండి',
-          "Please select Boy's Nakshatram":
-              'దయచేసి అబ్బాయి నక్షత్రాన్ని ఎంచుకోండి',
-          "Please select Girl's Nakshatram":
-              'దయచేసి అమ్మాయి నక్షత్రాన్ని ఎంచుకోండి',
-          "Please enter Girl's name": 'దయచేసి అమ్మాయి పేరు నమోదు చేయండి',
-          "Please select Girl's Rasi": 'దయచేసి అమ్మాయిల రాశిని ఎంచుకోండి',
-          "Please select Boy's Rasi": 'దయచేసి అబ్బాయిల రాశిని ఎంచుకోండి.',
           'Second language must be different from first':
               'రెండవ భాష మొదటి భాష నుండి భిన్నంగా ఉండాలి.',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'అనుమతి శాశ్వతంగా నిరాకరించబడింది. దయచేసి సెట్టింగ్స్‌లో ఎనేబుల్ చేయండి',
           'Permission Denied': 'అనుమతి నిరాకరించబడింది',
@@ -2972,7 +2816,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'నెట్‌వర్క్ లోపం. దయచేసి మీ కనెక్షన్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.',
           'OTP Verified': 'OTP ధృవీకరించబడింది',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'మీకు ఏ విషయంలో మార్గదర్శనం కావాలి?',
           'Select the categories and continue': 'వర్గాలను ఎంచుకొని కొనసాగండి',
@@ -2990,13 +2833,11 @@ class LocalString extends Translations {
           'Expert Profile': 'నిపుణుడి ప్రొఫైల్',
           'Reviews': 'సమీక్షలు',
           'No reviews available': 'సమీక్షలు లేవు',
-          'Book Consultation': 'కన్సల్టేషన్ బుక్ చేయండి',
           'No slots available': 'స్లాట్లు లభ్యం కావు',
           'Find & Consult Astrologers': 'జ్యోతిష్కులను కనుగొని సంప్రదించండి',
           '100+ Astrologers': '100+ జ్యోతిష్కులు',
           'Explore and find your perfect match':
               'అన్వేషించండి మరియు మీ పరిపూర్ణ సరిపోలికను కనుగొనండి',
-          'Upcoming': 'రాబోయే',
           'Completed': 'పూర్తయింది',
           'View Details': 'వివరాలను\nవీక్షించండి',
           'View\nDetails': 'వివరాలను\nవీక్షించండి',
@@ -3005,7 +2846,6 @@ class LocalString extends Translations {
           'Choose how AI replies': 'AI ఎలా ప్రత్యుత్తరమిస్తుందో ఎంచుకోండి',
           'Concise': 'సంక్షిప్తమైనది',
           'Book Now': 'ఇప్పుడే బుక్\nచేయండి',
-          'Booking Details': 'Booking వివరాలు',
           'Consultation Fee': 'కన్సల్టేషన్ ఫీజు',
           'Total Fee': 'మొత్తం రుసుము',
           'Confirm & Proceed to Pay': 'నిర్ధారించి చెల్లించండి',
@@ -3061,8 +2901,6 @@ class LocalString extends Translations {
           'Type your answer here...': 'మీ సమాధానాన్ని ఇక్కడ టైప్ చేయండి...',
           'Done': 'పూర్తయింది',
           'booked a slot on': 'లో స్లాట్‌ను\nబుక్ చేసుకున్నారు',
-          "meeting_with": "{name} తో సమావేశం",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'మీ అన్ని అవసరాలకు జ్యోతిష్ వాయిస్ గైడ్. ఈరోజే మీ సంభాషణను ప్రారంభించండి.',
           'Jyotish voice guide for all your needs':
@@ -3101,10 +2939,8 @@ class LocalString extends Translations {
           'No response.': 'ఎటువంటి స్పందన లేదు.',
           'Retry': 'మళ్ళీ ప్రయత్నించండి',
           'Subscribe Now': 'ఇప్పుడే సబ్స్క్రయిబ్ చేయండి',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'మేము మీ అనుభవానికి విలువ ఇస్తున్నాము.\nమీరు వెళ్ళిపోవాలని నిర్ణయించుకున్నది ఏమిటి?',
-          "I am having another account": 'నాకు వేరే ఖాతా ఉంది',
           'App not working properly': 'యాప్ సరిగ్గా పని చేయడం లేదు',
           'I don’t like the app': 'నాకు యాప్ నచ్చలేదు',
           'I am worried about my privacy':
@@ -3115,7 +2951,6 @@ class LocalString extends Translations {
               'ఈ ఖాతాతో అనుబంధించబడిన మొత్తం డేటా (మీ ప్రొఫైల్, సర్వీస్, బుకింగ్‌లు, జాతకచక్రాలు, అంచనాలతో సహా) 45 రోజుల్లో శాశ్వతంగా తొలగించబడుతుంది',
           'Delete Account Now': 'ఇప్పుడు ఖాతాను తొలగించండి',
           'No, I have changed my mind': 'లేదు, నేను నా మనసు మార్చుకుంటున్నాను',
-          //Astrologer
           'You logged in as Astrologer': 'మీరు జ్యోతిష్యుడిగా లాగిన్\nఅయ్యారు',
           'Meetings': 'బుకింగ్‌లు',
           'View your scheduled appointments & completed ones':
@@ -3132,10 +2967,6 @@ class LocalString extends Translations {
           'Horoscope details are not available': 'జాతక వివరాలు అందుబాటులో లేవు',
           'Answer': 'సమాధానం',
           'View': 'చూడండి',
-          "Queries asked - Time to share your thoughts!":
-              "అడిగిన ప్రశ్నలు - మీ ఆలోచనలను పంచుకోవడానికి ఇదే సమయం!",
-          "Queries asked - You've already shared your thoughts!":
-              "అడిగిన ప్రశ్నలు - మీరు ఇప్పటికే మీ ఆలోచనలను పంచుకున్నారు!",
           'Date': 'తేదీ',
           'Time': 'సమయం',
           'Fees Paid': 'చెల్లించిన రుసుములు',
@@ -3165,8 +2996,6 @@ class LocalString extends Translations {
           'Years of Experience': 'అనుభవ సంవత్సరాలు',
           'years': 'సంవత్సరాలు',
           'Showing Availability': 'లభ్యతను\nచూపుతోంది',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP మళ్లీ పంపడానికి {seconds} సెకన్లు",
           'Enter Mobile Number': 'మొబైల్ నంబర్‌ను నమోదు చేయండి',
           'Enter Email': 'ఇమెయిల్‌ను నమోదు చేయండి',
           'Enter your new email and verify it using OTP':
@@ -3186,7 +3015,6 @@ class LocalString extends Translations {
           'OTP is valid for 5 Minutes.':
               'OTP 5 నిమిషాల పాటు చెల్లుబాటు అవుతుంది.',
           'Resend OTP': 'ఓటీపీని మళ్లీ పంపండి',
-          //Internet
           'No Internet Connection': 'ఇంటర్నెట్ కనెక్షన్ లేదు',
           'Please check your\nnetwork settings':
               'దయచేసి మీ నెట్‌వర్క్ సెట్టింగ్‌లను తనిఖీ చేయండి.',
@@ -3342,7 +3170,6 @@ class LocalString extends Translations {
               'మీ ప్రశ్న, సమాధానం మరియు పరిష్కార వివరాలు.',
           'Request details': 'వివరాలను అభ్యర్థించండి',
           'Answered on': 'సమాధానం ఇవ్వబడింది',
-          "Astrologer's answer": 'జ్యోతిష్యుని సమాధానం',
           'In progress': 'పురోగతిలో ఉంది',
           'Rate your answer': 'మీ సమాధానానికి రేటింగ్ ఇవ్వండి',
           'Could not load this Ask request. Please try again.':
@@ -3355,7 +3182,6 @@ class LocalString extends Translations {
           'Session expired. Please try again.': 'సెషన్ గడువు ముగిసింది. దయచేసి మళ్ళీ ప్రయత్నించండి.',
           'Coupon applied': 'కూపన్ వర్తింపజేయబడింది',
           'Astrologer\'s Answer': 'జ్యోతిష్కుని సమాధానం',
-        
           'Your answers are ready': 'మీ సమాధానాలు సిద్ధంగా ఉన్నాయి',
           'Your astrologer has submitted answers to your consultation questions.': 'మీ జ్యోతిష్యుడు మీ సంప్రదింపు ప్రశ్నలకు సమాధానాలు సమర్పించారు.',
           'Open Booking Details to read them — you can also leave a review there.': 'వాటిని చదవడానికి బుకింగ్ వివరాలను తెరవండి — మీరు అక్కడ సమీక్షను కూడా వ్రాయవచ్చు.',
@@ -3377,14 +3203,15 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'మీ సమీక్షను సమర్పించలేకపోయాము. దయచేసి మళ్ళీ ప్రయత్నించండి.',
           'Review submitted for approval.': 'ఆమోదం కోసం సమీక్ష సమర్పించబడింది.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'ధన్యవాదాలు! మీ సమీక్ష ఆమోదించబడిన తర్వాత జ్యోతిష్యుని ప్రొఫైల్‌లో కనిపిస్తుంది.',
-
           'Delete': 'తొలగించు',
           'Save changes': 'మార్పులను సేవ్ చేయండి',
           'Delete your review?': 'మీ సమీక్షను తొలగించాలా?',
           'Could not delete your review. Please try again.': 'మీ సమీక్షను తొలగించలేకపోయాము. దయచేసి మళ్ళీ ప్రయత్నించండి.',
           'Published': 'ప్రచురించబడింది',
           'Write a short review (optional)': 'సంక్షిప్త సమీక్ష రాయండి (ఐచ్ఛికం)',
-},
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': '1 గంటలోపు మీ జ్యోతిష్యుడిని కేటాయించి, మీటింగ్ లింక్‌ను షేర్ చేయడం జరుగుతుంది.',
+          'I am having another account': 'నాకు మరో ఖాతా ఉంది',
+        },
         'kn_IN': {
           'Good day': 'ಶುಭ ದಿನ',
           'Astrologer': 'ಜ್ಯೋತಿಷ್ಯರು',
@@ -3394,11 +3221,6 @@ class LocalString extends Translations {
           'Settings': 'ಸಂಯೋಜನೆಗಳು',
           'Marriage\nMatch Making': 'ವಿವಾಹ\nಹೊಂದಾಣಿಕೆ',
           'Explore Other Predictions': 'ಇತರೆ ಭವಿಷ್ಯವಾಣಿಗಳನ್ನು ನೋಡಿ',
-          PlatformTextConfig.yearlyPrediction: 'ವಾರ್ಷಿಕ\nಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.weeklyPrediction: 'ವಾರದ\nಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.lifePrediction: 'ಜೀವನ\nಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.dailyPrediction: 'ದೈನಂದಿನ\nಭವಿಷ್ಯವಾಣಿಗಳು',
-          PlatformTextConfig.chatHomePage: 'AI ಜ್ಯೋತಿಷ್ಯ\nಧ್ವನಿ ಚಾಟ್',
           'ChatTitle': 'AI ವಾಯ್ಸ್ ಚಾಟ್',
           'Chat Now': 'ಈಗ ಚಾಟ್ ಮಾಡಿ',
           'Thara Bala': 'ತಾರಾ ಬಲ',
@@ -3406,7 +3228,6 @@ class LocalString extends Translations {
           'Astrologer\nConsultation': 'ಜ್ಯೋತಿಷ್ಯರನ್ನು\nಸಂಪರ್ಕಿಸಿ',
           'Astrologer Consultation': 'ಜ್ಯೋತಿಷ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ',
           'My Profile': 'ನನ್ನ ಪ್ರೊಫೈಲ್',
-          //settings
           'Profile': 'ಪ್ರೊಫೈಲ್',
           'Push Notifications': 'ಪುಶ್ ಸೂಚನೆಗಳು',
           'Language': 'ಭಾಷೆ',
@@ -3483,7 +3304,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'ಅಪ್ಲಿಕೇಶನ್ ಭಾಷೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ.',
           'Click to view': 'ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ',
-          // Ask Astrologer
           'Ask Astrologer': 'ಜ್ಯೋತಿಷಿಯನ್ನು ಕೇಳಿ',
           'Event Planner (Muhurtha)': 'ಕಾರ್ಯಕ್ರಮ ಯೋಜಕ (ಮುಹೂರ್ತ)',
           'Choose a date within the next 30 days.':
@@ -3554,7 +3374,23 @@ class LocalString extends Translations {
               'ಪೂರ್ಣ ಜಾತಕ ತೆರೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.',
           'Plan Now': 'ಈಗಲೇ ಯೋಜನೆ ರೂಪಿಸಿ',
           'Event Planner': 'ಕಾರ್ಯಕ್ರಮ ಯೋಜಕ',
-          'Consultation marathon': 'ಸಮಾಲೋಚನೆ ಮ್ಯಾರಥಾನ್',
+          'Teksage Expert Hours': 'ಟೆಕ್ಸೇಜ್ ಎಕ್ಸ್‌ಪರ್ಟ್ ಅವರ್ಸ್',
+          'IST': 'ಭಾರತೀಯ ಕಾಲಮಾನ',
+          'No Expert Hours event is open right now.': 'ಯಾವುದೇ ಎಕ್ಸ್‌ಪರ್ಟ್ ಅವರ್ಸ್ ಕಾರ್ಯಕ್ರಮವು ಇದೀಗ ತೆರೆದಿಲ್ಲ.',
+          'Your Expert Hours bookings': 'ನಿಮ್ಮ ತಜ್ಞರ ಸಮಯ ಬುಕಿಂಗ್‌ಗಳು',
+          'Upcoming': 'ಮುಂಬರುವ',
+          'Past': 'ಹಿಂದಿನದು',
+          'Login email': 'ಲಾಗಿನ್ ಇಮೇಲ್',
+          'Login phone': 'ಲಾಗಿನ್ ಫೋನ್',
+          'Your question': 'ನಿಮ್ಮ ಪ್ರಶ್ನೆ',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'ನೀವು ಏನು ಕೇಳಲು ಬಯಸುತ್ತೀರಿ ಎಂದು ನಮಗೆ ತಿಳಿಸಿ. ನಿಮಗೆ ನಿಯೋಜಿಸಲಾದ ಜ್ಯೋತಿಷಿ ಇದನ್ನು ನೋಡುತ್ತಾರೆ.',
+          'Enter your question before payment.': 'ಪಾವತಿ ಮಾಡುವ ಮೊದಲು ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ನಮೂದಿಸಿ.',
+          'Preferred consultation language': 'ಆದ್ಯತೆಯ ಸಮಾಲೋಚನೆ ಭಾಷೆ',
+          'Select your preferred consultation language.':
+              'ನಿಮ್ಮ ಆದ್ಯತೆಯ ಸಮಾಲೋಚನೆ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+          'Customer question': 'ಗ್ರಾಹಕರ ಪ್ರಶ್ನೆ',
+          'Consultation time has not ended yet.': 'ಸಮಾಲೋಚನೆ ಸಮಯ ಇನ್ನೂ ಮುಗಿದಿಲ್ಲ.',
+          'Waiting for admin assignment': 'ನಿರ್ವಾಹಕ ನಿಯೋಜನೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ',
           'Your Next Session': 'ನಿಮ್ಮ ಮುಂದಿನ ಸೆಷನ್',
           'Better guidance': 'ಉತ್ತಮ ಮಾರ್ಗದರ್ಶನ',
           'Brighter tomorrows': 'ಪ್ರಕಾಶಮಾನವಾದ ನಾಳೆಗಳು',
@@ -3566,7 +3402,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10 ನಿಮಿಷಗಳ ಅವಧಿಗಳು. ಮೊದಲು ಪಾವತಿಸಿ. ಪಾವತಿಯ ನಂತರ ಜ್ಯೋತಿಷಿಯನ್ನು ನಿಯೋಜಿಸಲಾಗುತ್ತದೆ.',
           'See times': 'ಸಮಯಗಳನ್ನು ನೋಡಿ',
           '10 minutes': '10 ನಿಮಿಷಗಳು',
-          'No marathon is open right now.': 'ಈಗ ಯಾವುದೇ ಮ್ಯಾರಥಾನ್ ಓಟಕ್ಕೆ ಅವಕಾಶವಿಲ್ಲ.',
           'Booked': 'ಬುಕ್ ಮಾಡಲಾಗಿದೆ',
           'Booking for this event has closed.': 'ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕಾಗಿ ಬುಕಿಂಗ್ ಮುಚ್ಚಲಾಗಿದೆ.',
           'Event ended by admin': 'ನಿರ್ವಾಹಕರಿಂದ ಈವೆಂಟ್ ಕೊನೆಗೊಂಡಿದೆ',
@@ -3622,7 +3457,7 @@ class LocalString extends Translations {
           '@count completed': '@count ಪೂರ್ಣಗೊಂಡಿದೆ',
           'Pay': 'ಪಾವತಿಸಿ',
           'Payment did not go through. This seat is still open. Try again.': 'ಪಾವತಿ ಪೂರ್ಣಗೊಳ್ಳಲಿಲ್ಲ. ಈ ಆಸನ ಇನ್ನೂ ತೆರೆದಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': 'ನಿಮ್ಮ ಜ್ಯೋತಿಷಿಯನ್ನು ನಿಯೋಜಿಸಲಾಗುವುದು ಮತ್ತು ಸಭೆಯ ಲಿಂಕ್ ಅನ್ನು 8 ಗಂಟೆಗಳ ಒಳಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hour.': 'ನಿಮ್ಮ ಜ್ಯೋತಿಷಿಯನ್ನು ನಿಯೋಜಿಸಲಾಗುವುದು ಮತ್ತು ಸಭೆಯ ಲಿಂಕ್ ಅನ್ನು 1 ಗಂಟೆಗಳ ಒಳಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ.',
           'Get it on Android': 'ಅದನ್ನು Android ನಲ್ಲಿ ಪಡೆಯಿರಿ',
           'Contact via WhatsApp': 'WhatsApp ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ',
           'Get on website': 'ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಪಡೆಯಿರಿ',
@@ -3656,7 +3491,6 @@ class LocalString extends Translations {
           'chandra_bala_excluded': 'ಚಂದ್ರ ಬಲ ಅನುಕೂಲವಲ್ಲ (ಚಂದ್ರಾಷ್ಟಮ)',
           'no_auspicious_window': 'ಅಶುಭ ಅವಧಿಯ ನಂತರ ಶುಭ ಸಮಯ ಉಳಿದಿಲ್ಲ',
           'Book Consultation': 'ಸಲಹೆ ಬುಕ್ ಮಾಡಿ',
-          'Your question': 'ನಿಮ್ಮ ಪ್ರಶ್ನೆ',
           'Select your preferred language': 'ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ',
           'We will match you with an astrologer who speaks your language.':
               'ನಿಮ್ಮ ಭಾಷೆ ಮಾತನಾಡುವ ಜ್ಯೋತಿಷಿಯನ್ನು ನಿಮ್ಮೊಂದಿಗೆ ಹೊಂದಿಸುತ್ತೇವೆ.',
@@ -3716,7 +3550,6 @@ class LocalString extends Translations {
           'No Ask Astrologer requests yet.': 'ಇನ್ನೂ ಜ್ಯೋತಿಷಿ ಪ್ರಶ್ನೆಗಳು ಇಲ್ಲ.',
           'Answer ready': 'ಉತ್ತರ ಸಿದ್ಧ',
           'Assigned': 'ನಿಯೋಜಿಸಲಾಗಿದೆ',
-          //Profile
           'First Name': 'ಮೊದಲ ಹೆಸರು',
           'Last Name': 'ಕೊನೆಯ ಹೆಸರು',
           'Email': 'ಇಮೇಲ್',
@@ -3744,22 +3577,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'ನೀವು Teksage ಬಗ್ಗೆ ಮೊದಲ ಬಾರಿ ಹೇಗೆ ತಿಳಿದುಕೊಂಡಿರಿ?',
           'Select a language': 'ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google ಹುಡುಕಾಟ",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)":
-              "ಬಾಯ್ಬಾರದ ಶಿಫಾರಸು (ಸ್ನೇಹಿತರು / ಕುಟುಂಬ)",
-          "Product Hunt": "Product Hunt",
-          "Other": "ಇತರೆ",
-          //Push Notification
           'Push Notification': 'ಪುಶ್ ಸೂಚನೆಗಳು',
-          PlatformTextConfig.dailyTitle: 'ದೈನಂದಿನ ಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.weeklyTitle: 'ವಾರದ ಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.yearlyTitle: 'ವಾರ್ಷಿಕ ಭವಿಷ್ಯವಾಣಿ',
-          PlatformTextConfig.lifePredictionLanding: 'ಜೀವನ ಭವಿಷ್ಯವಾಣಿ',
           'Promotions & Offers': 'ಪ್ರಚಾರಗಳು ಮತ್ತು ಆಫರ್‌ಗಳು',
           'Warnings': 'ಎಚ್ಚರಿಕೆಗಳು',
           'Consultation': 'ಸಮಾಲೋಚನೆ',
@@ -3788,19 +3606,16 @@ class LocalString extends Translations {
           'There are no Consultation updates.': 'ಯಾವುದೇ ಸಮಾಲೋಚನೆ ನವೀಕರಣಗಳಿಲ್ಲ.',
           'There are no recent general updates from your astrological guidance':
               'ನಿಮ್ಮ ಜ್ಯೋತಿಷ್ಯ ಮಾರ್ಗದರ್ಶನದಿಂದ ಯಾವುದೇ ಇತ್ತೀಚಿನ ಸಾಮಾನ್ಯ ನವೀಕರಣಗಳಿಲ್ಲ.',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'ಪ್ರಶ್ನೆಯಿದೆಯೇ?\nನಿಮ್ಮ ದಾರಿಯನ್ನು ಮಾರ್ಗದರ್ಶನ ಮಾಡಲು ನಮ್ಮ ಬೆಂಬಲ ತಂಡ ಇಲ್ಲಿದೆ',
           'Enter feedback or query here...':
               'ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ ಅಥವಾ ಪ್ರಶ್ನೆಯನ್ನು ಇಲ್ಲಿ ನಮೂದಿಸಿ',
           'Submit': 'ಸಲ್ಲಿಸಿ',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'ನಮ್ಮ ಜ್ಯೋತಿಷ್ಯ ಸೇವೆಗಳ ಬಗ್ಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳ ಉತ್ತರಗಳನ್ನು ಇಲ್ಲಿ ಕಂಡುಹಿಡಿಯಿರಿ',
           'Still have questions?': 'ಇನ್ನೂ ಪ್ರಶ್ನೆಗಳಿವೆಯೇ?',
           'Contact Support': 'ಬೆಂಬಲ ತಂಡವನ್ನು ಸಂಪರ್ಕಿಸಿ',
           'search_help': 'ಸಹಾಯ ಹುಡುಕಿ',
-          //panchang
           'WeekDay': 'ವಾರ',
           'Thithi': 'ತಿಥಿ',
           'Karna': 'ಕರಣ',
@@ -3813,20 +3628,12 @@ class LocalString extends Translations {
           'Paksha': 'ಪಕ್ಷ',
           'Amirthathi Yoga': 'ಅಮೃತ ಯೋಗ',
           'COMING SOON': 'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ',
-          "panchang_single_format": "(name) ವರೆಗೆ (time) (next)",
           'otp_response': "(title) ಪರಿಶೀಲನೆ\nOTP ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ.",
-
-          //Horoscope
-          PlatformTextConfig.horoscope: 'ರಾಶಿಫಲ',
           'Name': 'ಹೆಸರು',
           'Place': 'ಜನ್ಮ ಸ್ಥಳ',
           'Lagna': 'ಲಗ್ನ',
           'South Indian Chart': 'ದಕ್ಷಿಣ ಭಾರತೀಯ ಕುಂಡಲಿ',
           'North Indian Chart': 'ಉತ್ತರ ಭಾರತೀಯ ಕುಂಡಲಿ',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "ನಿಮ್ಮ ದಿನದ ಆರಂಭ ಅದ್ಭುತವಾಗಿರಲಿ ಎಂದು ಆಶಿಸುತ್ತೇನೆ.",
-          "Good morning,": 'ಶುಭೋದಯ,',
           'Sunday': 'ಭಾನುವಾರ',
           'Monday': 'ಸೋಮವಾರ',
           'Tuesday': 'ಮಂಗಳವಾರ',
@@ -3837,7 +3644,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'ಚಂದ್ರಾಷ್ಟಮ',
           'Predictions are based on birth details in your profile section':
               'ಭವಿಷ್ಯವಾಣಿಗಳು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ವಿಭಾಗದಲ್ಲಿನ ಜನನ ವಿವರಗಳನ್ನು ಆಧರಿಸಿವೆ.',
-          //yearly prediction
           'Planetary Transits': 'ಗ್ರಹಗಳ ಸಂಚಾರ',
           'Categorized Predictions': 'ವರ್ಗೀಕರಿಸಿದ ಭವಿಷ್ಯವಾಣಿಗಳು',
           'Jupiter': 'ಗುರು',
@@ -3858,15 +3664,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'ಜ್ಯೋತಿಷ್ಯ ಸಮಾಲೋಚನೆ',
           'First Half of': 'ಮೋಡಲರ್ಧ',
           'Second Half of': 'ದ್ವಿತೀಯಾರ್ಧ',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'ಜೀವನದ ಭವಿಷ್ಯವಾಣಿಗಳು',
           'General\nCharacteristics': 'ಸಾಮಾನ್ಯ\nಗುಣಲಕ್ಷಣಗಳು',
           'Career\nPredictions': 'ವೃತ್ತಿ\nಭವಿಷ್ಯ',
           'Relationship\nPredictions': 'ಸಂಬಂಧದ\nಮುನ್ಸೂಚನೆಗಳು',
           'Wealth\nPredictions': 'ಸಂಪತ್ತಿನ\nಮುನ್ಸೂಚನೆಗಳು',
           'Health\nPredictions': 'ಆರೋಗ್ಯ\nಮುನ್ಸೂಚನೆಗಳು',
           'Current\nTime Period': 'ಪ್ರಸ್ತುತ\nಸಮಯದ ಅವಧಿ',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'ದಿನನಿತ್ಯದ ಭವಿಷ್ಯವಾಣಿಗಳನ್ನು ಬೆಳಿಗ್ಗೆ 6 ಗಂಟೆಗೆ ಸ್ವೀಕರಿಸಲು ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಿ',
           'Your daily predictions was scheduled for 6 AM':
@@ -3875,7 +3678,6 @@ class LocalString extends Translations {
           'Relationship': 'ಸಂಬಂಧಗಳು',
           'Wealth': 'ಸಂಪತ್ತಿನ',
           'Health': 'ಆರೋಗ್ಯ',
-          //Marriage Match Making
           'Marriage Match Making': 'ವಿವಾಹ ಹೊಂದಾಣಿಕೆ',
           'Boy Name': 'ವರನ ಹೆಸರು',
           'Girl Name': 'ವಧುವಿನ ಹೆಸರು',
@@ -3893,7 +3695,6 @@ class LocalString extends Translations {
           'Calculate Match': 'ಹೊಂದಾಣಿಕೆ ಲೆಕ್ಕಹಾಕಿ',
           'Enter boy\'s name': 'ಪುರುಷನ ಹೆಸರು',
           'Enter girl\'s name': 'ಮಹಿಳೆಯ ಹೆಸರು',
-          //Subscriptions
           'Subscription': 'ಚಂದಾದಾರಿಕೆಗಳು',
           'Auto Schedule Daily Predictions':
               'ದೈನಂದಿನ ಭವಿಷ್ಯವಾಣಿಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ವೇಳಾಪಡಿಸಿ',
@@ -3939,7 +3740,6 @@ class LocalString extends Translations {
           'days left': 'ದಿನಗಳು ಉಳಿದಿವೆ',
           'Recommended': 'ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ',
           'membership': 'ಸದಸ್ಯತ್ವ',
-          //Dialog box
           'Plan Expired': 'ಯೋಜನೆ ಅವಧಿ ಮುಗಿದಿದೆ',
           'Premium Feature': 'ಪ್ರೀಮಿಯಂ ವೈಶಿಷ್ಟ್ಯ',
           'Unlock all features by choosing a plan':
@@ -3963,7 +3763,6 @@ class LocalString extends Translations {
           'Discard': 'ತ್ಯಜಿಸಿ',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'మీరు సేవ్ చేయని మార్పులు ఉన్నాయి.\nమీరు వాటిని విస్మరించి వెనక్కి వెళ్లాలనుకుంటున్నారా?',
-          //Error Validate
           'Please Enter the First Name': 'ದಯವಿಟ್ಟು ಮೊದಲ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
           'Please Enter the Second Name': 'ದಯವಿಟ್ಟು ಎರಡನೇ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
           'Please enter a valid Email': 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಇಮೇಲ್ ಅನ್ನು ನಮೂದಿಸಿ',
@@ -3991,17 +3790,8 @@ class LocalString extends Translations {
               'ದಯವಿಟ್ಟು ಒಂದು ಅಥವಾ ಹೆಚ್ಚಿನ ವರ್ಗಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ',
           'Error loading questions': 'ಪ್ರಶ್ನೆಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ',
           'No questions found': 'ಯಾವುದೇ ಪ್ರಶ್ನೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ',
-          "Please enter Boy's name": 'ದಯವಿಟ್ಟು ಹುಡುಗನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.',
-          "Please select Boy's Nakshatram":
-              'ದಯವಿಟ್ಟು ಹುಡುಗನ ನಕ್ಷತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
-          "Please select Girl's Nakshatram":
-              'ದಯವಿಟ್ಟು ಹುಡುಗಿಯರ ನಕ್ಷತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
-          "Please enter Girl's name": 'ದಯವಿಟ್ಟು ಹುಡುಗಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
-          "Please select Girl's Rasi": 'ದಯವಿಟ್ಟು ಹುಡುಗಿಯರ ರಾಶಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
-          "Please select Boy's Rasi": 'ದಯವಿಟ್ಟು ಹುಡುಗನ ರಾಶಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
           'Second language must be different from first':
               'ಎರಡನೇ ಭಾಷೆ ಮೊದಲನೆಯದಕ್ಕಿಂತ ಭಿನ್ನವಾಗಿರಬೇಕು.',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'ಅನುಮತಿ ಶಾಶ್ವತವಾಗಿ ನಿರಾಕರಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಸೆಟ್ಟಿಂಗ್ಸ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.',
           'Permission Denied': 'ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ',
@@ -4088,7 +3878,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
           'OTP Verified': 'OTP ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'ನೀವು ಯಾವ ವಿಷಯದಲ್ಲಿ ಮಾರ್ಗದರ್ಶನ ಬಯಸುತ್ತೀರಿ?',
           'Select the categories and continue':
@@ -4108,13 +3897,11 @@ class LocalString extends Translations {
           'Expert Profile': 'ತಜ್ಞರ ಪ್ರೊಫೈಲ್',
           'Reviews': 'ವಿಮರ್ಶೆಗಳು',
           'No reviews available': 'ಯಾವುದೇ ವಿಮರ್ಶೆಗಳು ಲಭ್ಯವಿಲ್ಲ',
-          'Book Consultation': 'ಸಲಹೆ ಬುಕ್ ಮಾಡಿ',
           'No slots available': 'ಯಾವುದೇ ಸ್ಲಾಟ್‌ಗಳು ಲಭ್ಯವಿಲ್ಲ',
           'Find & Consult Astrologers': 'ಜ್ಯೋತಿಷಿಗಳನ್ನು ಹುಡುಕಿ ಮತ್ತು ಸಮಾಲೋಚಿಸಿ',
           '100+ Astrologers': '100+ ಜ್ಯೋತಿಷಿಗಳು',
           'Explore and find your perfect match':
               'ನಿಮ್ಮ ಪರಿಪೂರ್ಣ ಹೊಂದಾಣಿಕೆಯನ್ನು ಅನ್ವೇಷಿಸಿ ಮತ್ತು ಹುಡುಕಿ',
-          'Upcoming': 'ಮುಂಬರುವ',
           'Completed': 'ಪೂರ್ಣಗೊಂಡಿದೆ',
           'View Details': 'ವಿವರಗಳನ್ನು\nವೀಕ್ಷಿಸಿ',
           'View\nDetails': 'ವಿವರಗಳನ್ನು\nವೀಕ್ಷಿಸಿ',
@@ -4122,7 +3909,6 @@ class LocalString extends Translations {
           'Choose your avatar': 'ನಿಮ್ಮ ಅವತಾರವನ್ನು ಆರಿಸಿ',
           'Choose how AI replies': 'AI ಹೇಗೆ ಉತ್ತರಿಸುತ್ತದೆ ಎಂಬುದನ್ನು ಆರಿಸಿ',
           'Concise': 'ಸಂಕ್ಷಿಪ್ತ',
-          'Booking Details': 'Booking ವಿವರಗಳು',
           'Consultation Fee': 'ಸಲಹೆ ಶುಲ್ಕ',
           'Total Fee': 'ಒಟ್ಟು ಶುಲ್ಕ',
           'Confirm & Proceed to Pay': 'ದೃಢೀಕರಿಸಿ ಮತ್ತು ಪಾವತಿಗೆ ಮುಂದುವರಿಯಿರಿ',
@@ -4179,8 +3965,6 @@ class LocalString extends Translations {
           'Type your answer here...': 'ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ...',
           'Done': 'ಮುಗಿದಿದೆ',
           'booked a slot on': 'ಸ್ಲಾಟ್\nಬುಕ್ ಮಾಡಲಾಗಿದೆ',
-          "meeting_with": "{name} ಜೊತೆ ಸಭೆ",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'ನಿಮ್ಮ ಎಲ್ಲಾ ಅಗತ್ಯಗಳಿಗಾಗಿ ಜ್ಯೋತಿಷ ಧ್ವನಿ ಮಾರ್ಗದರ್ಶಿ. ಇಂದು ನಿಮ್ಮ ಸಂಭಾಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ',
           'Jyotish voice guide for all your needs':
@@ -4219,10 +4003,8 @@ class LocalString extends Translations {
           'No response.': 'ಯಾವುದೇ ಪ್ರತಿಕ್ರಿಯೆ ಇಲ್ಲ.',
           'Retry': 'ಮರುಪ್ರಯತ್ನಿಸಿ',
           'Subscribe Now': 'ಈಗ ಚಂದಾದಾರರಾಗಿ',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'ನಿಮ್ಮ ಅನುಭವವನ್ನು ನಾವು ಗೌರವಿಸುತ್ತೇವೆ.\nನೀವು ಬಿಡಲು ನಿರ್ಧರಿಸಲು ಕಾರಣವೇನು?',
-          "I am having another account": 'ನನಗೆ ಬೇರೆ ಖಾತೆ ಇದೆ',
           'App not working properly':
               'ಅಪ್ಲಿಕೇಶನ್ ಸರಿಯಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿಲ್ಲ',
           'I don’t like the app': 'ನನಗೆ ಈ ಆ್ಯಪ್ ಇಷ್ಟವಿಲ್ಲ',
@@ -4235,7 +4017,6 @@ class LocalString extends Translations {
           'Delete Account Now': 'ಈಗ ಖಾತೆಯನ್ನು ಅಳಿಸಿ',
           'No, I have changed my mind':
               'ಇಲ್ಲ, ನಾನು ನನ್ನ ಮನಸ್ಸನ್ನು ಬದಲಾಯಿಸುತ್ತಿದ್ದೇನೆ',
-          //Astrologer
           'You logged in as Astrologer': 'ನೀವು ಜ್ಯೋತಿಷಿಯಾಗಿ\nಲಾಗಿನ್ ಆಗಿದ್ದೀರಿ.',
           'Meetings': 'ಬುಕಿಂಗ್‌ಗಳು',
           'View your scheduled appointments & completed ones':
@@ -4253,10 +4034,6 @@ class LocalString extends Translations {
           'Horoscope details are not available': 'ಜಾತಕ ವಿವರಗಳು ಲಭ್ಯವಿಲ್ಲ.',
           'Answer': 'ಉತ್ತರ',
           'View': 'ನೋಡಿ',
-          "Queries asked - Time to share your thoughts!":
-              "ಕೇಳಿದ ಪ್ರಶ್ನೆಗಳು - ನಿಮ್ಮ ಆಲೋಚನೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ಇದು ಸಮಯ.",
-          "Queries asked - You've already shared your thoughts!":
-              "ಕೇಳಿದ ಪ್ರಶ್ನೆಗಳು - ನೀವು ಈಗಾಗಲೇ ನಿಮ್ಮ ಆಲೋಚನೆಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದೀರಿ!",
           'Date': 'ದಿನಾಂಕ',
           'Time': 'ಸಮಯ',
           'Fees Paid': 'ಪಾವತಿಸಿದ ಶುಲ್ಕಗಳು',
@@ -4286,8 +4063,6 @@ class LocalString extends Translations {
           'Years of Experience': 'ಅನುಭವದ ವರ್ಷಗಳು',
           'years': 'ವರ್ಷಗಳು',
           'Showing Availability': 'ಲಭ್ಯತೆಯನ್ನು\nತೋರಿಸಲಾಗುತ್ತಿದೆ',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP ಮರುಕಳುಹಿಸಲು {seconds} ಸೆಕೆಂಡುಗಳು",
           'Enter Mobile Number': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ',
           'Enter Email': 'ಇಮೇಲ್ ನಮೂದಿಸಿ',
           'Enter your new email and verify it using OTP':
@@ -4306,7 +4081,6 @@ class LocalString extends Translations {
           'We have sent OTP to': 'ನಾವು OTP ಕಳುಹಿಸಿದ್ದೇವೆ',
           'OTP is valid for 5 Minutes.': 'OTP 5 ನಿಮಿಷಗಳವರೆಗೆ ಮಾನ್ಯವಾಗಿರುತ್ತದೆ.',
           'Resend OTP': 'OTP ಮತ್ತೆ ಕಳುಹಿಸಿ',
-          //Internet
           'No Internet Connection': 'ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ',
           'Please check your\nnetwork settings':
               'ದಯವಿಟ್ಟು ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.',
@@ -4462,7 +4236,6 @@ class LocalString extends Translations {
               'ನಿಮ್ಮ ಪ್ರಶ್ನೆ, ಉತ್ತರ ಮತ್ತು ಬದಲಾವಣೆಯ ವಿವರಗಳು.',
           'Request details': 'ವಿವರಗಳನ್ನು ವಿನಂತಿಸಿ',
           'Answered on': 'ಉತ್ತರಿಸಲಾಗಿದೆ',
-          "Astrologer's answer": 'ಜ್ಯೋತಿಷಿಯ ಉತ್ತರ',
           'In progress': 'ಪ್ರಗತಿಯಲ್ಲಿದೆ',
           'Rate your answer': 'ನಿಮ್ಮ ಉತ್ತರವನ್ನು ರೇಟ್ ಮಾಡಿ',
           'Could not load this Ask request. Please try again.':
@@ -4475,7 +4248,6 @@ class LocalString extends Translations {
           'Session expired. Please try again.': 'ಸೆಷನ್ ಅವಧಿ ಮುಗಿದಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
           'Coupon applied': 'ಕೂಪನ್ ಅನ್ವಯಿಸಲಾಗಿದೆ',
           'Astrologer\'s Answer': 'ಜ್ಯೋತಿಷಿಯ ಉತ್ತರ',
-        
           'Your answers are ready': 'ನಿಮ್ಮ ಉತ್ತರಗಳು ಸಿದ್ಧವಾಗಿವೆ',
           'Your astrologer has submitted answers to your consultation questions.': 'ನಿಮ್ಮ ಜ್ಯೋತಿಷಿಗಳು ನಿಮ್ಮ ಸಮಾಲೋಚನೆ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಗಳನ್ನು ಸಲ್ಲಿಸಿದ್ದಾರೆ.',
           'Open Booking Details to read them — you can also leave a review there.': 'ಬುಕಿಂಗ್ ವಿವರಗಳನ್ನು ಓದಲು ತೆರೆಯಿರಿ - ನೀವು ಅಲ್ಲಿ ವಿಮರ್ಶೆಯನ್ನು ಸಹ ಬಿಡಬಹುದು.',
@@ -4497,14 +4269,15 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'ನಿಮ್ಮ ವಿಮರ್ಶೆಯನ್ನು ಸಲ್ಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
           'Review submitted for approval.': 'ಅನುಮೋದನೆಗಾಗಿ ವಿಮರ್ಶೆಯನ್ನು ಸಲ್ಲಿಸಲಾಗಿದೆ.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'ಧನ್ಯವಾದಗಳು! ಅನುಮೋದನೆ ಪಡೆದ ನಂತರ ನಿಮ್ಮ ವಿಮರ್ಶೆಯು ಜ್ಯೋತಿಷಿಯ ಪ್ರೊಫೈಲ್‌ನಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.',
-
           'Delete': 'ಅಳಿಸಿ',
           'Save changes': 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ',
           'Delete your review?': 'ನಿಮ್ಮ ವಿಮರ್ಶೆಯನ್ನು ಅಳಿಸುವುದೇ?',
           'Could not delete your review. Please try again.': 'ನಿಮ್ಮ ವಿಮರ್ಶೆಯನ್ನು ಅಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
           'Published': 'ಪ್ರಕಟಿಸಲಾಗಿದೆ',
           'Write a short review (optional)': 'ಸಣ್ಣ ವಿಮರ್ಶೆಯನ್ನು ಬರೆಯಿರಿ (ಐಚ್ಛಿಕ)',
-},
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'ನಿಮ್ಮ ಜ್ಯೋತಿಷಿಯನ್ನು ನಿಯೋಜಿಸಲಾಗುವುದು ಮತ್ತು ಸಭೆಯ ಲಿಂಕ್ ಅನ್ನು 1 ಗಂಟೆಯೊಳಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ.',
+          'I am having another account': 'ನನಗೆ ಬೇರೆ ಖಾತೆ ಇದೆ.',
+        },
         'ml_IN': {
           'Good day': 'നമസ്കാരം',
           'Astrologer': 'ജ്യോതിഷി',
@@ -4514,11 +4287,6 @@ class LocalString extends Translations {
           'Settings': 'ക്രമീകരണം ',
           'Marriage\nMatch Making': 'വിവാഹ\nപൊരുത്തം',
           'Explore Other Predictions': 'മറ്റ് പ്രവചനങ്ങൾ\nപര്യവേക്ഷണം ചെയ്യുക',
-          PlatformTextConfig.yearlyPrediction: 'വാർഷിക\nപ്രവചനങ്ങൾ',
-          PlatformTextConfig.weeklyPrediction: 'പ്രതിവാര\nപ്രവചനങ്ങൾ',
-          PlatformTextConfig.lifePrediction: 'ജീവിത\nപ്രവചനങ്ങൾ',
-          PlatformTextConfig.dailyPrediction: 'പ്രതിദിന\nപ്രവചനങ്ങൾ',
-          PlatformTextConfig.chatHomePage: 'AI വോയ്‌സ്\nആസ്ട്രോ ചാറ്റ് ചെയ്യൂ',
           'ChatTitle': 'AI വോയ്‌സ് ചാറ്റ്',
           'Chat Now': 'ഇപ്പോൾ\nചാറ്റ്',
           'Thara Bala': 'താര ഭലം',
@@ -4526,7 +4294,6 @@ class LocalString extends Translations {
           'Astrologer\nConsultation': 'ജ്യോതിഷിയെ\nസമീപിക്കുക',
           'Astrologer Consultation': 'ജ്യോതിഷിയെ സമീപിക്കുക',
           'My Profile': 'എൻ്റെ\nപ്രൊഫൈൽ',
-          //settings
           'Profile': 'പ്രൊഫൈൽ',
           'Push Notifications': 'പുഷ് അറിയിപ്പുകൾ',
           'Language': 'ഭാഷ',
@@ -4603,7 +4370,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'ആപ്പ് ഭാഷ വിജയകരമായി മാറ്റി.',
           'Click to view': 'കാണാൻ ക്ലിക്ക് ചെയ്യുക',
-          // Ask Astrologer
           'Ask Astrologer': 'ജ്യോതിഷിയോട് ചോദിക്കൂ',
           'Event Planner (Muhurtha)': 'പരിപാടി ആസൂത്രകൻ (മുഹൂർത്തം)',
           'Choose a date within the next 30 days.':
@@ -4672,7 +4438,23 @@ class LocalString extends Translations {
           'Could not open Full Horoscope': 'പൂർണ്ണ ജാതകം തുറക്കാൻ കഴിഞ്ഞില്ല.',
           'Plan Now': 'ഇപ്പോൾ ആസൂത്രണം ചെയ്യുക',
           'Event Planner': 'ഇവന്റ് പ്ലാനർ',
-          'Consultation marathon': 'കൺസൾട്ടേഷൻ മാരത്തൺ',
+          'Teksage Expert Hours': 'ടെക്സേജ് വിദഗ്ദ്ധ സമയം',
+          'IST': 'ഇന്ത്യൻ സമയം',
+          'No Expert Hours event is open right now.': 'ഇപ്പോൾ ഒരു എക്സ്പെർട്ട് അവേഴ്‌സ് പരിപാടിയും തുറന്നിട്ടില്ല.',
+          'Your Expert Hours bookings': 'നിങ്ങളുടെ വിദഗ്ദ്ധ സമയ ബുക്കിംഗുകൾ',
+          'Upcoming': 'വരാനിരിക്കുന്ന',
+          'Past': 'കഴിഞ്ഞ',
+          'Login email': 'ലോഗിൻ ഇമെയിൽ',
+          'Login phone': 'ലോഗിൻ ഫോൺ',
+          'Your question': 'നിങ്ങളുടെ ചോദ്യം',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'നിങ്ങൾക്ക് എന്താണ് ചോദിക്കേണ്ടതെന്ന് ഞങ്ങളോട് പറയൂ. നിങ്ങളുടെ നിയോഗിക്കപ്പെട്ട ജ്യോതിഷി ഇത് കാണും.',
+          'Enter your question before payment.': 'പണമടയ്ക്കുന്നതിന് മുമ്പ് നിങ്ങളുടെ ചോദ്യം നൽകുക.',
+          'Preferred consultation language': 'കൺസൾട്ടേഷനായി തിരഞ്ഞെടുക്കുന്ന ഭാഷ',
+          'Select your preferred consultation language.':
+              'നിങ്ങൾക്ക് ഇഷ്ടപ്പെട്ട കൺസൾട്ടേഷൻ ഭാഷ തിരഞ്ഞെടുക്കുക.',
+          'Customer question': 'ഉപഭോക്തൃ ചോദ്യം',
+          'Consultation time has not ended yet.': 'കൂടിയാലോചന സമയം ഇതുവരെ അവസാനിച്ചിട്ടില്ല.',
+          'Waiting for admin assignment': 'അഡ്മിൻ അസൈൻമെന്റിനായി കാത്തിരിക്കുന്നു',
           'Your Next Session': 'നിങ്ങളുടെ അടുത്ത സെഷൻ',
           'Better guidance': 'മികച്ച മാർഗ്ഗനിർദ്ദേശം',
           'Brighter tomorrows': 'കൂടുതൽ ശോഭനമായ നാളെകൾ',
@@ -4684,7 +4466,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10 മിനിറ്റ് സെഷനുകൾ. ആദ്യം പണം നൽകുക. പണം നൽകിയ ശേഷം ഒരു ജ്യോതിഷിയെ നിയമിക്കും.',
           'See times': 'സമയം കാണുക',
           '10 minutes': '10 മിനിറ്റ്',
-          'No marathon is open right now.': 'ഇപ്പോൾ ഒരു മാരത്തണും തുറന്നിട്ടില്ല.',
           'Booked': 'ബുക്ക് ചെയ്തു',
           'Booking for this event has closed.': 'ഈ പരിപാടിയുടെ ബുക്കിംഗ് അവസാനിച്ചു.',
           'Event ended by admin': 'അഡ്മിൻ പരിപാടി അവസാനിപ്പിച്ചു',
@@ -4740,7 +4521,7 @@ class LocalString extends Translations {
           '@count completed': '@count പൂർത്തിയായി',
           'Pay': 'പണമടയ്ക്കുക',
           'Payment did not go through. This seat is still open. Try again.': 'പണമടയ്ക്കൽ നടന്നില്ല. ഈ സീറ്റ് ഇപ്പോഴും തുറന്നിരിക്കുന്നു. വീണ്ടും ശ്രമിക്കുക.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': 'നിങ്ങളുടെ ജ്യോതിഷിയെ നിയമിക്കുകയും മീറ്റിംഗ് ലിങ്ക് 8 മണിക്കൂറിനുള്ളിൽ പങ്കിടുകയും ചെയ്യും.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hour.': 'നിങ്ങളുടെ ജ്യോതിഷിയെ നിയമിക്കുകയും മീറ്റിംഗ് ലിങ്ക് 1 മണിക്കൂറിനുള്ളിൽ പങ്കിടുകയും ചെയ്യും.',
           'Get it on Android': 'ഇത് Android-ൽ നേടൂ',
           'Contact via WhatsApp': 'വാട്ട്‌സ്ആപ്പ് വഴി ബന്ധപ്പെടുക',
           'Get on website': 'വെബ്‌സൈറ്റിൽ ലഭിക്കുക',
@@ -4775,7 +4556,6 @@ class LocalString extends Translations {
           'chandra_bala_excluded': 'ചന്ദ്ര ബലം അനുകൂലമല്ല (ചന്ദ്രാഷ്ടമം)',
           'no_auspicious_window': 'അശുഭ കാലത്തിന് ശേഷം ശുഭ സമയം അവശേഷിക്കുന്നില്ല',
           'Book Consultation': 'കൺസൾട്ടേഷൻ ബുക്ക് ചെയ്യുക',
-          'Your question': 'നിങ്ങളുടെ ചോദ്യം',
           'Select your preferred language':
               'നിങ്ങൾ ഇഷ്ടപ്പെടുന്ന ഭാഷ തിരഞ്ഞെടുക്കൂ',
           'We will match you with an astrologer who speaks your language.':
@@ -4837,7 +4617,6 @@ class LocalString extends Translations {
               'ഇനിയും ജ്യോതിഷ ചോദ്യങ്ങൾ ഒന്നുമില്ല.',
           'Answer ready': 'ഉത്തരം തയ്യാർ',
           'Assigned': 'നിയോഗിച്ചു',
-          //Profile
           'First Name': 'പേരിന്റെ ആദ്യഭാഗം',
           'Last Name': 'പേരിന്റെ അവസാന ഭാഗം',
           'Email': 'ഇമെയിൽ',
@@ -4865,22 +4644,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'Teksageയെക്കുറിച്ച് നിങ്ങൾ ആദ്യമായി എങ്ങനെ അറിഞ്ഞു?',
           'Select a language': 'ഒരു ഭാഷ തിരഞ്ഞെടുക്കുക',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google തിരയൽ",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)":
-              "വായ്മൊഴി ശുപാർശ (സുഹൃത്തുകൾ / കുടുംബം)",
-          "Product Hunt": "Product Hunt",
-          "Other": "മറ്റ്",
-          //Push Notification
           'Push Notification': 'പുഷ് അറിയിപ്പുകൾ',
-          PlatformTextConfig.dailyTitle: 'ദൈനംദിന പ്രവചനങ്ങൾ',
-          PlatformTextConfig.weeklyTitle: 'പ്രതിവാര പ്രവചനങ്ങൾ',
-          PlatformTextConfig.yearlyTitle: 'വാർഷിക പ്രവചനങ്ങൾ',
-          PlatformTextConfig.lifePredictionLanding: 'ജീവിത പ്രവചനം',
           'Promotions & Offers': 'പ്രമോഷനും ഓഫറുകളും',
           'Warnings': 'മുന്നറിയിപ്പ്',
           'Consultation': 'കൺസൾട്ടേഷൻ',
@@ -4911,18 +4675,15 @@ class LocalString extends Translations {
               'കൺസൾട്ടേഷൻ അപ്‌ഡേറ്റുകളൊന്നുമില്ല.',
           'There are no recent general updates from your astrological guidance':
               'നിങ്ങളുടെ ജ്യോതിഷ മാർഗ്ഗനിർദ്ദേശത്തിൽ നിന്ന് അടുത്തിടെ പൊതുവായ അപ്‌ഡേറ്റുകളൊന്നുമില്ല.',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'ഒരു ചോദ്യമുണ്ടോ?\nനിങ്ങളുടെ പാതയെ നയിക്കാൻ ഞങ്ങളുടെ പിന്തുണാ ടീം ഇവിടെയുണ്ട്.',
           'Enter feedback or query here...': 'ഇവിടെ ഫീഡ്‌ബാക്കോ ചോദ്യമോ നൽകുക',
           'Submit': 'സമർപ്പിക്കുക',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'ഞങ്ങളുടെ ജ്യോതിഷ സേവനങ്ങളെക്കുറിച്ചുള്ള പതിവ്\nചോദ്യങ്ങൾക്ക് ഉത്തരം കണ്ടെത്തുക',
           'Still have questions?': 'ഇപ്പോഴും ചോദ്യങ്ങളുണ്ടോ?',
           'Contact Support': 'പിന്തുണയ്ക്കായി ബന്ധപ്പെടുക',
           'search_help': 'തിരയൽ സഹായം',
-          //panchang
           'WeekDay': 'ആഴ്ച',
           'Thithi': 'തിഥി',
           'Karna': 'കരണം',
@@ -4935,20 +4696,12 @@ class LocalString extends Translations {
           'Paksha': 'പക്ഷ',
           'Amirthathi Yoga': 'അമൃത യോഗം',
           'COMING SOON': 'ഉടൻ വരുന്നു',
-          "panchang_single_format": "(name) വരെ (time) (next)",
           'otp_response': "(title) പരിശോധന\nOTP വിജയകരമായി അയച്ചു.",
-
-          //Horoscope
-          PlatformTextConfig.horoscope: 'ജാതകം',
           'Name': 'പേര്',
           'Place': 'സ്ഥലം',
           'Lagna': 'ലഗ്നം',
           'South Indian Chart': 'ദക്ഷിണേന്ത്യൻ ചാർട്ട്',
           'North Indian Chart': 'ഉത്തരേന്ത്യൻ ചാർട്ട്',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "നിങ്ങളുടെ ദിവസത്തിന് ഒരു മികച്ച തുടക്കം ആശംസിക്കുന്നു.",
-          "Good morning,": 'സുപ്രഭാതം,',
           'Sunday': 'ഞായറാഴ്‌ച',
           'Monday': 'തിങ്കളാഴ്‌ച',
           'Tuesday': 'ചൊവ്വാഴ്‌ച',
@@ -4959,7 +4712,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'ചന്ദ്രാഷ്ടമ',
           'Predictions are based on birth details in your profile section':
               'നിങ്ങളുടെ പ്രൊഫൈൽ വിഭാഗത്തിലെ ജനന വിശദാംശങ്ങളെ അടിസ്ഥാനമാക്കിയാണ് പ്രവചനങ്ങൾ',
-          //yearly prediction
           'Planetary Transits': 'ഗ്രഹ സംക്രമണം',
           'Categorized Predictions': 'വർഗ്ഗീകരിച്ച പ്രവചനങ്ങൾ',
           'Jupiter': 'ഗുരു',
@@ -4980,15 +4732,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'ജ്യോതിഷ കൺസൾട്ടേഷൻ',
           'First Half of': 'ആദ്യ പകുതി',
           'Second Half of': 'രണ്ടാം പകുതി',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'ജീവിത പ്രവചനങ്ങൾ',
           'General\nCharacteristics': 'പൊതു\nസ്വഭാവസ',
           'Career\nPredictions': 'തൊഴില്\nപ്രവചനങ്ങൾ',
           'Relationship\nPredictions': 'ബന്ധ\nപ്രവചനങ്ങൾ',
           'Wealth\nPredictions': 'സമ്പത്തിൻ്റെ\nപ്രവചനങ്ങൾ',
           'Health\nPredictions': 'ആരോഗ്യ\nപ്രവചനങ്ങൾ',
           'Current\nTime Period': 'നിലവിലെ\nസമയ കാലയളവ്',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'രാവിലെ 6 മണിക്ക് ദൈനംദിന പ്രവചനങ്ങൾ സ്വീകരിക്കുന്നതിന് അപ്‌ഗ്രേഡ് ചെയ്യുക',
           'Your daily predictions was scheduled for 6 AM':
@@ -4997,7 +4746,6 @@ class LocalString extends Translations {
           'Relationship': 'ബന്ധങ്ങൾ',
           'Wealth': 'സമ്പത്തിൻ്റെ',
           'Health': 'ആരോഗ്യം',
-          //Marriage Match Making
           'Marriage Match Making': 'വിവാഹ പൊരുത്തം',
           'Boy Name': 'വരന്റെ പേര്',
           'Girl Name': 'വധുവിന്റെ പേര്',
@@ -5015,7 +4763,6 @@ class LocalString extends Translations {
           'Calculate Match': 'പൊരുത്തം കണക്കാക്കുക',
           'Enter boy\'s name': 'പുരുഷ നാമം',
           'Enter girl\'s name': 'സ്ത്രീ നാമം',
-          //Subscriptions
           'Subscription': 'സബ്സ്ക്രിപ്ഷനുകൾ',
           'Auto Schedule Daily Predictions':
               'ദൈനംദിന പ്രവചനങ്ങൾ സ്വയം ഷെഡ്യൂൾ ചെയ്യുക',
@@ -5061,7 +4808,6 @@ class LocalString extends Translations {
           'days left': 'ദിവസങ്ങൾ ബാക്കി',
           'Recommended': 'ശുപാർശ ചെയ്തത്',
           'membership': 'അംഗത്വം',
-          //Dialog box
           'Plan Expired': 'പ്ലാൻ കാലാവധി അവസാനിച്ചു',
           'Premium Feature': 'പ്രീമിയം സവിശേഷത',
           'Unlock all features by choosing a plan':
@@ -5085,7 +4831,6 @@ class LocalString extends Translations {
           'Discard': 'ഉപേക്ഷിക്കുക',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'നിങ്ങൾക്ക് സംരക്ഷിക്കാത്ത മാറ്റങ്ങളുണ്ട്.\nഅവ ഉപേക്ഷിച്ച് തിരികെ പോകണോ?',
-          //Error Validate
           'Please Enter the First Name': 'ദയവായി ആദ്യ പേര് നൽകുക',
           'Please Enter the Second Name': 'ദയവായി രണ്ടാം പേര് നൽകുക',
           'Please enter a valid Email': 'ദയവായി സാധുവായ ഇമെയിൽ നൽകുക',
@@ -5113,17 +4858,8 @@ class LocalString extends Translations {
               'ദയവായി ഒന്നോ അതിലധികമോ വിഭാഗങ്ങൾ തിരഞ്ഞെടുക്കുക',
           'Error loading questions': 'ചോദ്യങ്ങൾ ലോഡ് ചെയ്യുന്നതിൽ പിശക്',
           'No questions found': 'ചോദ്യങ്ങളൊന്നും കണ്ടെത്തിയില്ല',
-          "Please enter Boy's name": 'ആൺകുട്ടിയുടെ പേര് നൽകുക',
-          "Please select Boy's Nakshatram":
-              'ആൺകുട്ടികളുടെ നക്ഷത്രം തിരഞ്ഞെടുക്കുക',
-          "Please select Girl's Nakshatram":
-              'പെൺകുട്ടികളുടെ നക്ഷത്രം തിരഞ്ഞെടുക്കുക',
-          "Please enter Girl's name": 'പെൺകുട്ടിയുടെ പേര് നൽകുക',
-          "Please select Girl's Rasi": 'പെൺകുട്ടികളുടെ റാസി തിരഞ്ഞെടുക്കുക',
-          "Please select Boy's Rasi": 'ആൺകുട്ടികളുടെ രാശി തിരഞ്ഞെടുക്കുക',
           'Second language must be different from first':
               'രണ്ടാമത്തെ ഭാഷ ആദ്യത്തേതിൽ നിന്ന് വ്യത്യസ്തമായിരിക്കണം.',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'അനുമതി സ്ഥിരമായി നിഷേധിച്ചിരിക്കുന്നു. ദയവായി സെറ്റിംഗ്സിൽ നിന്ന് അത് പ്രവർത്തനക്ഷമമാക്കുക.',
           'Permission Denied': 'അനുമതി നിഷേധിച്ചു',
@@ -5216,7 +4952,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'നെറ്റ്‌വർക്ക് പിശക്. നിങ്ങളുടെ കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.',
           'OTP Verified': 'OTP പരിശോധിച്ചുറപ്പിച്ചു',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'നിങ്ങൾക്ക് ഏത് വിഷയത്തിൽ മാർഗനിർദ്ദേശം ആവശ്യമാണ്?',
           'Select the categories and continue':
@@ -5236,13 +4971,11 @@ class LocalString extends Translations {
           'Expert Profile': 'വിദഗ്ധന്റെ പ്രൊഫൈൽ',
           'Reviews': 'അവലോകനങ്ങൾ',
           'No reviews available': 'അവലോകനങ്ങൾ ലഭ്യമല്ല',
-          'Book Consultation': 'കൺസൾട്ടേഷൻ ബുക്ക് ചെയ്യുക',
           'No slots available': 'സ്ലോട്ടുകൾ ലഭ്യമല്ല',
           'Find & Consult Astrologers': 'ജ്യോതിഷികളെ കണ്ടെത്തി ഉപദേശം തേടുക',
           '100+ Astrologers': '100+ ജ്യോതിഷികൾ',
           'Explore and find your perfect match':
               'നിങ്ങളുടെ പൂർണ പൊരുത്തം പര്യവേക്ഷണം ചെയ്ത് കണ്ടെത്തുക',
-          'Upcoming': 'വരാനിരിക്കുന്ന',
           'Completed': 'പൂർത്തിയാക്കി',
           'View Details': 'വിശദാംശങ്ങൾ\nകാണുക',
           'View\nDetails': 'വിശദാംശങ്ങൾ\nകാണുക',
@@ -5250,7 +4983,6 @@ class LocalString extends Translations {
           'Choose your avatar': 'നിങ്ങളുടെ അവതാർ തിരഞ്ഞെടുക്കുക',
           'Choose how AI replies': 'AI എങ്ങനെ മറുപടി നൽകണമെന്ന് തിരഞ്ഞെടുക്കുക',
           'Concise': 'സംക്ഷിപ്തമായ',
-          'Booking Details': 'Booking വിശദാംശങ്ങൾ',
           'Consultation Fee': 'കൺസൾട്ടേഷൻ ഫീസ്',
           'Total Fee': 'ആകെ ഫീസ്',
           'Confirm & Proceed to Pay': 'സ്ഥിരീകരിച്ച് പണമടയ്ക്കുക',
@@ -5308,8 +5040,6 @@ class LocalString extends Translations {
               'നിങ്ങളുടെ ഉത്തരം ഇവിടെ ടൈപ്പ് ചെയ്യുക...',
           'Done': 'ചെയ്തുകഴിഞ്ഞു',
           'booked a slot on': 'ഒരു സ്ലോട്ട്\nബുക്ക് ചെയ്തു',
-          "meeting_with": "{name} നോടുള്ള യോഗം",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'നിങ്ങളുടെ എല്ലാ ആവശ്യങ്ങൾക്കുമുള്ള ജ്യോതിഷ് വോയ്‌സ് ഗൈഡ്. ഇന്ന് തന്നെ നിങ്ങളുടെ സംഭാഷണം ആരംഭിക്കൂ',
           'Jyotish voice guide for all your needs':
@@ -5348,10 +5078,8 @@ class LocalString extends Translations {
           'No response.': 'പ്രതികരണമില്ല.',
           'Retry': 'വീണ്ടും ശ്രമിക്കുക',
           'Subscribe Now': 'സബ്സ്ക്രൈബ് ചെയ്യുക',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'നിങ്ങളുടെ അനുഭവത്തെ ഞങ്ങൾ വിലമതിക്കുന്നു.\nനിങ്ങളെ പോകാൻ തീരുമാനിച്ചതിന്റെ കാരണം എന്താണ്?',
-          "I am having another account": 'എനിക്ക് വേറെ ഒരു അക്കൗണ്ട് ഉണ്ട്',
           'App not working properly': 'ആപ്പ് ശരിയായി പ്രവർത്തിക്കുന്നില്ല',
           'I don’t like the app': 'എനിക്ക് ആപ്പ് ഇഷ്ടമല്ല',
           'I am worried about my privacy':
@@ -5362,7 +5090,6 @@ class LocalString extends Translations {
               'ഈ അക്കൗണ്ടുമായി ബന്ധപ്പെട്ട എല്ലാ ഡാറ്റയും (നിങ്ങളുടെ പ്രൊഫൈൽ, സേവനം, ബുക്കിംഗുകൾ, ജാതകം, പ്രവചനങ്ങൾ ഉൾപ്പെടെ) 45 ദിവസത്തിനുള്ളിൽ ശാശ്വതമായി ഇല്ലാതാക്കപ്പെടും',
           'Delete Account Now': 'അക്കൗണ്ട് ഇപ്പോൾ ഇല്ലാതാക്കുക',
           'No, I have changed my mind': 'ഇല്ല, ഞാൻ എന്റെ മനസ്സ് മാറ്റുകയാണ്',
-          //Astrologer
           'You logged in as Astrologer': 'നിങ്ങൾ ജ്യോതിഷിയായി\nലോഗിൻ ചെയ്‌തു.',
           'Meetings': 'ബുക്കിംഗുകൾ',
           'View your scheduled appointments & completed ones':
@@ -5380,10 +5107,6 @@ class LocalString extends Translations {
           'Horoscope details are not available': 'ജാതക വിശദാംശങ്ങൾ ലഭ്യമല്ല.',
           'Answer': 'ഉത്തരം',
           'View': 'കാണുക',
-          "Queries asked - Time to share your thoughts!":
-              "ചോദ്യങ്ങൾ ചോദിച്ചു - നിങ്ങളുടെ ചിന്തകൾ പങ്കിടാൻ സമയമായി!",
-          "Queries asked - You've already shared your thoughts!":
-              "ചോദ്യങ്ങൾ ചോദിച്ചു - നിങ്ങൾ ഇതിനകം നിങ്ങളുടെ ചിന്തകൾ പങ്കുവെച്ചു കഴിഞ്ഞു!",
           'Date': 'തീയതി',
           'Time': 'സമയം',
           'Fees Paid': 'ഫീസ് അടച്ചു',
@@ -5413,8 +5136,6 @@ class LocalString extends Translations {
           'Years of Experience': 'പരിചയ വർഷങ്ങൾ',
           'years': 'വർഷങ്ങൾ',
           'Showing Availability': 'ലഭ്യത\nകാണിക്കുന്നു',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP വീണ്ടും അയയ്ക്കാൻ {seconds} സെക്കൻഡ്",
           'Enter Mobile Number': 'മൊബൈൽ നമ്പർ നൽകുക',
           'Enter Email': 'ഇമെയിൽ നൽകുക',
           'Enter your new email and verify it using OTP':
@@ -5432,7 +5153,6 @@ class LocalString extends Translations {
           'We have sent OTP to': 'ഞങ്ങൾ OTP അയച്ചു',
           'OTP is valid for 5 Minutes.': 'OTP 5 മിനിറ്റ് വരെ സാധുവാണ്.',
           'Resend OTP': 'OTP വീണ്ടും അയയ്ക്കുക',
-          //Internet
           'No Internet Connection': 'ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല',
           'Please check your\nnetwork settings':
               'നിങ്ങളുടെ നെറ്റ്‌വർക്ക് ക്രമീകരണങ്ങൾ പരിശോധിക്കുക.',
@@ -5588,7 +5308,6 @@ class LocalString extends Translations {
               'നിങ്ങളുടെ ചോദ്യം, ഉത്തരം, പ്രവർത്തന വിശദാംശങ്ങൾ.',
           'Request details': 'വിശദാംശങ്ങൾ അഭ്യർത്ഥിക്കുക',
           'Answered on': 'ഉത്തരം നൽകിയത്',
-          "Astrologer's answer": 'ജ്യോതിഷിയുടെ ഉത്തരം',
           'In progress': 'പുരോഗതിയിൽ',
           'Rate your answer': 'നിങ്ങളുടെ ഉത്തരം റേറ്റ് ചെയ്യുക',
           'Could not load this Ask request. Please try again.':
@@ -5601,7 +5320,6 @@ class LocalString extends Translations {
           'Session expired. Please try again.': 'സെഷൻ കാലഹരണപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുക.',
           'Coupon applied': 'കൂപ്പൺ പ്രയോഗിച്ചു',
           'Astrologer\'s Answer': 'ജ്യോതിഷക്കാരന്റെ ഉത്തരം',
-        
           'Your answers are ready': 'നിങ്ങളുടെ ഉത്തരങ്ങൾ തയ്യാറാണ്',
           'Your astrologer has submitted answers to your consultation questions.': 'നിങ്ങളുടെ ജ്യോതിഷി നിങ്ങളുടെ കൂടിയാലോചന ചോദ്യങ്ങൾക്ക് ഉത്തരം സമർപ്പിച്ചു.',
           'Open Booking Details to read them — you can also leave a review there.': 'ബുക്കിംഗ് വിശദാംശങ്ങൾ വായിക്കാൻ അത് തുറക്കുക — നിങ്ങൾക്ക് അവിടെ ഒരു അവലോകനം നൽകാനും കഴിയും.',
@@ -5623,14 +5341,15 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'നിങ്ങളുടെ അവലോകനം സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.',
           'Review submitted for approval.': 'അംഗീകാരത്തിനായി അവലോകനം സമർപ്പിച്ചു.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'നന്ദി! അംഗീകാരം ലഭിച്ചുകഴിഞ്ഞാൽ നിങ്ങളുടെ അവലോകനം ജ്യോതിഷിയുടെ പ്രൊഫൈലിൽ ദൃശ്യമാകും.',
-
           'Delete': 'ഇല്ലാതാക്കുക',
           'Save changes': 'മാറ്റങ്ങൾ സംരക്ഷിക്കുക',
           'Delete your review?': 'നിങ്ങളുടെ അവലോകനം ഇല്ലാതാക്കണോ?',
           'Could not delete your review. Please try again.': 'നിങ്ങളുടെ അവലോകനം ഇല്ലാതാക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.',
           'Published': 'പ്രസിദ്ധീകരിച്ചത്',
           'Write a short review (optional)': 'ഒരു ചെറിയ അവലോകനം എഴുതുക (ഓപ്ഷണൽ)',
-},
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'നിങ്ങളുടെ ജ്യോതിഷിയെ നിയോഗിക്കുകയും മീറ്റിംഗ് ലിങ്ക് 1 മണിക്കൂറിനുള്ളിൽ പങ്കിടുകയും ചെയ്യും.',
+          'I am having another account': 'എനിക്ക് വേറെ ഒരു അക്കൗണ്ട് ഉണ്ട്.',
+        },
         'hi': {
           'Good day': 'शुभ दिन',
           'Astrologer': 'ज्योतिषी',
@@ -5640,11 +5359,6 @@ class LocalString extends Translations {
           'Settings': 'सेटिंग्स',
           'Marriage\nMatch Making': 'विवाह\nमिलान',
           'Explore Other Predictions': 'अन्य भविष्यवाणी',
-          PlatformTextConfig.yearlyPrediction: 'वार्षिक\nभविष्यवाणी',
-          PlatformTextConfig.weeklyPrediction: 'साप्ताहिक\nभविष्यवाणी',
-          PlatformTextConfig.lifePrediction: 'जीवन\nभविष्यवाणी',
-          PlatformTextConfig.dailyPrediction: 'दैनिक\nभविष्यवाणी',
-          PlatformTextConfig.chatHomePage: 'AI वॉयस ज्योतिष चैट',
           'ChatTitle': 'AI वॉयस चैट',
           'Chat Now': 'चैट करें',
           'Thara Bala': 'तारा बल',
@@ -5652,7 +5366,6 @@ class LocalString extends Translations {
           'Astrologer\nConsultation': 'ज्योतिषी\nपरामर्श',
           'Astrologer Consultation': 'ज्योतिषी परामर्श',
           'My Profile': 'मेरी प्रोफ़ाइल',
-          //Settings
           'Profile': 'प्रोफ़ाइल',
           'Push Notifications': 'पुश नोटिफिकेशन',
           'Language': 'भाषा',
@@ -5728,7 +5441,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'ऐप की भाषा सफलतापूर्वक बदल दी गई है।',
           'Click to view': 'देखने के लिए क्लिक करें',
-          // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषी से पूछें',
           'Event Planner (Muhurtha)': 'कार्यक्रम योजनाकार (मुहूर्त)',
           'Choose a date within the next 30 days.':
@@ -5798,7 +5510,23 @@ class LocalString extends Translations {
               'पूर्ण राशिफल नहीं खुल सका',
           'Plan Now': 'अभी योजना बनाएं',
           'Event Planner': 'घटना योजनाकार',
-          'Consultation marathon': 'परामर्श मैराथन',
+          'Teksage Expert Hours': 'टेक्सेज विशेषज्ञ के कार्य समय',
+          'IST': 'प्रथम',
+          'No Expert Hours event is open right now.': 'इस समय कोई भी एक्सपर्ट आवर्स इवेंट उपलब्ध नहीं है।',
+          'Your Expert Hours bookings': 'आपकी एक्सपर्ट आवर्स बुकिंग',
+          'Upcoming': 'आगामी',
+          'Past': 'अतीत',
+          'Login email': 'भाग लेने का (विद्युत - डाक',
+          'Login phone': 'लॉगिन फ़ोन',
+          'Your question': 'आपका प्रश्न',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'आप जो भी पूछना चाहते हैं, हमें बताएं। आपके लिए नियुक्त ज्योतिषी इसे देखेंगे।',
+          'Enter your question before payment.': 'भुगतान करने से पहले अपना प्रश्न दर्ज करें।',
+          'Preferred consultation language': 'परामर्श के लिए पसंदीदा भाषा',
+          'Select your preferred consultation language.':
+              'अपनी पसंदीदा परामर्श भाषा चुनें।',
+          'Customer question': 'ग्राहक का प्रश्न',
+          'Consultation time has not ended yet.': 'परामर्श का समय अभी समाप्त नहीं हुआ है।',
+          'Waiting for admin assignment': 'प्रशासनिक कार्य सौंपे जाने की प्रतीक्षा है',
           'Your Next Session': 'आपका अगला सत्र',
           'Better guidance': 'बेहतर मार्गदर्शन',
           'Brighter tomorrows': 'उज्ज्वल भविष्य',
@@ -5810,7 +5538,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '10 मिनट के सत्र। पहले भुगतान करें। भुगतान के बाद एक ज्योतिषी नियुक्त किया जाएगा।',
           'See times': 'समय देखें',
           '10 minutes': '10 मिनटों',
-          'No marathon is open right now.': 'फिलहाल कोई मैराथन आयोजित नहीं हो रही है।',
           'Booked': 'बुक्ड',
           'Booking for this event has closed.': 'इस कार्यक्रम के लिए बुकिंग बंद हो चुकी है।',
           'Event ended by admin': 'कार्यक्रम प्रशासक द्वारा समाप्त किया गया',
@@ -5866,7 +5593,7 @@ class LocalString extends Translations {
           '@count completed': '@count पूरा हुआ',
           'Pay': 'वेतन',
           'Payment did not go through. This seat is still open. Try again.': 'भुगतान सफल नहीं हुआ। यह सीट अभी भी उपलब्ध है। कृपया पुनः प्रयास करें।',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': 'आपके लिए एक ज्योतिषी नियुक्त किया जाएगा और मीटिंग का लिंक 8 घंटे के भीतर साझा कर दिया जाएगा।',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hour.': 'आपके लिए एक ज्योतिषी नियुक्त किया जाएगा और मीटिंग का लिंक 1 घंटे के भीतर साझा कर दिया जाएगा।',
           'Get it on Android': 'इसे एंड्रॉइड पर प्राप्त करें',
           'Contact via WhatsApp': 'व्हाट्सएप के माध्यम से संपर्क करें',
           'Get on website': 'वेबसाइट पर जाएं',
@@ -5902,7 +5629,6 @@ class LocalString extends Translations {
           'no_auspicious_window':
               'अशुभ अवधि के बाद कोई शुभ समय नहीं बचा',
           'Book Consultation': 'परामर्श बुक करें',
-          'Your question': 'आपका प्रश्न',
           'Select your preferred language': 'अपनी पसंदीदा भाषा चुनें',
           'We will match you with an astrologer who speaks your language.':
               'हम आपको आपकी भाषा बोलने वाले ज्योतिषी से मिलाएंगे।',
@@ -5961,7 +5687,6 @@ class LocalString extends Translations {
           'No Ask Astrologer requests yet.': 'अभी तक कोई ज्योतिषी प्रश्न नहीं।',
           'Answer ready': 'उत्तर तैयार',
           'Assigned': 'असाइन किया गया',
-          //Profile
           'First Name': 'पहला नाम',
           'Last Name': 'अंतिम नाम',
           'Email': 'ईमेल',
@@ -5989,21 +5714,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'आपको Teksage के बारे में पहली बार कैसे पता चला?',
           'Select a language': 'भाषा चुनें',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google खोज",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)": "मुंहज़ुबानी (दोस्त / परिवार)",
-          "Product Hunt": "Product Hunt",
-          "Other": "अन्य",
-          //Push Notification
           'Push Notification': 'पुश नोटिफिकेशन',
-          PlatformTextConfig.dailyTitle: 'दैनिक भविष्यफल',
-          PlatformTextConfig.weeklyTitle: 'साप्ताहिक भविष्यफल',
-          PlatformTextConfig.yearlyTitle: 'वार्षिक भविष्यफल',
-          PlatformTextConfig.lifePredictionLanding: 'जीवन भविष्यवाणी',
           'Promotions & Offers': 'प्रमोशन और ऑफ़र',
           'Warnings': 'चेतावनी',
           'Consultation': 'परामर्श',
@@ -6032,19 +5743,16 @@ class LocalString extends Translations {
           'There are no Consultation updates.': 'कोई कंसल्टेशन अपडेट नहीं हैं।',
           'There are no recent general updates from your astrological guidance':
               'आपकी ज्योतिषीय सलाह से कोई हालिया सामान्य अपडेट नहीं है।',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'कोई प्रश्न है?\nआपकी सहायता के लिए हमारी सपोर्ट टीम यहाँ मौजूद है',
           'Enter feedback or query here...':
               'यहाँ अपना फीडबैक या प्रश्न दर्ज करें',
           'Submit': 'सबमिट करें',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'हमारी ज्योतिष सेवाओं के सामान्य\nप्रश्नों के उत्तर खोजें',
           'Still have questions?': 'अभी भी प्रश्न हैं?',
           'Contact Support': 'सपोर्ट से संपर्क करें',
           'search_help': 'सहायता खोजें',
-          //panchang
           'WeekDay': 'वार',
           'Thithi': 'तिथि',
           'Karna': 'करण',
@@ -6057,20 +5765,12 @@ class LocalString extends Translations {
           'Paksha': 'पक्ष',
           'Amirthathi Yoga': 'अमृत योग',
           'COMING SOON': 'जल्द आ रहा है',
-          "panchang_single_format": "(name) तक (time) (next)",
           'otp_response': "(title) सत्यापन\nOTP सफलतापूर्वक भेजा गया।",
-
-          //Horoscope
-          PlatformTextConfig.horoscope: 'राशिफल',
           'Name': 'नाम',
           'Place': 'स्थान',
           'Lagna': 'लग्न',
           'South Indian Chart': 'दक्षिण भारतीय कुंडली',
           'North Indian Chart': 'उत्तर भारतीय कुंडली',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "आशा है आपके दिन की शुरुआत शानदार रही होगी.",
-          "Good morning,": 'शुभ प्रभात,',
           'Sunday': 'रविवार',
           'Monday': 'सोमवार',
           'Tuesday': 'मंगलवार',
@@ -6081,7 +5781,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'चंद्राष्टम',
           'Predictions are based on birth details in your profile section':
               'भविष्यवाणियां आपकी प्रोफ़ाइल अनुभाग में मौजूद जन्म विवरण पर आधारित हैं।',
-          //yearly prediction
           'Planetary Transits': 'ग्रहों का गोचर',
           'Categorized Predictions': 'श्रेणीबद्ध भविष्यवाणियाँ',
           'Jupiter': 'गुरु',
@@ -6102,15 +5801,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'ज्योतिष परामर्श',
           'First Half of': 'पहला भाग',
           'Second Half of': 'दूसरा भाग',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'जीवन भविष्यवाणियाँ',
           'General\nCharacteristics': 'सामान्य\nविशेषताएँ',
           'Career\nPredictions': 'आजीविका\nभविष्यवाणियाँ',
           'Relationship\nPredictions': 'रिश्तों की\nभविष्यवाणियाँ',
           'Wealth\nPredictions': 'धन की\nभविष्यवाणियाँ',
           'Health\nPredictions': 'स्वास्थ्य\nभविष्यवाणियाँ',
           'Current\nTime Period': 'वर्तमान\nसमय अवधि',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'सुबह 6 बजे दैनिक भविष्यवाणियां प्राप्त करने के लिए अपग्रेड करें।',
           'Your daily predictions was scheduled for 6 AM':
@@ -6119,7 +5815,6 @@ class LocalString extends Translations {
           'Relationship': 'रिश्ते',
           'Wealth': 'धन की ',
           'Health': 'स्वास्थ्य',
-          //Marriage Match Making
           'Marriage Match Making': 'कुंडली मिलान',
           'Boy Name': 'लड़के नाम',
           'Girl Name': 'लड़की नाम',
@@ -6137,7 +5832,6 @@ class LocalString extends Translations {
           'Calculate Match': 'मिलान गणना करें',
           'Enter boy\'s name': 'पुरुष का नाम',
           'Enter girl\'s name': 'महिला का नाम',
-          //Subscriptions
           'Subscription': 'सदस्यताएँ',
           'Auto Schedule Daily Predictions':
               'दैनिक भविष्यफल को ऑटो शेड्यूल करें',
@@ -6183,7 +5877,6 @@ class LocalString extends Translations {
           'days left': 'दिन शेष',
           'Recommended': 'अनुशंसित',
           'membership': 'सदस्यता',
-          //Dialog box
           'Plan Expired': 'प्लान समाप्त हो गया',
           'Premium Feature': 'प्रीमियम फीचर',
           'Unlock all features by choosing a plan':
@@ -6206,7 +5899,6 @@ class LocalString extends Translations {
           'Discard': 'खारिज करना',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'आपके बदलाव सेव नहीं हुए हैं।\nक्या आप उन्हें छोड़ना चाहते हैं और वापस जाना चाहते हैं?',
-          //Error Validate
           'Please Enter the First Name': 'कृपया पहला नाम दर्ज करें',
           'Please Enter the Second Name': 'कृपया अंतिम नाम दर्ज करें',
           'Please enter a valid Email': 'कृपया मान्य ईमेल दर्ज करें',
@@ -6232,15 +5924,8 @@ class LocalString extends Translations {
               'कृपया एक या अधिक श्रेणियाँ चुनें',
           'Error loading questions': 'प्रश्न लोड करने में त्रुटि',
           'No questions found': 'कोई प्रश्न नहीं मिला',
-          "Please enter Boy's name": 'कृपया लड़के का नाम दर्ज करें',
-          "Please select Boy's Nakshatram": 'कृपया लड़के का नक्षत्र चुनें',
-          "Please select Girl's Nakshatram": 'कृपया लड़की का नक्षत्र चुनें',
-          "Please enter Girl's name": 'कृपया लड़की का नाम दर्ज करें',
-          "Please select Girl's Rasi": 'कृपया लड़की की राशि चुनें',
-          "Please select Boy's Rasi": 'कृपया लड़के की राशि चुनें',
           'Second language must be different from first':
               'दूसरी भाषा पहली भाषा से अलग होनी चाहिए',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'अनुमति स्थायी रूप से अस्वीकृत. कृपया सेटिंग्स में सक्षम करें',
           'Permission Denied': 'अनुमति अस्वीकृत',
@@ -6320,7 +6005,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'नेटवर्क एरर। कृपया अपना कनेक्शन चेक करें और फिर से कोशिश करें।',
           'OTP Verified': 'ओटीपी सत्यापित',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'आपको किस विषय पर मार्गदर्शन चाहिए?',
           'Select the categories and continue': 'श्रेणियाँ चुनें और आगे बढ़ें',
@@ -6338,14 +6022,12 @@ class LocalString extends Translations {
           'Expert Profile': 'विशेषज्ञ प्रोफ़ाइल',
           'Reviews': 'समीक्षाएँ',
           'No reviews available': 'कोई समीक्षा उपलब्ध नहीं',
-          'Book Consultation': 'परामर्श बुक करें',
           'No slots available': 'कोई स्लॉट उपलब्ध नहीं',
           'Find & Consult Astrologers':
               'ज्योतिषियों को खोजें और उनसे परामर्श लें',
           '100+ Astrologers': '100+ ज्योतिषी',
           'Explore and find your perfect match':
               'खोजें और अपना आदर्श साथी खोजें',
-          'Upcoming': 'आगामी',
           'Completed': 'पुरा होना',
           'View Details': 'विवरण देखें',
           'View\nDetails': 'विवरण देखें',
@@ -6353,7 +6035,6 @@ class LocalString extends Translations {
           'Choose your avatar': 'अपना अवतार चुनें',
           'Choose how AI replies': 'चुनें कि AI कैसे उत्तर देता है',
           'Concise': 'संक्षिप्त',
-          'Booking Details': 'Booking विवरण',
           'Consultation Fee': 'परामर्श शुल्क',
           'Total Fee': 'कुल शुल्क',
           'Confirm & Proceed to Pay': 'पुष्टि करें और भुगतान करें',
@@ -6410,8 +6091,6 @@ class LocalString extends Translations {
           'Type your answer here...': 'अपना जवाब यहाँ टाइप करें...',
           'Done': 'हो गया',
           'booked a slot on': 'पर एक\nस्लॉट बुक किया',
-          "meeting_with": "{name} के साथ बैठक",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'आपकी सभी जरूरतों के लिए ज्योतिषीय आवाज गाइड। आज ही अपनी बातचीत शुरू करें।',
           'Jyotish voice guide for all your needs':
@@ -6449,10 +6128,8 @@ class LocalString extends Translations {
           'No response.': 'कोई जबाव नहीं।',
           'Retry': 'पुन: प्रयास करें',
           'Subscribe Now': 'अब सदस्यता लें',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'हम आपके अनुभव को महत्व देते हैं.\nआपने जाने का फैसला क्यों किया?',
-          "I am having another account": 'मेरा एक और खाता है',
           'App not working properly': 'ऐप ठीक से काम नहीं कर रहा',
           'I don’t like the app': 'मुझे यह ऐप पसंद नहीं है',
           'I am worried about my privacy': 'मुझे अपनी निजता की चिंता है।',
@@ -6462,7 +6139,6 @@ class LocalString extends Translations {
               'इस खाते से संबंधित सभी डेटा (जिसमें आपकी प्रोफ़ाइल, सेवा, बुकिंग, राशिफल, भविष्यवाणियां शामिल हैं) 45 दिनों में स्थायी रूप से हटा दिए जाएंगे।',
           'Delete Account Now': 'अभी खाता हटाएं',
           'No, I have changed my mind': 'नहीं, मैं अपना मन बदल रहा हूँ।',
-          //Astrologer
           'You logged in as Astrologer':
               'आपने ज्योतिषी के तौर पर\nलॉग इन किया है।',
           'Meetings': 'बुकिंग के',
@@ -6479,10 +6155,6 @@ class LocalString extends Translations {
               'राशिफल की जानकारी उपलब्ध नहीं है।',
           'Answer': 'उत्तर',
           'View': 'देखना',
-          "Queries asked - Time to share your thoughts!":
-              "सवाल पूछे गए - अपने विचार शेयर करने का समय!",
-          "Queries asked - You've already shared your thoughts!":
-              "पूछे गए सवाल - आप पहले ही अपने विचार शेयर कर चुके हैं!",
           'Date': 'तिथि',
           'Time': 'समय',
           'Fees Paid': 'फीस का भुगतान',
@@ -6512,8 +6184,6 @@ class LocalString extends Translations {
           'Years of Experience': 'अनुभव के वर्ष',
           'years': 'वर्ष',
           'Showing Availability': 'उपलब्धता दिखाई\nजा रही है',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP दोबारा भेजने में {seconds} सेकंड",
           'Enter Mobile Number': 'मोबाइल नंबर दर्ज करें',
           'Enter Email': 'ईमेल दर्ज करें',
           'Enter your new email and verify it using OTP':
@@ -6531,7 +6201,6 @@ class LocalString extends Translations {
           'We have sent OTP to': 'हमने OTP भेजा है',
           'OTP is valid for 5 Minutes.': 'OTP 5 मिनट के लिए वैलिड है।',
           'Resend OTP': 'ओटीपी दोबारा भेजें',
-          //Internet
           'No Internet Connection': 'कोई इंटरनेट कनेक्शन नहीं',
           'Please check your\nnetwork settings':
               'कृपया अपनी नेटवर्क सेटिंग्स जांचें।',
@@ -6687,7 +6356,6 @@ class LocalString extends Translations {
               'आपका प्रश्न, उत्तर और प्रक्रिया की विस्तृत जानकारी।',
           'Request details': 'अनुरोध विवरण',
           'Answered on': 'उत्तर दिया गया',
-          "Astrologer's answer": 'ज्योतिषी का उत्तर',
           'In progress': 'प्रगति पर है',
           'Rate your answer': 'अपने उत्तर को रेट करें',
           'Could not load this Ask request. Please try again.':
@@ -6701,7 +6369,6 @@ class LocalString extends Translations {
           'Coupon applied': 'कूपन लागू हो गया',
           'Horoscope Details': 'राशिफल विवरण',
           'Astrologer\'s Answer': 'ज्योतिषी का उत्तर',
-        
           'Your answers are ready': 'आपके उत्तर तैयार हैं',
           'Your astrologer has submitted answers to your consultation questions.': 'आपके ज्योतिषी ने आपके परामर्श संबंधी प्रश्नों के उत्तर प्रस्तुत कर दिए हैं।',
           'Open Booking Details to read them — you can also leave a review there.': 'बुकिंग विवरण पढ़ने के लिए उसे खोलें — आप वहां समीक्षा भी छोड़ सकते हैं।',
@@ -6723,14 +6390,15 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'आपकी समीक्षा सबमिट नहीं हो सकी। कृपया पुनः प्रयास करें।',
           'Review submitted for approval.': 'समीक्षा अनुमोदन के लिए प्रस्तुत की गई।',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'धन्यवाद! आपकी समीक्षा स्वीकृत होने के बाद ज्योतिषी की प्रोफ़ाइल पर दिखाई देगी।',
-
           'Delete': 'मिटाना',
           'Save changes': 'परिवर्तनों को सुरक्षित करें',
           'Delete your review?': 'क्या आप अपनी समीक्षा हटाना चाहते हैं?',
           'Could not delete your review. Please try again.': 'आपकी समीक्षा हटाई नहीं जा सकी। कृपया पुनः प्रयास करें।',
           'Published': 'प्रकाशित',
           'Write a short review (optional)': 'एक संक्षिप्त समीक्षा लिखें (वैकल्पिक)',
-},
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'आपके लिए एक ज्योतिषी नियुक्त किया जाएगा और मीटिंग का लिंक 1 घंटे के भीतर साझा कर दिया जाएगा।',
+          'I am having another account': 'मेरा एक और खाता है',
+        },
         'mr_IN': {
           'Good day': 'शुभ दिवस ',
           'Astrologer': 'ज्योतिषी',
@@ -6740,11 +6408,6 @@ class LocalString extends Translations {
           'Settings': 'सेटिंग्ज',
           'Marriage\nMatch Making': 'पत्रिका\nजुळवणी',
           'Explore Other Predictions': 'इतर भविष्यवाणांचा शोध घ्या',
-          PlatformTextConfig.yearlyPrediction: 'वार्षिक\nभविष्य',
-          PlatformTextConfig.weeklyPrediction: 'साप्ताहिक\nभविष्य',
-          PlatformTextConfig.lifePrediction: 'जीवन\nफलित',
-          PlatformTextConfig.dailyPrediction: 'दैनिक\nभविष्य',
-          PlatformTextConfig.chatHomePage: 'एआय व्हॉइस\nज्योतिष चॅट',
           'ChatTitle': 'AI व्हॉइस चॅट',
           'Chat Now': 'आता चॅट करा',
           'Thara Bala': 'ताराबल',
@@ -6752,7 +6415,6 @@ class LocalString extends Translations {
           'Astrologer\nConsultation': 'ज्योतिषाचा\nसल्ला घ्या',
           'Astrologer Consultation': 'ज्योतिषाचा सल्ला घ्या',
           'My Profile': 'माझे प्रोफाइल',
-          //Settings
           'Profile': 'प्रोफाईल',
           'Push Notifications': 'पुश सूचना',
           'Language': 'भाषा',
@@ -6827,7 +6489,6 @@ class LocalString extends Translations {
           'App language has been changed successfully':
               'अ‍ॅपची भाषा यशस्वीरित्या बदलली आहे.',
           'Click to view': 'पाहण्यासाठी क्लिक करा',
-          // Ask Astrologer
           'Ask Astrologer': 'ज्योतिषाला विचारा',
           'Event Planner (Muhurtha)': 'कार्यक्रम नियोजक (मुहूर्त)',
           'Choose a date within the next 30 days.':
@@ -6896,7 +6557,23 @@ class LocalString extends Translations {
           'Could not open Full Horoscope': 'संपूर्ण कुंडली उघडता आली नाही.',
           'Plan Now': 'आताच नियोजन करा',
           'Event Planner': 'कार्यक्रम नियोजक',
-          'Consultation marathon': 'सल्लामसलत मॅरेथॉन',
+          'Teksage Expert Hours': 'टेक्सेज तज्ञांचे तास',
+          'IST': 'आयएसटी',
+          'No Expert Hours event is open right now.': 'सध्या कोणताही एक्सपर्ट अवर्स इव्हेंट उपलब्ध नाही.',
+          'Your Expert Hours bookings': 'तुमच्या तज्ञांच्या तासांची बुकिंग',
+          'Upcoming': 'आगामी',
+          'Past': 'भूतकाळ',
+          'Login email': 'लॉगिन ईमेल',
+          'Login phone': 'लॉगिन फोन',
+          'Your question': 'तुमचा प्रश्न',
+          'Tell us what you want to ask. Your assigned astrologer will see this.': 'तुम्हाला काय विचारायचे आहे ते आम्हाला सांगा. तुमचे नेमलेले ज्योतिषी हे पाहतील.',
+          'Enter your question before payment.': 'पेमेंट करण्यापूर्वी तुमचा प्रश्न नोंदवा.',
+          'Preferred consultation language': 'सल्लामसलतीसाठी पसंतीची भाषा',
+          'Select your preferred consultation language.':
+              'तुमच्या पसंतीची सल्लामसलतीची भाषा निवडा.',
+          'Customer question': 'ग्राहकाचा प्रश्न',
+          'Consultation time has not ended yet.': 'चर्चेची वेळ अजून संपलेली नाही.',
+          'Waiting for admin assignment': 'प्रशासकीय नियुक्तीची प्रतीक्षा करत आहे',
           'Your Next Session': 'तुमचे पुढील सत्र',
           'Better guidance': 'उत्तम मार्गदर्शन',
           'Brighter tomorrows': 'उज्ज्वल भविष्य',
@@ -6908,7 +6585,6 @@ class LocalString extends Translations {
           '10-minute sessions. Pay first. An astrologer is assigned after payment.': '१० मिनिटांचे सत्र. प्रथम पैसे भरा. पैसे भरल्यानंतर ज्योतिषी नेमून दिला जाईल.',
           'See times': 'वेळा पहा',
           '10 minutes': '१० मिनिटे',
-          'No marathon is open right now.': 'सध्या कोणतीही मॅरेथॉन उपलब्ध नाही.',
           'Booked': 'बुक केले',
           'Booking for this event has closed.': 'या कार्यक्रमासाठी नोंदणी बंद झाली आहे.',
           'Event ended by admin': 'प्रशासकाने कार्यक्रम समाप्त केला.',
@@ -6964,7 +6640,7 @@ class LocalString extends Translations {
           '@count completed': '@count पूर्ण झाले',
           'Pay': 'पैसे द्या',
           'Payment did not go through. This seat is still open. Try again.': 'पेमेंट झाले नाही. ही जागा अजूनही उपलब्ध आहे. पुन्हा प्रयत्न करा.',
-          'Your astrologer will be assigned and the meeting link will be shared within 8 hours.': '८ तासांच्या आत तुम्हाला तुमचे ज्योतिषी नेमून दिले जातील आणि मीटिंगची लिंक पाठवली जाईल.',
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hour.': 'आपके ज्योतिषी को नियुक्त कर दिया जाएगा और 1 घंटे के भीतर मीटिंग का लिंक साझा कर दिया जाएगा।.',
           'Get it on Android': 'अँड्रॉइडवर मिळवा',
           'Contact via WhatsApp': 'व्हॉट्सॲपद्वारे संपर्क साधा',
           'Get on website': 'वेबसाइटवर जा',
@@ -6999,7 +6675,6 @@ class LocalString extends Translations {
           'no_auspicious_window':
               'अशुभ काळानंतर शुभ वेळ उरलेली नाही',
           'Book Consultation': 'सल्लामसलत बुक करा',
-          'Your question': 'तुमचा प्रश्न',
           'Select your preferred language': 'तुमची पसंतीची भाषा निवडा',
           'We will match you with an astrologer who speaks your language.':
               'आम्ही तुम्हाला तुमची भाषा बोलणाऱ्या ज्योतिषाशी जोडू.',
@@ -7059,7 +6734,6 @@ class LocalString extends Translations {
               'अजून कोणतेही ज्योतिष प्रश्न नाहीत.',
           'Answer ready': 'उत्तर तयार',
           'Assigned': 'नियुक्त',
-          //Profile
           'First Name': 'पहिले नाव',
           'Last Name': 'आडनाव',
           'Email': 'ईमेल',
@@ -7087,21 +6761,7 @@ class LocalString extends Translations {
           'How did you first hear about Teksage?':
               'तुम्हाला Teksage बद्दल प्रथम कसे कळले?',
           'Select a language': 'एक भाषा निवडा',
-          "Google Play Store / App Store": "Google Play Store / App Store",
-          "Google Search": "Google शोध",
-          "Quora": "Quora",
-          "Facebook / Instagram": "Facebook / Instagram",
-          "YouTube": "YouTube",
-          "WhatsApp / Telegram (friends or groups)": "WhatsApp / Telegram",
-          "Word of mouth (friends/family)": "तोंडी शिफारस (मित्र / कुटुंब)",
-          "Product Hunt": "Product Hunt",
-          "Other": "इतर",
-          //Push Notification
           'Push Notification': 'पुश सूचना',
-          PlatformTextConfig.dailyTitle: 'दैनिक राशिभविष्य',
-          PlatformTextConfig.weeklyTitle: 'साप्ताहिक भविष्य',
-          PlatformTextConfig.yearlyTitle: 'वार्षिक भविष्य',
-          PlatformTextConfig.lifePredictionLanding: 'जीवन फलित',
           'Promotions & Offers': 'जाहिराती आणि ऑफर',
           'Warnings': 'इशारा',
           'Consultation': 'सल्लामसलत',
@@ -7131,19 +6791,16 @@ class LocalString extends Translations {
               'सल्लामसलतीबाबत कोणतेही नवीन अपडेट्स नाहीत.',
           'There are no recent general updates from your astrological guidance':
               'तुमच्या ज्योतिष मार्गदर्शनाकडून कोणतेही नवीन सामान्य अपडेट्स नाहीत.',
-          //support
           'Got a question?\nOur support team is here to guide your path':
               'प्रश्न आहे का?\nआमची सपोर्ट टीम तुम्हाला मार्गदर्शन करण्यासाठी येथे आहे',
           'Enter feedback or query here...':
               'तुमची प्रतिक्रिया किंवा प्रश्न येथे प्रविष्ट करा',
           'Submit': 'सबमिट',
-          //FAQs
           'Find answers to common questions\nabout our astrology services.':
               'आमच्या ज्योतिष सेवांबद्दलच्या सामान्य प्रश्नांची उत्तरे शोधा.',
           'Still have questions?': 'अजूनही काही प्रश्न आहेत का?',
           'Contact Support': 'सहाय्यता कक्षाशी संपर्क साधा',
           'search_help': 'शोध मदत',
-          //panchang
           'WeekDay': 'वार',
           'Thithi': 'तिथि',
           'Karna': 'करण',
@@ -7156,20 +6813,12 @@ class LocalString extends Translations {
           'Paksha': 'पक्ष',
           'Amirthathi Yoga': 'अमृत योग',
           'COMING SOON': 'लवकरच येत आहे',
-          "panchang_single_format": "(name) पर्यंत (time) (next)",
           'otp_response': "(title) पडताळणी\nOTP यशस्वीरित्या पाठवला.",
-
-          //Horoscope
-          PlatformTextConfig.horoscope: 'कुंडली',
           'Name': 'नाव',
           'Place': 'जन्मस्थान',
           'Lagna': 'लग्न',
           'South Indian Chart': 'दक्षिण भारतीय कुंडली',
           'North Indian Chart': 'उत्तर भारतीय कुंडली',
-          //weekly predictions
-          "Hope you're having a wonderful start to your day.":
-              "आशा आहे की तुमचा दिवसाची सुरुवात छान झाली असेल.",
-          "Good morning,": 'शुभ प्रभात,',
           'Sunday': 'रविवार',
           'Monday': 'सोमवार',
           'Tuesday': 'मंगळवार',
@@ -7180,7 +6829,6 @@ class LocalString extends Translations {
           'Chandrashtama': 'चंद्राष्टम',
           'Predictions are based on birth details in your profile section':
               'तुमची भविष्यवाणी तुमच्या प्रोफाइलमधील जन्म माहितीवर आधारित आहे.',
-          //yearly prediction
           'Planetary Transits': 'ग्रह गोचर',
           'Categorized Predictions': 'विभागवार भविष्य',
           'Jupiter': 'गुरु',
@@ -7201,15 +6849,12 @@ class LocalString extends Translations {
           'Astrology Consultation': 'ज्योतिष सल्ला',
           'First Half of': 'पहिला भाग',
           'Second Half of': 'दुसरा भाग',
-          //Life predictions
-          PlatformTextConfig.lifeTitle: 'जीवन फलित',
           'General\nCharacteristics': 'सामान्य\nवैशिष्ट्ये',
           'Career\nPredictions': 'करिअर\nभविष्य',
           'Relationship\nPredictions': 'नातेसंबंध\nभविष्य',
           'Wealth\nPredictions': 'आर्थिक\nभविष्य',
           'Health\nPredictions': 'आरोग्य\nभविष्य',
           'Current\nTime Period': 'वर्तमान\nकाळ',
-          //Daily Predictions
           'Upgrade to receive daily predictions at 6 AM':
               'सकाळी ६ वाजता दररोजचे अंदाज मिळविण्यासाठी अपग्रेड करा',
           'Your daily predictions was scheduled for 6 AM':
@@ -7218,7 +6863,6 @@ class LocalString extends Translations {
           'Relationship': 'विवाह आणि नातेसंबंध',
           'Wealth': 'आर्थिक',
           'Health': 'आरोग्य',
-          //Marriage Match Making
           'Marriage Match Making': 'विवाह जुळवणी',
           'Boy Name': 'मुलाची नाव',
           'Girl Name': 'मुलीची नाव',
@@ -7236,7 +6880,6 @@ class LocalString extends Translations {
           'Calculate Match': 'गुणमिलन करा',
           'Enter boy\'s name': 'पुरुषाचे नाव',
           'Enter girl\'s name': 'स्त्रीचे नाव',
-          //Subscriptions
           'Subscription': 'सदस्यता',
           'Auto Schedule Daily Predictions':
               'दैनिक राशिभविष्य स्वयंचलितरित्या नियोजित करा',
@@ -7281,7 +6924,6 @@ class LocalString extends Translations {
           'Your Current Plan': 'तुमची सध्याची योजना',
           'days left': 'दिवस राहिले',
           'membership': 'सदस्यत्व',
-          //Dialog box
           'Plan Expired': 'प्लॅन संपला आहे',
           'Premium Feature': 'प्रीमियम वैशिष्ट्य/प्रीमियम फीचर',
           'Unlock all features by choosing a plan':
@@ -7306,7 +6948,6 @@ class LocalString extends Translations {
           'Discard': 'रद्द करा',
           'You have unsaved changes.\nDo you want to discard them and go back?':
               'तुमच्याकडे जतन न केलेले बदल आहेत.\nतुम्ही ते बदल रद्द करून मागे जाऊ इच्छिता का?',
-          //Error Validate
           'Please Enter the First Name': 'कृपया पहिले नाव प्रविष्ट करा',
           'Please Enter the Second Name': 'कृपया आडनाव प्रविष्ट करा',
           'Please enter a valid Email': 'कृपया योग्य ईमेल प्रविष्ट करा',
@@ -7334,15 +6975,8 @@ class LocalString extends Translations {
               'कृपया एक किंवा अधिक श्रेणी निवडा',
           'Error loading questions': 'प्रश्न लोड करताना त्रुटी आली',
           'No questions found': 'कोणतेही प्रश्न आढळले नाहीत',
-          "Please enter Boy's name": 'कृपया मुलाचे नाव प्रविष्ट करा.',
-          "Please select Boy's Nakshatram": 'कृपया लड़के का नक्षत्र चुनें',
-          "Please select Girl's Nakshatram": 'कृपया लड़की का नक्षत्र चुनें',
-          "Please enter Girl's name": 'कृपया मुलीचे नाव प्रविष्ट करा',
-          "Please select Girl's Rasi": 'कृपया मुलींची राशि निवडा',
-          "Please select Boy's Rasi": 'कृपया मुलांची राशि निवडा',
           'Second language must be different from first':
               'दुसरी भाषा पहिल्यापेक्षा वेगळी असली पाहिजे.',
-          //Snack bar
           'Permission permanently denied. Please enable it in settings.':
               'परवानगी कायमस्वरूपी नाकारली आहे. कृपया ती सेटिंग्जमध्ये सक्षम करा.',
           'Permission Denied': 'परवानगी नाकारली',
@@ -7428,7 +7062,6 @@ class LocalString extends Translations {
           'Network error. Please check your connection and try again.':
               'नेटवर्कमध्ये त्रुटी आली आहे. कृपया तुमचे कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.',
           'OTP Verified': 'ओटीपी सत्यापित झाला',
-          //Astrology consultations
           'What do you\nneed guidance on?':
               'तुम्हाला कोणत्या गोष्टीवर मार्गदर्शनाची गरज आहे?',
           'Select the categories and continue':
@@ -7447,13 +7080,11 @@ class LocalString extends Translations {
           'Expert Profile': 'तज्ञांचे प्रोफाइल',
           'Reviews': 'अभिप्राय',
           'No reviews available': 'अभिप्राय उपलब्ध नाहीत',
-          'Book Consultation': 'सल्लामसलत बुक करा',
           'No slots available': 'कोणतीही जागा उपलब्ध नाही',
           'Find & Consult Astrologers': 'ज्योतिषी शोधा आणि त्यांचा सल्ला घ्या',
           '100+ Astrologers': '100+ ज्योतिषी',
           'Explore and find your perfect match':
               'एक्सप्लोर करा आणि तुमचा परिपूर्ण जोडीदार शोधा',
-          'Upcoming': 'आगामी',
           'Completed': 'पूर्ण',
           'View Details': 'तपशील पहा',
           'View\nDetails': 'तपशील पहा',
@@ -7461,7 +7092,6 @@ class LocalString extends Translations {
           'Choose your avatar': 'तुमचा अवतार निवडा',
           'Choose how AI replies': 'AI कसे उत्तर देते ते निवडा',
           'Concise': 'संक्षिप्त',
-          'Booking Details': 'Booking तपशील',
           'Consultation Fee': 'सल्ला शुल्क',
           'Total Fee': 'एकूण शुल्क',
           'Confirm & Proceed to Pay': 'निश्चित करा आणि पेमेंट करा',
@@ -7518,8 +7148,6 @@ class LocalString extends Translations {
           'Type your answer here...': 'तुमचे उत्तर येथे टाइप करा...',
           'Done': 'पूर्ण झाले',
           'booked a slot on': 'वर एक\nस्लॉट बुक केला',
-          "meeting_with": "{name} सोबत बैठक",
-          //Voice chat
           'Jyotish voice guide for all your needs. Start you conversation today':
               'तुमच्या सर्व गरजांसाठी ज्योतिषी व्हॉइस गाइड. आजच तुमचे संभाषण सुरू करा.',
           'Jyotish voice guide for all your needs':
@@ -7557,10 +7185,8 @@ class LocalString extends Translations {
           'No response.': 'कोणताही प्रतिसाद नाही.',
           'Retry': 'पुन्हा प्रयत्न करा',
           'Subscribe Now': 'आता सदस्यता घ्या',
-          //Delete Account
           'We value your experience.\nWhat made you decide to leave?':
               'आम्ही तुमच्या अनुभवाची कदर करतो.\nतुम्ही निघण्याचा निर्णय कशामुळे घेतला?',
-          "I am having another account": 'माझे दुसरे खाते आहे',
           'App not working properly': 'ॲप नीट काम करत नाही',
           'I don’t like the app': 'मला अ‍ॅप आवडत नाही',
           'I am worried about my privacy': 'मला माझ्या गोपनीयतेची काळजी वाटते',
@@ -7570,7 +7196,6 @@ class LocalString extends Translations {
               'या खात्याशी संबंधित सर्व डेटा (तुमचा प्रोफाइल, सेवा, बुकिंग, कुंडली, भाकिते यासह) ४५ दिवसांत कायमचा हटवला जाईल',
           'Delete Account Now': 'आता खाते हटवा',
           'No, I have changed my mind': 'नाही, मी माझा विचार बदलत आहे',
-          //Astrologer
           'You logged in as Astrologer':
               'तुम्ही ज्योतिषी म्हणून लॉग\nइन केले आहे.',
           'Meetings': 'बुकिंग',
@@ -7589,10 +7214,6 @@ class LocalString extends Translations {
               'राशीभविष्याची माहिती उपलब्ध नाही.',
           'Answer': 'उत्तर',
           'View': 'पहा',
-          "Queries asked - Time to share your thoughts!":
-              "विचारलेले प्रश्न - तुमच्या प्रतिक्रिया व्यक्त करण्याची वेळ आली आहे!",
-          "Queries asked - You've already shared your thoughts!":
-              "विचारलेले प्रश्न - तुम्ही तुमचे विचार आधीच मांडले आहेत!",
           'Date': 'तारीख',
           'Time': 'वेळ',
           'Fees Paid': 'फीस का भुगतान',
@@ -7622,8 +7243,6 @@ class LocalString extends Translations {
           'Years of Experience': 'अनुभवाची वर्षे',
           'years': 'वर्ष',
           'Showing Availability': 'उपलब्धता दर्शवित आहे',
-          //OTP Screen
-          "resend_otp_in_seconds": "OTP पुन्हा पाठवण्यासाठी {seconds} सेकंद",
           'Enter Mobile Number': 'मोबाइल नंबर टाका',
           'Enter Email': 'ईमेल प्रविष्ट करा',
           'Enter your new email and verify it using OTP':
@@ -7641,7 +7260,6 @@ class LocalString extends Translations {
           'We have sent OTP to': 'आम्ही ओटीपी पाठवला आहे',
           'OTP is valid for 5 Minutes.': 'ओटीपी ५ मिनिटांसाठी वैध आहे.',
           'Resend OTP': 'ओटीपी पुन्हा पाठवा',
-          //Internet
           'No Internet Connection': 'इंटरनेट कनेक्शन नाही',
           'Please check your\nnetwork settings':
               'कृपया तुमच्या नेटवर्क सेटिंग्ज तपासा.',
@@ -7797,7 +7415,6 @@ class LocalString extends Translations {
               'तुमचा प्रश्न, उत्तर आणि प्रतिसादासाठी लागलेल्या वेळेचा तपशील.',
           'Request details': 'तपशीलांची विनंती करा',
           'Answered on': 'उत्तर दिले',
-          "Astrologer's answer": 'ज्योतिषाचे उत्तर',
           'In progress': 'प्रगतीपथावर',
           'Rate your answer': 'तुमच्या उत्तराचे मूल्यांकन करा',
           'Could not load this Ask request. Please try again.':
@@ -7810,7 +7427,6 @@ class LocalString extends Translations {
           'Session expired. Please try again.': 'सत्र कालबाह्य झाले आहे. कृपया पुन्हा प्रयत्न करा.',
           'Coupon applied': 'कूपन लागू केले',
           'Astrologer\'s Answer': 'ज्योतिषाचे उत्तर',
-        
           'Your answers are ready': 'तुमची उत्तरे तयार आहेत.',
           'Your astrologer has submitted answers to your consultation questions.': 'तुमच्या ज्योतिषाने तुमच्या सल्लामसलतीच्या प्रश्नांची उत्तरे सादर केली आहेत.',
           'Open Booking Details to read them — you can also leave a review there.': 'ते वाचण्यासाठी बुकिंग तपशील उघडा — तुम्ही तिथे तुमचा अभिप्राय देखील देऊ शकता.',
@@ -7832,13 +7448,14 @@ class LocalString extends Translations {
           'Could not submit your review. Please try again.': 'आपला अभिप्राय सादर करता आला नाही. कृपया पुन्हा प्रयत्न करा.',
           'Review submitted for approval.': 'पुनरावलोकन मंजुरीसाठी सादर केले आहे.',
           'Thanks! Your review will show on the astrologer\'s profile once approved.': 'धन्यवाद! तुमचा अभिप्राय मंजूर झाल्यावर ज्योतिषाच्या प्रोफाइलवर दिसेल.',
-
           'Delete': 'हटवा',
           'Save changes': 'बदल जतन करा',
           'Delete your review?': 'तुमचा अभिप्राय काढून टाकायचा आहे का?',
           'Could not delete your review. Please try again.': 'तुमची समीक्षा हटवता आली नाही. कृपया पुन्हा प्रयत्न करा.',
           'Published': 'प्रकाशित',
           'Write a short review (optional)': 'एक छोटा अभिप्राय लिहा (ऐच्छिक)',
-},
+          'Your astrologer will be assigned and the meeting link will be shared within 1 hours.': 'तुमचे ज्योतिषी नेमले जातील आणि मीटिंगची लिंक १ तासाच्या आत पाठवली जाईल.',
+          'I am having another account': 'माझे दुसरे खाते आहे',
+        },
       };
 }

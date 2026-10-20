@@ -17,6 +17,8 @@ class UserLanguageDropDown extends StatefulWidget {
   final String? errorText;
   final String? selectedValue;
   final bool enabled;
+  /// Flat input look (no pill / sparkle / filled selection bg) — Expert Hours checkout.
+  final bool neutral;
 
   const UserLanguageDropDown(
       {super.key,
@@ -27,7 +29,8 @@ class UserLanguageDropDown extends StatefulWidget {
       this.errorText,
       required this.options,
       this.selectedValue,
-      this.enabled = true});
+      this.enabled = true,
+      this.neutral = false});
 
   @override
   State<UserLanguageDropDown> createState() => _UserLanguageDropDownState();
@@ -148,6 +151,8 @@ class _UserLanguageDropDownState extends State<UserLanguageDropDown> {
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
+    final empty = controller.text.isEmpty;
+    final neutral = widget.neutral;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,14 +160,16 @@ class _UserLanguageDropDownState extends State<UserLanguageDropDown> {
         Text(
           widget.title,
           style: TextStyle(
-            color: blackColor.withValues(alpha: 0.6),
-            fontSize: util.fontSize16,
+            color: neutral
+                ? blackColor.withValues(alpha: 0.55)
+                : blackColor.withValues(alpha: 0.6),
+            fontSize: neutral ? util.fontSize12 : util.fontSize16,
             height: 1.0,
-            fontFamily: AppFont.get(FontType.medium),
+            fontFamily: AppFont.get(neutral ? FontType.semiBold : FontType.medium),
           ),
         ),
         SizedBox(
-          height: util.responsiveHeight(0.005),
+          height: neutral ? 6 : util.responsiveHeight(0.005),
         ),
         FocusScope(
           child: Focus(
@@ -175,40 +182,45 @@ class _UserLanguageDropDownState extends State<UserLanguageDropDown> {
               onTap: () => showDropdownModal(context),
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: util.width20, vertical: 11.5),
+                  horizontal: neutral ? 12 : util.width20,
+                  vertical: neutral ? 12 : 11.5,
+                ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: blackColor.withValues(alpha: 0.12)),
-                  borderRadius: BorderRadius.circular(100),
-                  color: controller.text.isEmpty ? Colors.white : homeBanner,
+                  border: Border.all(
+                    color: isFocused && neutral
+                        ? mainColor
+                        : blackColor.withValues(alpha: neutral ? 0.1 : 0.12),
+                    width: isFocused && neutral ? 1.5 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(neutral ? 12 : 100),
+                  color: neutral
+                      ? whiteColor
+                      : (empty ? Colors.white : homeBanner),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: Image.asset(categoryLanguage),
-                          ),
+                    if (!neutral)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Image.asset(categoryLanguage),
                         ),
-                        Text(
-                          controller.text.isEmpty
-                              ? "Select language".tr
-                              : controller.text.tr,
-                          style: TextStyle(
-                            fontSize: util.fontSize18,
-                            fontFamily: AppFont.get(FontType.semiBold),
-                            height: 1.0,
-                            color: controller.text.isEmpty
-                                ? blackColor.withValues(alpha: 0.6)
-                                : whiteColor,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                      ),
+                    Expanded(
+                      child: Text(
+                        empty ? "Select language".tr : controller.text.tr,
+                        style: TextStyle(
+                          fontSize: neutral ? util.fontSize13 : util.fontSize18,
+                          fontFamily: AppFont.get(FontType.semiBold),
+                          height: 1.0,
+                          color: empty
+                              ? blackColor.withValues(alpha: neutral ? 0.4 : 0.6)
+                              : (neutral ? blackColor : whiteColor),
                         ),
-                      ],
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     SvgPicture.asset(dropDownArrow, fit: BoxFit.scaleDown),
                   ],

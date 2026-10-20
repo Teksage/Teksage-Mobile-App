@@ -4,6 +4,8 @@ import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
+import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:astro_prompt/config/event_planner_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,10 +26,14 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
   String title = '';
   String participants = '';
   bool loading = true;
+  String? viewerZone;
 
   @override
   void initState() {
     super.initState();
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => viewerZone = zone);
+    });
     _load();
   }
 
@@ -43,7 +49,7 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
       for (final row in drafts) {
         if (row['id'] == widget.marathonId) event = row;
       }
-      final fallback = next.isEmpty ? 'Consultation marathon'.tr : '${next.first['event_name'] ?? ''}';
+      final fallback = next.isEmpty ? 'Teksage Expert Hours'.tr : '${next.first['event_name'] ?? ''}';
       final count = event?['participant_count'];
       final total = count is int ? count : int.tryParse('$count') ?? next.length;
       final end = DateTime.tryParse('${event?['ends_at'] ?? ''}');
@@ -81,16 +87,10 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
     return 'Waiting'.tr;
   }
 
-  Future<void> _accept(int id) async {
-    try {
-      final result = await _service.accept(id);
-      final warning = result['warning']?.toString();
-      if (warning != null && warning.isNotEmpty && mounted) showErrorSnackBar(context, warning);
-      await _load();
-    } catch (err) {
-      if (!mounted) return;
-      showErrorSnackBar(context, err.toString().replaceFirst('Exception: ', ''));
-    }
+  bool _slotEnded(String endsAt) {
+    final end = DateTime.tryParse(endsAt);
+    if (end == null) return false;
+    return !end.isAfter(DateTime.now());
   }
 
   Future<void> _complete(int id) async {
@@ -133,10 +133,21 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
                   final link = '${row['meeting_link'] ?? ''}'.trim();
                   final label = _label(status);
                   final ended = row['admin_ended'] == true && status != 'completed';
+                  final query = '${row['customer_query'] ?? ''}'.trim();
+                  final languageId = '${row['preferred_language'] ?? ''}'.trim();
+                  final language = languageId.isEmpty
+                      ? ''
+                      : AskAstrologerLanguages.labelFor(languageId).tr;
+                  final canComplete = (status == 'accepted' || status == 'assigned') && _slotEnded('${row['ends_at'] ?? ''}');
+                  final lines = <String>[
+                    if (language.isNotEmpty) '${'Preferred consultation language'.tr}: $language',
+                    if (query.isNotEmpty) '${'Customer question'.tr}: $query',
+                  ];
                   return MarathonPortalCard(
                     startsAt: '${row['starts_at'] ?? ''}',
-                    timezone: row['timezone']?.toString(),
+                    timezone: viewerZone,
                     title: row['user_name']?.toString() ?? '',
+                    lines: lines,
                     status: ended ? '$label · ${'Event ended by admin'.tr}' : label,
                     footer: Wrap(
                       alignment: WrapAlignment.end,
@@ -147,8 +158,14 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
                         if (link.isNotEmpty) _outline(util, 'Join Meeting'.tr, () => launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication)),
                         if (status == 'completed')
                           Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.bold), color: mainColor, fontSize: util.fontSize13))
+                        else if (status == 'paid')
+                          Text('Waiting for admin assignment'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), color: blackColor.withValues(alpha: 0.65), fontSize: util.fontSize13))
                         else
-                          _filled(util, status == 'paid' ? 'Accept'.tr : 'Mark completed'.tr, () => status == 'paid' ? _accept(id) : _complete(id)),
+                          _filled(
+                            util,
+                            canComplete ? 'Mark completed'.tr : 'Consultation time has not ended yet.'.tr,
+                            canComplete ? () => _complete(id) : null,
+                          ),
                       ],
                     ),
                   );
@@ -173,14 +190,15 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
     );
   }
 
-  Widget _filled(MyUtility util, String label, VoidCallback onTap) {
+  Widget _filled(MyUtility util, String label, VoidCallback? onTap) {
     return FilledButton(
       onPressed: onTap,
       style: FilledButton.styleFrom(
         backgroundColor: mainColor,
+        disabledBackgroundColor: mainColor.withValues(alpha: 0.35),
         foregroundColor: whiteColor,
         shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),

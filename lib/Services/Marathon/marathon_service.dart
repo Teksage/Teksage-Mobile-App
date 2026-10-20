@@ -23,10 +23,19 @@ class MarathonService {
     return json.decode(response.body) as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>> checkout(int slotId, {String currency = 'INR'}) async {
+  Future<Map<String, dynamic>> checkout(
+    int slotId, {
+    String currency = 'INR',
+    required String customerQuery,
+    required String preferredLanguage,
+  }) async {
     final response = await APIRequest.postRequest(
-      '${ApiEndpoint.marathon}/slots/$slotId/checkout?currency=$currency',
-      {},
+      '${ApiEndpoint.marathon}/slots/$slotId/checkout',
+      {
+        'currency': currency,
+        'customer_query': customerQuery,
+        'preferred_language': preferredLanguage,
+      },
     );
     if (response.statusCode != 200) {
       throw Exception(_detail(response));

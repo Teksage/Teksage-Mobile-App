@@ -4,6 +4,7 @@ import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,10 +18,14 @@ class MarathonHomeBanner extends StatefulWidget {
 
 class _MarathonHomeBannerState extends State<MarathonHomeBanner> {
   Map<String, dynamic>? _event;
+  String? _viewerZone;
 
   @override
   void initState() {
     super.initState();
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => _viewerZone = zone);
+    });
     _loadLatestActive();
   }
 
@@ -67,11 +72,11 @@ class _MarathonHomeBannerState extends State<MarathonHomeBanner> {
     final closesAt = event?['booking_closes_at']?.toString();
     final when = marathonWallParts(
       event?['starts_at']?.toString(),
-      zone: event?['timezone']?.toString(),
+      zone: _viewerZone,
     );
-    final name = event?['name']?.toString() ?? '';
+    final name = marathonDisplayName(event?['name']?.toString());
     final eventLine = (event != null && when != null && name.isNotEmpty)
-        ? '$name · ${_monthLabel(when.month)} ${when.day}, ${when.time}'
+        ? '$name · ${_monthLabel(when.month)} ${when.day}, ${marathonTimeWithIst(when.time)}'
         : null;
 
     return GestureDetector(
@@ -117,7 +122,7 @@ class _MarathonHomeBannerState extends State<MarathonHomeBanner> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Consultation marathon'.tr,
+                                'Teksage Expert Hours'.tr,
                                 style: TextStyle(
                                   fontFamily: AppFont.get(FontType.bold),
                                   fontSize: util.fontSize16,

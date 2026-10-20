@@ -8,6 +8,7 @@ import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,10 +30,14 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
   String error = '';
   bool loading = true;
   int? slotId;
+  String? viewerZone;
 
   @override
   void initState() {
     super.initState();
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => viewerZone = zone);
+    });
     _load();
   }
 
@@ -48,7 +53,7 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
         event = row;
         mine = booked;
         loading = false;
-        slotId = _firstOpen(row);
+        slotId = _firstOpen(row, booked: booked);
       });
     } catch (err) {
       if (!mounted) return;
@@ -59,18 +64,50 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
     }
   }
 
-  int? _firstOpen(Map<String, dynamic> row) {
+  int? _firstOpen(Map<String, dynamic> row, {List<Map<String, dynamic>> booked = const []}) {
     if (row['booking_open'] != true) return null;
+    final taken = booked.map(_bookingSlotId).whereType<int>().toSet();
     final slots = List<Map<String, dynamic>>.from(row['slots'] ?? []);
     for (final slot in slots) {
+      final id = _slotIdOf(slot);
+      if (id != null && taken.contains(id)) continue;
       final left = slot['seats_left'];
       final count = left is int ? left : int.tryParse('$left') ?? 0;
-      if (count > 0) {
-        final id = slot['id'];
-        return id is int ? id : int.tryParse('$id');
-      }
+      if (count > 0) return id;
     }
     return null;
+  }
+
+  int? _bookingSlotId(Map<String, dynamic> row) {
+    final raw = row['slot_id'];
+    return raw is int ? raw : int.tryParse('$raw');
+  }
+
+  int? _slotIdOf(Map<String, dynamic> row) {
+    final raw = row['id'];
+    return raw is int ? raw : int.tryParse('$raw');
+  }
+
+  bool _mineBooked(int slotId) {
+    Map<String, dynamic>? slot;
+    for (final item in List<Map<String, dynamic>>.from(event?['slots'] ?? [])) {
+      if (_slotIdOf(item) == slotId) {
+        slot = item;
+        break;
+      }
+    }
+    final slotStart = DateTime.tryParse('${slot?['starts_at'] ?? ''}');
+    for (final row in mine) {
+      final bookedSlot = _bookingSlotId(row);
+      if (bookedSlot == slotId) return true;
+      if (bookedSlot != null) continue;
+      // Fallback when older APIs omit slot_id: match by start time.
+      final bookingStart = DateTime.tryParse('${row['starts_at'] ?? ''}');
+      if (bookingStart != null && slotStart != null && bookingStart.toUtc() == slotStart.toUtc()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   int _count(dynamic value) => value is int ? value : int.tryParse('$value') ?? 0;
@@ -114,7 +151,7 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
               children: [
                 if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
                 if (row == null)
-                  Text('No marathon is open right now.'.tr)
+                  Text('No Expert Hours event is open right now.'.tr)
                 else ...[
                   const MarathonListHero(),
                   const SizedBox(height: 16),
@@ -162,15 +199,12 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
                             ],
                           ),
                         ),
+                        if (mine.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          _bookingsButton(util),
+                        ],
                       ],
                     ),
-                    if (mine.isNotEmpty) ...[
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: _bookingsButton(util),
-                      ),
-                    ],
                     const SizedBox(height: 12),
                     LayoutBuilder(
                       builder: (context, constraints) {
@@ -190,7 +224,7 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
                         );
                       },
                     ),
-                    if (slotId != null && open && row['admin_ended'] != true) ...[
+                    if (slotId != null && open && row['admin_ended'] != true && !_mineBooked(slotId!)) ...[
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
@@ -261,7 +295,7 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
     return PopupMenuButton<int>(
       onSelected: open,
       itemBuilder: (context) => mine.map((row) {
-        final when = marathonWallParts(row['starts_at']?.toString(), zone: event?['timezone']?.toString());
+        final when = marathonWallParts(row['starts_at']?.toString(), zone: viewerZone);
         return PopupMenuItem<int>(value: bookingId(row), child: Text(when?.time ?? ''));
       }).toList(),
       child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: decoration, child: label),
@@ -272,17 +306,22 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
     final raw = slot['id'];
     final id = raw is int ? raw : int.tryParse('$raw') ?? 0;
     final left = _count(slot['seats_left']);
+    final mineBooked = _mineBooked(id);
     final full = left == 0;
     final shut = !bookingOpen;
-    final selectable = !full && !shut;
+    final selectable = !mineBooked && !full && !shut;
     final selected = slotId == id && selectable;
-    final when = marathonWallParts(slot['starts_at']?.toString(), zone: event?['timezone']?.toString());
-    final label = full ? 'Booked'.tr : shut ? 'Closed'.tr : '@count left'.trParams({'count': '$left'});
-    final labelColor = full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
-    final accent = full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
+    final when = marathonWallParts(slot['starts_at']?.toString(), zone: viewerZone);
+    final label = mineBooked || full
+        ? 'Booked'.tr
+        : shut
+            ? 'Closed'.tr
+            : '@count left'.trParams({'count': '$left'});
+    final labelColor = mineBooked || full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
+    final accent = mineBooked || full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
     final ring = selected
         ? mainColor
-        : full
+        : mineBooked || full
             ? const Color(0xffF6A6A6)
             : shut
                 ? const Color(0xffF5B07A)

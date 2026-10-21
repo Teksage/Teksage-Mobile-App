@@ -755,7 +755,11 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         if (otpSent) ...[
           const SizedBox(height: 16),
           Text(
-            'We have sent OTP to @contact'.trParams({'contact': emailTab ? contact.text.trim() : '$dialCode ${contact.text.trim()}'}),
+            'We have sent OTP to @contact'.trParams({
+              'contact': emailTab
+                  ? maskEmailForOtpDisplay(contact.text.trim())
+                  : '$dialCode ${maskMobileForOtpDisplay(contact.text.trim())}',
+            }),
             textAlign: TextAlign.center,
             style: TextStyle(color: blackColor.withValues(alpha: 0.6)),
           ),

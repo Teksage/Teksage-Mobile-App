@@ -7,17 +7,17 @@ class ApiEndpoint {
   //emulator
   // static const String mainUrl ="http://10.0.2.2:8000";
   //physical device — use your PC's current Wi‑Fi IPv4 (ipconfig). Must match same network as phone.
-static const String mainUrl ="http://10.35.122.187:8000";
+// static const String mainUrl ="http://10.35.122.187:8000";
 
 
-  // static const String mainUrl ='https://teksage-backend-latest.onrender.com';
-  // static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
+  static const String mainUrl ='https://teksage-backend-latest.onrender.com';
+  static const String chatUrl ='wss://teksage-backend-latest.onrender.com/chat';
   
 
   //emulator
   // static const String chatUrl ="ws://10.0.2.2:8000/chat";
   //physical device
-static const String chatUrl ="ws://10.35.122.187:8000/chat";
+// static const String chatUrl ="ws://10.35.122.187:8000/chat";
   
 
   ///
@@ -67,6 +67,7 @@ static const String chatUrl ="ws://10.35.122.187:8000/chat";
 
   // Consultation marathon
   static const String marathon = '$baseUrl/marathon';
+  static const String marathonRelated = '$marathon/related-profiles';
   static const String marathonPublic = '$marathon/public';
 
   //Horoscope

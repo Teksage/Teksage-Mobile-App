@@ -160,12 +160,10 @@ class _UserLanguageDropDownState extends State<UserLanguageDropDown> {
         Text(
           widget.title,
           style: TextStyle(
-            color: neutral
-                ? blackColor.withValues(alpha: 0.55)
-                : blackColor.withValues(alpha: 0.6),
+            color: neutral ? blackColor : blackColor.withValues(alpha: 0.6),
             fontSize: neutral ? util.fontSize12 : util.fontSize16,
             height: 1.0,
-            fontFamily: AppFont.get(neutral ? FontType.semiBold : FontType.medium),
+            fontFamily: AppFont.get(neutral ? FontType.bold : FontType.medium),
           ),
         ),
         SizedBox(
@@ -213,7 +211,7 @@ class _UserLanguageDropDownState extends State<UserLanguageDropDown> {
                         empty ? "Select language".tr : controller.text.tr,
                         style: TextStyle(
                           fontSize: neutral ? util.fontSize13 : util.fontSize18,
-                          fontFamily: AppFont.get(FontType.semiBold),
+                          fontFamily: AppFont.get(neutral ? FontType.medium : FontType.semiBold),
                           height: 1.0,
                           color: empty
                               ? blackColor.withValues(alpha: neutral ? 0.4 : 0.6)

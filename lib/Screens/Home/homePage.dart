@@ -196,11 +196,33 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> checkAccessToken() async {
-    String? token = await getAccessToken();
+    await syncHomeSession();
+  }
+
+  /// Home can stay on the stack while Expert Hours login happens on another page.
+  /// Read the saved session again whenever this page is visible.
+  Future<void> syncHomeSession() async {
+    final token = await getAccessToken();
+    final signedIn = token.isNotEmpty;
+    final type = signedIn ? await getUserType() : true;
+    final id = await getUserId();
+    final name = await getUserName();
     if (!mounted) return;
     setState(() {
-      tokenExist = token.isNotEmpty;
+      tokenExist = signedIn;
+      userType = type;
+      if (id != null) userId = id;
+      if (name.isNotEmpty) userName = name;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route?.isCurrent ?? false) {
+      syncHomeSession();
+    }
   }
 
   Future<void> fetchRasiList() async {
@@ -449,6 +471,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> handleConsultationNavigation(BuildContext context) async {
+    await syncHomeSession();
     if (!tokenExist) return showLoginDialog(context);
     if (userType) {
       await openBookConsultation(

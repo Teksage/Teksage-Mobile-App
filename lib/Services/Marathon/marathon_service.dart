@@ -23,11 +23,35 @@ class MarathonService {
     return json.decode(response.body) as Map<String, dynamic>;
   }
 
+  Future<List<Map<String, dynamic>>> relatedProfiles() async {
+    final response = await APIRequest.getRequest(ApiEndpoint.marathonRelated);
+    if (response.statusCode != 200) return [];
+    final body = json.decode(response.body) as Map<String, dynamic>;
+    return List<Map<String, dynamic>>.from(body['data'] ?? []);
+  }
+
+  Future<Map<String, dynamic>> createRelated(Map<String, dynamic> body) async {
+    final response = await APIRequest.postRequest(ApiEndpoint.marathonRelated, body);
+    if (response.statusCode != 200) {
+      throw Exception(_detail(response));
+    }
+    return json.decode(response.body) as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> updateRelated(int id, Map<String, dynamic> body) async {
+    final response = await APIRequest.patchRequest('${ApiEndpoint.marathonRelated}/$id', body);
+    if (response.statusCode != 200) {
+      throw Exception(_detail(response));
+    }
+    return json.decode(response.body) as Map<String, dynamic>;
+  }
+
   Future<Map<String, dynamic>> checkout(
     int slotId, {
     String currency = 'INR',
     required String customerQuery,
     required String preferredLanguage,
+    int? relatedProfileId,
   }) async {
     final response = await APIRequest.postRequest(
       '${ApiEndpoint.marathon}/slots/$slotId/checkout',
@@ -35,6 +59,7 @@ class MarathonService {
         'currency': currency,
         'customer_query': customerQuery,
         'preferred_language': preferredLanguage,
+        'related_profile_id': relatedProfileId,
       },
     );
     if (response.statusCode != 200) {

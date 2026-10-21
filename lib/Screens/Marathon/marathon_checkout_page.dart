@@ -6,6 +6,7 @@ import 'package:astro_prompt/Model/location_selection_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_fee.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_summary_page.dart';
+import 'package:astro_prompt/Services/Analytics/installAttributionService.dart';
 import 'package:astro_prompt/Services/AuthService/authService.dart';
 import 'package:astro_prompt/Services/countryService/countryCodeService.dart';
 import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
@@ -20,9 +21,14 @@ import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:astro_prompt/config/Helper/profile_currency.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
+import 'package:astro_prompt/config/LocallySavedData/name.dart';
+import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
 import 'package:astro_prompt/config/LocallySavedData/timezone.dart';
+import 'package:astro_prompt/config/LocallySavedData/userId.dart';
+import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:astro_prompt/config/login_constants.dart';
+import 'package:astro_prompt/config/otp_contact_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -83,6 +89,14 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   String preferredLanguage = '';
   String languageError = '';
   String? viewerZone;
+  bool forOthers = false;
+  List<Map<String, dynamic>> relatedPeople = [];
+  int? selectedRelatedId;
+  bool addingRelated = false;
+  String relationship = '';
+  String relationshipError = '';
+  String relatedBaseline = '';
+  UserProfile? ownerProfile;
 
   @override
   void initState() {
@@ -131,6 +145,22 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     currentFull = profile.preferredLocation;
   }
 
+  void _fillVerifiedContact(UserProfile profile) {
+    final email = profile.email.trim();
+    final mobile = profile.mobileNumber.trim();
+    final emailReady = profile.emailVerified && email.isNotEmpty;
+    final phoneReady = profile.mobileVerified && mobile.isNotEmpty;
+    needsEmail = !(emailReady && !phoneReady);
+    emailContact.text = emailReady ? email : emailContact.text;
+    emailVerified = emailReady;
+    if (phoneReady) {
+      phoneContact.text = mobile;
+      phoneVerified = true;
+      final code = profile.countryCode.replaceAll(RegExp(r'\D'), '');
+      if (code.isNotEmpty) dialCode = '+$code';
+    }
+  }
+
   Future<void> _load() async {
     try {
       final row = await _service.publicDetail(widget.marathonId);
@@ -140,11 +170,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         final profile = await ProfileService().fetchUserProfile();
         await _refreshBookings();
         if (profile != null) {
+          ownerProfile = profile;
           _fill(profile);
+          _fillVerifiedContact(profile);
           _rememberFee(profile, row);
-          needsEmail = profile.email.trim().isEmpty;
-          emailVerified = !needsEmail;
         }
+        relatedPeople = await _service.relatedProfiles();
         // Always collect birth details + required customer query before pay.
         next = 2;
       }
@@ -179,6 +210,24 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       if (parsed == widget.slotId) return slot;
     }
     return null;
+  }
+
+  /// Same session fields the normal login screen stores, so home stays signed in as a customer.
+  Future<void> _rememberLogin(Map<String, dynamic> result) async {
+    final rawType = '${result['user_type'] ?? ''}'.trim().toLowerCase();
+    final isCustomer = rawType.isEmpty || rawType == 'customer';
+    final rawId = result['userId'];
+    final userId = rawId is int ? rawId : int.tryParse('$rawId');
+    if (userId != null) {
+      await saveUserId(userId);
+      await InstallAttributionService.instance.onLoginSuccess(userId: '$userId');
+    }
+    await saveUserName('${result['name'] ?? ''}');
+    await saveLastName('${result['lastName'] ?? ''}');
+    await saveUserType(isCustomer);
+    if (result['premiumUser'] is bool) {
+      await savePremiumUser(result['premiumUser'] as bool);
+    }
   }
 
   Future<void> _refreshBookings() async {
@@ -235,13 +284,15 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       setState(() => error = 'That code is incorrect or has expired. Try again.'.tr);
       return;
     }
+    await _rememberLogin(result);
     final profile = await ProfileService().fetchUserProfile();
     if (profile != null) {
+      ownerProfile = profile;
       _fill(profile);
+      _fillVerifiedContact(profile);
       if (event != null) _rememberFee(profile, event!);
-      needsEmail = profile.email.trim().isEmpty;
-      emailVerified = !needsEmail;
     }
+    relatedPeople = await _service.relatedProfiles();
     await _refreshBookings();
     if (!mounted) return;
     // Always collect birth details / query / language on step 2 before pay.
@@ -262,14 +313,116 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     return label.tr;
   }
 
+  static const _relatedProfileLimit = 3;
+  static const _relationships = <String, String>{
+    'spouse': 'Spouse',
+    'brother': 'Brother',
+    'sister': 'Sister',
+    'father': 'Father',
+    'mother': 'Mother',
+    'son': 'Son',
+    'daughter': 'Daughter',
+    'friend': 'Friend',
+    'other': 'Others',
+  };
+
+  bool get _showBirth => true;
+
+  bool get _profileReady {
+    final profile = ownerProfile;
+    if (profile == null) return false;
+    return profile.firstName.trim().isNotEmpty &&
+        profile.dateOfBirth.trim().isNotEmpty &&
+        profile.timeOfBirth.trim().isNotEmpty &&
+        profile.birthLocation.trim().isNotEmpty;
+  }
+
+  String _relatedFingerprint() {
+    return '${first.text}|${last.text}|${dob.text}|${tob.text}|$birthFull|$currentFull|$relationship';
+  }
+
+  Map<String, dynamic> _relatedBody() {
+    final clock = tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim();
+    return {
+      'first_name': first.text.trim(),
+      'last_name': last.text.trim(),
+      'date_of_birth': dob.text.trim(),
+      'time_of_birth': clock,
+      'place_of_birth': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
+      'preferred_location': currentFull.trim().isNotEmpty ? currentFull.trim() : current.text.trim(),
+      'relationship': relationship,
+    };
+  }
+
+  void _clearBirth() {
+    first.clear();
+    last.clear();
+    dob.clear();
+    tob.clear();
+    birth.clear();
+    current.clear();
+    birthFull = '';
+    currentFull = '';
+    relationship = '';
+    relatedBaseline = '';
+  }
+
+  void _applyRelated(Map<String, dynamic> person) {
+    final place = '${person['place_of_birth'] ?? ''}';
+    final where = '${person['preferred_location'] ?? ''}';
+    final clock = '${person['time_of_birth'] ?? ''}';
+    selectedRelatedId = person['id'] is int ? person['id'] as int : int.tryParse('${person['id']}');
+    addingRelated = false;
+    first.text = '${person['first_name'] ?? ''}';
+    last.text = '${person['last_name'] ?? ''}';
+    dob.text = '${person['date_of_birth'] ?? ''}'.split('T').first;
+    tob.text = clock.length >= 5 ? clock.substring(0, 5) : clock;
+    birth.text = place;
+    current.text = where;
+    birthFull = place;
+    currentFull = where;
+    relationship = '${person['relationship'] ?? ''}';
+    relatedBaseline = _relatedFingerprint();
+  }
+
+  void _chooseSelf() {
+    setState(() {
+      forOthers = false;
+      selectedRelatedId = null;
+      addingRelated = false;
+      relationship = '';
+      relationshipError = '';
+      error = '';
+      if (ownerProfile != null) _fill(ownerProfile!);
+    });
+  }
+
+  void _chooseOthers() {
+    setState(() {
+      forOthers = true;
+      selectedRelatedId = null;
+      addingRelated = relatedPeople.isEmpty;
+      relationshipError = '';
+      error = '';
+      _clearBirth();
+    });
+  }
+
   Future<void> _saveProfile() async {
     setState(() {
       error = '';
       queryError = '';
       languageError = '';
+      relationshipError = '';
     });
     if (first.text.trim().isEmpty || last.text.trim().isEmpty || dob.text.trim().isEmpty || tob.text.trim().isEmpty || birth.text.trim().isEmpty || current.text.trim().isEmpty) {
-      setState(() => error = 'Add your name, date of birth, time of birth, and place of birth to continue.'.tr);
+      setState(() => error = forOthers
+          ? 'Add their birth details to continue.'.tr
+          : 'Add your name, date of birth, time of birth, and place of birth to continue.'.tr);
+      return;
+    }
+    if (forOthers && relationship.trim().isEmpty) {
+      setState(() => relationshipError = 'Select a relationship.'.tr);
       return;
     }
     if (needsEmail && !emailVerified) {
@@ -285,29 +438,54 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       setState(() => queryError = 'Enter your question before payment.'.tr);
       return;
     }
-    final saved = await ProfileService().updateProfile({
-      'first_name': first.text.trim(),
-      'last_name': last.text.trim(),
-      'date_of_birth': dob.text.trim(),
-      'time_of_birth': tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim(),
-      'birth_location': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
-      'preferred_location': currentFull.trim().isNotEmpty
-          ? currentFull.trim()
-          : (current.text.trim().isEmpty
-              ? (birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim())
-              : current.text.trim()),
-    });
-    if (!mounted) return;
-    if (saved['success'] != true) {
-      setState(() => error = '${saved['error'] ?? ''}');
-      return;
-    }
-    final profile = await ProfileService().fetchUserProfile();
-    if (profile != null && event != null) _rememberFee(profile, event!);
-    // Profile save updates API timezone from Current Location — refresh display zone.
-    final tzFromSave = saved['data'] is Map ? saved['data']['timezone']?.toString() : null;
-    if (tzFromSave != null && tzFromSave.trim().isNotEmpty) {
-      await saveTimezone(tzFromSave.trim());
+    if (!forOthers || !_profileReady) {
+      final saved = await ProfileService().updateProfile({
+        'first_name': first.text.trim(),
+        'last_name': last.text.trim(),
+        'date_of_birth': dob.text.trim(),
+        'time_of_birth': tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim(),
+        'birth_location': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
+        'preferred_location': currentFull.trim().isNotEmpty
+            ? currentFull.trim()
+            : (current.text.trim().isEmpty
+                ? (birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim())
+                : current.text.trim()),
+      });
+      if (!mounted) return;
+      if (saved['success'] != true) {
+        setState(() => error = '${saved['error'] ?? ''}');
+        return;
+      }
+      final profile = await ProfileService().fetchUserProfile();
+      if (profile != null) {
+        ownerProfile = profile;
+        if (event != null) _rememberFee(profile, event!);
+      }
+      final tzFromSave = saved['data'] is Map ? saved['data']['timezone']?.toString() : null;
+      if (tzFromSave != null && tzFromSave.trim().isNotEmpty) {
+        await saveTimezone(tzFromSave.trim());
+      }
+      selectedRelatedId = null;
+    } else {
+      try {
+        final body = _relatedBody();
+        if (selectedRelatedId == null) {
+          if (relatedPeople.length >= _relatedProfileLimit) {
+            setState(() => error = 'You can add only 3 people.'.tr);
+            return;
+          }
+          final created = await _service.createRelated(body);
+          selectedRelatedId = created['id'] is int ? created['id'] as int : int.tryParse('${created['id']}');
+        } else if (_relatedFingerprint() != relatedBaseline) {
+          await _service.updateRelated(selectedRelatedId!, body);
+        }
+        relatedPeople = await _service.relatedProfiles();
+        relatedBaseline = _relatedFingerprint();
+      } catch (err) {
+        if (!mounted) return;
+        setState(() => error = err.toString().replaceFirst('Exception: ', ''));
+        return;
+      }
     }
     final zone = await loadViewerTimezone();
     await _refreshBookings();
@@ -349,6 +527,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         currency: currency,
         customerQuery: customerQuery.trim(),
         preferredLanguage: preferredLanguage.trim(),
+        relatedProfileId: forOthers ? selectedRelatedId : null,
       );
       CustomLoader.hide();
       _razorpay.open({
@@ -428,7 +607,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
                   _slotSummaryCard(util, start.time, end.time),
                   const SizedBox(height: 16),
                 ],
-                if (step == 3 && (preferredLanguage.trim().isNotEmpty || customerQuery.trim().isNotEmpty)) ...[
+                if (step == 3 && (preferredLanguage.trim().isNotEmpty || customerQuery.trim().isNotEmpty || (forOthers && first.text.trim().isNotEmpty))) ...[
                   _checkoutAsideCard(util),
                   const SizedBox(height: 16),
                 ],
@@ -594,9 +773,9 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
 
   Widget _profile(MyUtility util) {
     final labelStyle = TextStyle(
-      fontFamily: AppFont.get(FontType.semiBold),
+      fontFamily: AppFont.get(FontType.bold),
       fontSize: util.fontSize12,
-      color: blackColor.withValues(alpha: 0.55),
+      color: blackColor,
     );
     final hintStyle = TextStyle(
       fontFamily: AppFont.get(FontType.semiBold),
@@ -613,9 +792,116 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         ),
         const SizedBox(height: 6),
         Text(
-          'Add your name, date of birth, time of birth, and place of birth to continue.'.tr,
+          (forOthers
+                  ? 'Add their birth details to continue.'
+                  : 'Add your name, date of birth, time of birth, and place of birth to continue.')
+              .tr,
           style: hintStyle,
         ),
+        if (_profileReady) ...[
+          const SizedBox(height: 16),
+          Text('Who is this consultation for?'.tr, style: labelStyle),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(child: _subjectButton('Self'.tr, !forOthers, _chooseSelf)),
+              const SizedBox(width: 8),
+              Expanded(child: _subjectButton('Others'.tr, forOthers, _chooseOthers)),
+            ],
+          ),
+        ],
+        if (forOthers && relatedPeople.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text('People you\'ve added before'.tr, style: labelStyle),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: InputDecorator(
+                  decoration: _outline().copyWith(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      key: ValueKey(addingRelated ? 'new' : selectedRelatedId),
+                      value: addingRelated ? null : selectedRelatedId,
+                      isExpanded: true,
+                      isDense: true,
+                      menuWidth: MediaQuery.sizeOf(context).width - 32,
+                      style: TextStyle(fontFamily: AppFont.get(FontType.medium), fontSize: util.fontSize13, color: blackColor),
+                      hint: Text(
+                        'Select a person or add their details.'.tr,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontFamily: AppFont.get(FontType.medium), fontSize: util.fontSize13, color: blackColor.withValues(alpha: 0.55)),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      selectedItemBuilder: (context) => [
+                        for (final person in relatedPeople)
+                          if (person['id'] is int || int.tryParse('${person['id']}') != null)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                '${person['display_name']} (${(_relationships['${person['relationship']}'] ?? '${person['relationship']}').tr})',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontFamily: AppFont.get(FontType.medium), fontSize: util.fontSize13, color: blackColor),
+                              ),
+                            ),
+                      ],
+                      items: [
+                        for (final person in relatedPeople)
+                          if (person['id'] is int || int.tryParse('${person['id']}') != null)
+                            DropdownMenuItem<int>(
+                              value: person['id'] is int ? person['id'] as int : int.parse('${person['id']}'),
+                              child: Text(
+                                '${person['display_name']} (${(_relationships['${person['relationship']}'] ?? '${person['relationship']}').tr})',
+                              ),
+                            ),
+                      ],
+                      onChanged: (id) {
+                        Map<String, dynamic>? match;
+                        for (final row in relatedPeople) {
+                          final rowId = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}');
+                          if (rowId == id) match = row;
+                        }
+                        if (match == null) return;
+                        setState(() => _applyRelated(match!));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: () {
+                  if (relatedPeople.length >= _relatedProfileLimit) {
+                    setState(() => error = 'You can add only 3 people.'.tr);
+                    return;
+                  }
+                  setState(() {
+                    error = '';
+                    addingRelated = true;
+                    selectedRelatedId = null;
+                    _clearBirth();
+                  });
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: addingRelated ? mainColor : blackColor.withValues(alpha: 0.7),
+                  backgroundColor: addingRelated ? mainColor.withValues(alpha: 0.12) : whiteColor,
+                  side: BorderSide(color: addingRelated ? mainColor : blackColor.withValues(alpha: 0.1)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                  minimumSize: const Size(0, 48),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text('Add new'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold))),
+              ),
+            ],
+          ),
+        ],
+        if (_showBirth) ...[
         const SizedBox(height: 16),
         _pairRow(
           _labeledInput(
@@ -695,14 +981,29 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
             ),
           ),
         ),
+        if (forOthers) ...[
+          const SizedBox(height: 12),
+          UserLanguageDropDown(
+            title: 'Relationship to you'.tr,
+            isMandatory: true,
+            neutral: true,
+            options: _relationships.values.map((label) => label.tr).toList(),
+            selectedValue: relationship.isEmpty ? null : _relationships[relationship]?.tr,
+            errorFlag: relationshipError.isNotEmpty,
+            errorText: relationshipError.isEmpty ? null : relationshipError,
+            onChanged: (label) {
+              final code = _relationships.entries
+                  .firstWhere((entry) => entry.value.tr == label || entry.value == label, orElse: () => const MapEntry('', ''))
+                  .key;
+              setState(() {
+                relationship = code;
+                relationshipError = '';
+              });
+            },
+          ),
+        ],
+        ],
         const SizedBox(height: 12),
-        Text(
-          needsEmail
-              ? 'Verify your email. Your meeting link is sent there.'.tr
-              : 'Phone is optional. Your meeting link is sent to your email.'.tr,
-          style: hintStyle,
-        ),
-        const SizedBox(height: 8),
         if (needsEmail) ..._emailVerify(util, labelStyle) else ..._phoneVerify(util, labelStyle),
         const SizedBox(height: 12),
         UserLanguageDropDown(
@@ -743,6 +1044,19 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         const SizedBox(height: 16),
         _green('Continue'.tr, _saveProfile),
       ],
+    );
+  }
+
+  Widget _subjectButton(String label, bool on, VoidCallback tap) {
+    return OutlinedButton(
+      onPressed: tap,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: on ? const Color(0xffE7F6E3) : whiteColor,
+        side: BorderSide(color: on ? mainColor : blackColor.withValues(alpha: 0.12)),
+        foregroundColor: on ? mainColor : blackColor.withValues(alpha: 0.7),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Text(label),
     );
   }
 
@@ -916,7 +1230,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
 
   TextStyle _inputStyle(MyUtility util) {
     return TextStyle(
-      fontFamily: AppFont.get(FontType.semiBold),
+      fontFamily: AppFont.get(FontType.regular),
       fontSize: util.fontSize13,
       color: blackColor,
     );
@@ -986,7 +1300,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
                         style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize16),
                       ),
                       Text(
-                        '10 minutes'.tr,
+                        '15 minutes'.tr,
                         style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize12),
                       ),
                       const SizedBox(height: 8),
@@ -1023,6 +1337,16 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (forOthers && first.text.trim().isNotEmpty) ...[
+            Text(
+              'For: @name (@relationship)'.trParams({
+                'name': '${first.text.trim()} ${last.text.trim()}'.trim(),
+                'relationship': (_relationships[relationship] ?? relationship).tr,
+              }),
+              style: valueStyle,
+            ),
+            if (preferredLanguage.trim().isNotEmpty || customerQuery.trim().isNotEmpty) const SizedBox(height: 12),
+          ],
           if (preferredLanguage.trim().isNotEmpty) ...[
             Text('Preferred consultation language'.tr, style: labelStyle),
             const SizedBox(height: 4),
@@ -1066,9 +1390,11 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
           ),
         if (error.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text(error, style: const TextStyle(color: Colors.red))),
         const SizedBox(height: 16),
-        clash != null
-            ? _green('View booking'.tr, () => Get.off(() => MarathonSummaryPage(bookingId: bookingId)))
-            : _green('Pay & Book Session'.tr, _pay),
+        Center(
+          child: clash != null
+              ? _pill('View booking'.tr, () => Get.off(() => MarathonSummaryPage(bookingId: bookingId)))
+              : _pill('Pay & Book Session'.tr, _pay),
+        ),
       ],
     );
   }
@@ -1097,7 +1423,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
 
   List<Widget> _emailVerify(MyUtility util, TextStyle labelStyle) {
     return [
-      Text('Email'.tr, style: labelStyle),
+      Text(
+        forOthers && _profileReady
+            ? 'Registered user email (not relationship email)'.tr
+            : 'Email'.tr,
+        style: labelStyle,
+      ),
       const SizedBox(height: 6),
       Row(
         children: [
@@ -1110,15 +1441,25 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
               decoration: _outline(),
             ),
           ),
-          if (!emailVerified) ...[
+          if (emailVerified)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgPicture.asset(verified, width: 28, height: 28),
+            )
+          else ...[
             const SizedBox(width: 8),
             _verifyChip(emailOtpSent ? 'Confirm'.tr : 'Verify'.tr, emailOtpSent ? _confirmEmail : _sendEmail),
           ],
         ],
       ),
+      const SizedBox(height: 6),
+      Text(
+        'Verify your email. Your meeting link is sent there.'.tr,
+        style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize12, color: blackColor.withValues(alpha: 0.55), height: 1.35),
+      ),
       if (emailOtpSent && !emailVerified) ...[
         const SizedBox(height: 8),
-        Text('We have sent OTP to @contact'.trParams({'contact': emailContact.text.trim()}), textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
+        Text('We have sent OTP to @contact'.trParams({'contact': maskEmailForOtpDisplay(emailContact.text.trim())}), textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
         Text('OTP is valid for 5 Minutes.'.tr, textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
         const SizedBox(height: 8),
         TextField(
@@ -1169,7 +1510,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   List<Widget> _phoneVerify(MyUtility util, TextStyle labelStyle) {
     final code = dialCode.replaceAll(RegExp(r'\D'), '');
     return [
-      Text('Phone Number'.tr, style: labelStyle),
+      Text(
+        forOthers && _profileReady
+            ? 'Registered user contact number (not relationship contact)'.tr
+            : 'Phone Number'.tr,
+        style: labelStyle,
+      ),
       const SizedBox(height: 6),
       Row(
         children: [
@@ -1184,16 +1530,26 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
               decoration: _outline(),
             ),
           ),
-          if (!phoneVerified) ...[
+          if (phoneVerified)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgPicture.asset(verified, width: 28, height: 28),
+            )
+          else ...[
             const SizedBox(width: 8),
             _verifyChip(phoneOtpSent ? 'Confirm'.tr : 'Verify'.tr, phoneOtpSent ? _confirmPhone : _sendPhone),
           ],
         ],
       ),
+      const SizedBox(height: 6),
+      Text(
+        'Phone is optional. Your meeting link is sent to your email.'.tr,
+        style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize12, color: blackColor.withValues(alpha: 0.55), height: 1.35),
+      ),
       if (phoneOtpSent && !phoneVerified) ...[
         const SizedBox(height: 8),
         Text(
-          'We have sent OTP to @contact'.trParams({'contact': '+$code ${phoneContact.text.trim()}'}),
+          'We have sent OTP to @contact'.trParams({'contact': '+$code ${maskMobileForOtpDisplay(phoneContact.text)}'}),
           textAlign: TextAlign.center,
           style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13),
         ),
@@ -1421,7 +1777,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
 
   InputDecoration _outline({String? hint, Widget? suffix}) {
     final side = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: blackColor.withValues(alpha: 0.1)),
     );
     return InputDecoration(
@@ -1440,6 +1796,29 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     );
   }
 
+  Widget _pill(String label, VoidCallback tap) {
+    return FilledButton(
+      onPressed: tap,
+      style: FilledButton.styleFrom(
+        backgroundColor: mainColor,
+        foregroundColor: whiteColor,
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: const StadiumBorder(),
+        elevation: 2,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width - 96),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: 14, height: 1.25),
+        ),
+      ),
+    );
+  }
+
   Widget _green(String label, VoidCallback tap) {
     return FilledButton(
       onPressed: tap,
@@ -1449,7 +1828,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         shape: const StadiumBorder(),
       ),
-      child: Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.bold))),
+      child: Text(label, textAlign: TextAlign.center, style: TextStyle(fontFamily: AppFont.get(FontType.bold))),
     );
   }
 }

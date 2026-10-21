@@ -199,12 +199,12 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
                             ],
                           ),
                         ),
-                        if (mine.isNotEmpty) ...[
-                          const SizedBox(width: 8),
-                          _bookingsButton(util),
-                        ],
                       ],
                     ),
+                    if (mine.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Align(alignment: Alignment.centerRight, child: _bookingsButton(util)),
+                    ],
                     const SizedBox(height: 12),
                     LayoutBuilder(
                       builder: (context, constraints) {
@@ -226,20 +226,34 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
                     ),
                     if (slotId != null && open && row['admin_ended'] != true && !_mineBooked(slotId!)) ...[
                       const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
+                      Center(
+                        child: FilledButton(
                           onPressed: () => Get.to(() => MarathonCheckoutPage(marathonId: widget.id, slotId: slotId!)),
                           style: FilledButton.styleFrom(
                             backgroundColor: mainColor,
                             foregroundColor: whiteColor,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             shape: const StadiumBorder(),
+                            elevation: 2,
                           ),
-                          icon: const Icon(Icons.credit_card, size: 18),
-                          label: Text(
-                            '${'Pay & Book Session'.tr} →',
-                            style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize14),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.credit_card, size: 16),
+                              const SizedBox(width: 8),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width - 140),
+                                child: Text(
+                                  'Pay & Book Session'.tr,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize14, height: 1.25),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Text('→'),
+                            ],
                           ),
                         ),
                       ),
@@ -316,7 +330,7 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
         ? 'Booked'.tr
         : shut
             ? 'Closed'.tr
-            : '@count left'.trParams({'count': '$left'});
+            : '@count seats'.trParams({'count': '$left'});
     final labelColor = mineBooked || full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
     final accent = mineBooked || full ? errorColor : shut ? const Color(0xffD35400) : mainColor;
     final ring = selected
@@ -361,7 +375,9 @@ class _MarathonDetailPageState extends State<MarathonDetailPage> {
                             Text(
                               label,
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontFamily: AppFont.get(FontType.medium), color: labelColor, fontSize: 11),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontFamily: AppFont.get(FontType.medium), color: labelColor, fontSize: 11, height: 1.2),
                             ),
                           ],
                         ),

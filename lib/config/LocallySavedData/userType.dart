@@ -7,7 +7,8 @@ Future<void> saveUserType(bool userType) async {
 
 Future<bool> getUserType() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('UserType') ?? false;
+  // Missing role matches the website: a normal account is a customer, not an astrologer.
+  return prefs.getBool('UserType') ?? true;
 }
 
 ///Clear UserType

@@ -103,8 +103,10 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
     }
   }
 
-  Future<void> _horoscope(int eventId) async {
-    final uri = Uri.parse('${EventPlannerConfig.shareSiteOrigin}/astrologer/meetings/$eventId/horoscope');
+  Future<void> _horoscope(int eventId, {String name = ''}) async {
+    final params = <String, String>{};
+    if (name.trim().isNotEmpty) params['name'] = name.trim();
+    final uri = Uri.parse('${EventPlannerConfig.shareSiteOrigin}/astrologer/meetings/$eventId/horoscope').replace(queryParameters: params.isEmpty ? null : params);
     final ok = await canLaunchUrl(uri) && await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && mounted) showInfoSnackBar(context, 'Could not open Full Horoscope'.tr);
   }
@@ -139,7 +141,11 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
                       ? ''
                       : AskAstrologerLanguages.labelFor(languageId).tr;
                   final canComplete = (status == 'accepted' || status == 'assigned') && _slotEnded('${row['ends_at'] ?? ''}');
+                  final member = '${row['member_display_name'] ?? ''}'.trim();
+                  final relationCode = '${row['relationship'] ?? ''}'.trim();
+                  final relation = _relatedLabel(relationCode);
                   final lines = <String>[
+                    if (member.isNotEmpty) 'For: @name (@relationship)'.trParams({'name': member, 'relationship': relation}),
                     if (language.isNotEmpty) '${'Preferred consultation language'.tr}: $language',
                     if (query.isNotEmpty) '${'Customer question'.tr}: $query',
                   ];
@@ -154,7 +160,7 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        if (eventId != null) _outline(util, 'Full Horoscope'.tr, () => _horoscope(eventId)),
+                        if (eventId != null) _outline(util, 'Full Horoscope'.tr, () => _horoscope(eventId, name: member.isEmpty ? '${row['user_name'] ?? ''}' : '$member ($relation)')),
                         if (link.isNotEmpty) _outline(util, 'Join Meeting'.tr, () => launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication)),
                         if (status == 'completed')
                           Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.bold), color: mainColor, fontSize: util.fontSize13))
@@ -205,4 +211,20 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
       child: Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13)),
     );
   }
+}
+
+String _relatedLabel(String code) {
+  const labels = {
+    'spouse': 'Spouse',
+    'brother': 'Brother',
+    'sister': 'Sister',
+    'father': 'Father',
+    'mother': 'Mother',
+    'son': 'Son',
+    'daughter': 'Daughter',
+    'friend': 'Friend',
+    'other': 'Others',
+  };
+  final label = labels[code] ?? code;
+  return label.isEmpty ? label : label.tr;
 }

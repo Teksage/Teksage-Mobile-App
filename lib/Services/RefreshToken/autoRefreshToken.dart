@@ -279,6 +279,44 @@ class APIRequest {
     }
   }
 
+  /// Common method to handle all PATCH requests with auto-refresh
+  static Future<http.Response> patchRequest(
+      String url, Map<String, dynamic> body) async {
+    final String timezone = await getTimezone();
+    String? accessToken = await getAccessToken();
+    String responseLanguage = await _getResponseLanguage();
+    AuthService authService = AuthService();
+    var headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json',
+      'X-Timezone': timezone,
+      'response_language': responseLanguage,
+    };
+    try {
+      var response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+      if (response.statusCode == 401) {
+        String? newAccessToken = await APIRequest().refreshAccessToken();
+        if (newAccessToken != null) {
+          return patchRequest(url, body);
+        }
+        await authService.logout();
+        if (Platform.isAndroid) {
+          Get.offAllNamed('/home');
+        } else {
+          Get.offAllNamed('/login');
+        }
+        throw Exception('Token refresh failed. Please log in again.');
+      }
+      return response;
+    } catch (e) {
+      throw Exception("PATCH request failed: $e");
+    }
+  }
+
   /// Common method to handle all MultiPOST requests with auto-refresh
   static Future<String?> multipartPostRequest(String url, File file,
       {String fieldName = 'file', Map<String, String>? fields}) async {

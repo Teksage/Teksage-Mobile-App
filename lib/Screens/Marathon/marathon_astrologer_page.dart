@@ -1,3 +1,4 @@
+import 'package:astro_prompt/Components/Marathon/marathon_flow_widgets.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_portal_card.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_astrologer_bookings_page.dart';
 import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
@@ -87,119 +88,89 @@ class _MarathonAstrologerPageState extends State<MarathonAstrologerPage> {
     return owned.every((row) => row['status'] == 'completed');
   }
 
+  int _id(Map<String, dynamic> row) => row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}') ?? 0;
+
+  bool _upcoming(Map<String, dynamic> row) {
+    final end = DateTime.tryParse('${row['ends_at'] ?? ''}');
+    final ended = row['admin_ended'] == true;
+    return !ended && !_completed(_id(row)) && (end == null || !end.isBefore(DateTime.now()));
+  }
+
+  Widget _pill(MyUtility util, String label, bool on, VoidCallback tap) {
+    return GestureDetector(
+      onTap: tap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        decoration: BoxDecoration(
+          color: on ? mainColor : whiteColor,
+          borderRadius: BorderRadius.circular(24),
+          border: on ? null : Border.all(color: blackColor.withValues(alpha: 0.1)),
+        ),
+        child: Text(label, style: marathonText(util, FontType.semiBold, color: on ? whiteColor : blackColor.withValues(alpha: 0.55))),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
+    final visible = drafts.where((row) => _upcoming(row) == showUpcoming).toList();
     return Scaffold(
-      backgroundColor: const Color(0xffF4FBF3),
-      appBar: AppBar(
-        backgroundColor: const Color(0xffF4FBF3),
-        elevation: 0,
-        title: Text(
-          'Teksage Expert Hours'.tr,
-          style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize16, color: blackColor),
-        ),
-      ),
-      body: loading
-          ? Center(child: CircularProgressIndicator(color: mainColor))
-          : Builder(
-              builder: (context) {
-                final now = DateTime.now();
-                bool upcoming(Map<String, dynamic> row) {
-                  final end = DateTime.tryParse('${row['ends_at'] ?? ''}');
-                  final ended = row['admin_ended'] == true;
-                  final id = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}') ?? 0;
-                  return !ended && !_completed(id) && (end == null || !end.isBefore(now));
-                }
-
-                final visible = drafts.where((row) => showUpcoming ? upcoming(row) : !upcoming(row)).toList();
-                final pastCount = drafts.where((row) => !upcoming(row)).length;
-                return ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  children: [
-                    MarathonPortalHero(
-                      title: 'Teksage Expert Hours'.tr,
-                      subtitle: 'Events waiting for you'.tr,
-                      hint: 'Confirm you will take part. Admin publishes after astrologers confirm.'.tr,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => setState(() => showUpcoming = true),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: showUpcoming ? mainColor : whiteColor,
-                              foregroundColor: showUpcoming ? whiteColor : mainColor,
-                              side: const BorderSide(color: mainColor),
+      backgroundColor: marathonPageBg,
+      body: Column(
+        children: [
+          MarathonPortalHeader(
+            title: 'Teksage Expert Hours'.tr,
+            subtitle: 'Confirm you will take part. Admin publishes after astrologers confirm.'.tr,
+            onBack: () => Get.back(),
+          ),
+          Expanded(
+            child: loading
+                ? const Center(child: CircularProgressIndicator(color: mainColor))
+                : ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    children: [
+                      Wrap(
+                        spacing: 8,
+                        children: [
+                          _pill(util, 'Upcoming'.tr, showUpcoming, () => setState(() => showUpcoming = true)),
+                          _pill(util, 'Past'.tr, !showUpcoming, () => setState(() => showUpcoming = false)),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      if (visible.isEmpty)
+                        Text('No Expert Hours event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
+                      ...visible.map((row) {
+                        final id = _id(row);
+                        final completed = _completed(id);
+                        final ended = row['admin_ended'] == true;
+                        final status = completed ? 'Completed'.tr : ended ? 'Event ended by admin'.tr : null;
+                        final categories = (row['categories'] as List?)?.map((item) => item.toString()).toList() ?? <String>[];
+                        return MarathonPortalCard(
+                          startsAt: '${row['starts_at'] ?? ''}',
+                          endsAt: '${row['ends_at'] ?? ''}',
+                          timezone: viewerZone,
+                          title: row['name']?.toString() ?? '',
+                          category: categories.isEmpty ? '' : categories.first.tr,
+                          active: status == null,
+                          status: status,
+                          closesAt: status == null ? row['booking_closes_at']?.toString() : null,
+                          lines: [_seats(id)],
+                          onTap: () => Get.to(() => MarathonAstrologerBookingsPage(marathonId: id)),
+                          actions: [
+                            MarathonSoftButton(
+                              label: 'View bookings'.tr,
+                              onTap: () => Get.to(() => MarathonAstrologerBookingsPage(marathonId: id)),
                             ),
-                            child: Text('Upcoming'.tr),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => setState(() => showUpcoming = false),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: !showUpcoming ? mainColor : whiteColor,
-                              foregroundColor: !showUpcoming ? whiteColor : mainColor,
-                              side: const BorderSide(color: mainColor),
-                            ),
-                            child: Text('${'Past'.tr} ($pastCount)'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    if (visible.isEmpty)
-                      Text('No Expert Hours event is open right now.'.tr, style: TextStyle(color: blackColor.withValues(alpha: 0.6))),
-                    ...visible.map((row) {
-                      final id = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}') ?? 0;
-                      final completed = _completed(id);
-                      final ended = row['admin_ended'] == true;
-                      final status = completed ? 'Completed'.tr : ended ? 'Event ended by admin'.tr : null;
-                      final categories = (row['categories'] as List?)?.map((item) => item.toString()).toList() ?? <String>[];
-                      final confirmed = row['confirmed'] == true;
-                      return MarathonPortalCard(
-                        startsAt: '${row['starts_at'] ?? ''}',
-                        endsAt: '${row['ends_at'] ?? ''}',
-                        timezone: viewerZone,
-                        title: row['name']?.toString() ?? '',
-                        categories: categories,
-                        status: status,
-                        closesAt: status == null ? row['booking_closes_at']?.toString() : null,
-                        onTap: () => Get.to(() => MarathonAstrologerBookingsPage(marathonId: id)),
-                        footer: Wrap(
-                          alignment: WrapAlignment.end,
-                          spacing: 8,
-                          runSpacing: 8,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(color: mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
-                              child: Text(_seats(id), style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize12, color: mainColor)),
-                            ),
-                            if (!confirmed)
-                              FilledButton(
-                                onPressed: () => _confirm(id),
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: mainColor,
-                                  foregroundColor: whiteColor,
-                                  shape: const StadiumBorder(),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                child: Text('Confirm participation'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13)),
-                              ),
+                            if (row['confirmed'] != true) MarathonPortalButton(label: 'Confirm participation'.tr, onTap: () => _confirm(id)),
                           ],
-                        ),
-                      );
-                    }),
-                  ],
-                );
-              },
-            ),
+                        );
+                      }),
+                    ],
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

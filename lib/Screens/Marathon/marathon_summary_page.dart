@@ -83,6 +83,8 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
     final query = '${row?['customer_query'] ?? ''}'.trim();
     final languageId = '${row?['preferred_language'] ?? ''}'.trim();
     final language = languageId.isEmpty ? '' : AskAstrologerLanguages.labelFor(languageId).tr;
+    final memberName = '${row?['member_display_name'] ?? ''}'.trim();
+    final memberLine = memberName.isEmpty ? '' : '$memberName (${_relatedLabel('${row?['relationship'] ?? ''}')})';
     return Scaffold(
       backgroundColor: const Color(0xffF4FBF3),
       appBar: AppBar(
@@ -191,11 +193,13 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
                           ),
                           _row('Date'.tr, _dateLabel(start), util, last: false),
                           _row('Time'.tr, start == null || end == null ? '' : marathonTimeRange(start.time, end.time), util, last: false),
-                          _row('Duration'.tr, '10 minutes'.tr, util, last: false),
+                          _row('Duration'.tr, '15 minutes'.tr, util, last: false),
                           _row('Consultation fee'.tr, money(parts.base), util, last: false),
                           if (parts.taxed) _row('${'CGST'.tr} (${parts.cgstPct}%)', money(parts.cgst), util, last: false),
                           if (parts.taxed) _row('${'SGST'.tr} (${parts.sgstPct}%)', money(parts.sgst), util, last: false),
-                          _row('Total'.tr, money(parts.total), util, last: language.isEmpty && query.isEmpty && astrologer.isEmpty),
+                          _row('Total'.tr, money(parts.total), util, last: language.isEmpty && query.isEmpty && astrologer.isEmpty && memberLine.isEmpty),
+                          if (memberLine.isNotEmpty)
+                            _row('Relationship to you'.tr, memberLine, util, last: language.isEmpty && query.isEmpty && astrologer.isEmpty),
                           if (language.isNotEmpty) _row('Preferred consultation language'.tr, language, util, last: query.isEmpty && astrologer.isEmpty),
                           if (query.isNotEmpty) _row('Your question'.tr, query, util, last: astrologer.isEmpty),
                           if (astrologer.isNotEmpty) _row('Astrologer'.tr, astrologer, util, last: true),
@@ -322,4 +326,20 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
       ),
     );
   }
+}
+
+String _relatedLabel(String code) {
+  const labels = {
+    'spouse': 'Spouse',
+    'brother': 'Brother',
+    'sister': 'Sister',
+    'father': 'Father',
+    'mother': 'Mother',
+    'son': 'Son',
+    'daughter': 'Daughter',
+    'friend': 'Friend',
+    'other': 'Others',
+  };
+  final label = labels[code] ?? code;
+  return label.isEmpty ? label : label.tr;
 }

@@ -1,11 +1,14 @@
 import 'package:astro_prompt/Components/Common/customCountryDropDown.dart';
 import 'package:astro_prompt/Components/Consultation-User/LanguageDropDown.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_event_banner.dart';
+import 'package:astro_prompt/Components/Marathon/marathon_flow_widgets.dart';
 import 'package:astro_prompt/Model/country_model.dart';
 import 'package:astro_prompt/Model/location_selection_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_fee.dart';
+import 'package:astro_prompt/Screens/Marathon/marathon_slots.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_summary_page.dart';
+import 'package:astro_prompt/Services/Analytics/installAttributionService.dart';
 import 'package:astro_prompt/Services/AuthService/authService.dart';
 import 'package:astro_prompt/Services/countryService/countryCodeService.dart';
 import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
@@ -20,13 +23,19 @@ import 'package:astro_prompt/config/Helper/appFont.dart';
 import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:astro_prompt/config/Helper/profile_currency.dart';
 import 'package:astro_prompt/config/LocallySavedData/accessToken.dart';
+import 'package:astro_prompt/config/LocallySavedData/name.dart';
+import 'package:astro_prompt/config/LocallySavedData/premiumUser.dart';
 import 'package:astro_prompt/config/LocallySavedData/timezone.dart';
+import 'package:astro_prompt/config/LocallySavedData/userId.dart';
+import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:astro_prompt/config/login_constants.dart';
+import 'package:astro_prompt/config/otp_contact_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class MarathonCheckoutPage extends StatefulWidget {
@@ -46,6 +55,9 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   late Razorpay _razorpay;
   Map<String, dynamic>? event;
   List<Map<String, dynamic>> mine = [];
+
+  /// Starts on the slot picked from the list. Step 2 lets the user change it.
+  late int slotId = widget.slotId;
   int step = 1;
   bool loading = true;
   String error = '';
@@ -83,6 +95,14 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   String preferredLanguage = '';
   String languageError = '';
   String? viewerZone;
+  bool forOthers = false;
+  List<Map<String, dynamic>> relatedPeople = [];
+  int? selectedRelatedId;
+  bool addingRelated = false;
+  String relationship = '';
+  String relationshipError = '';
+  String relatedBaseline = '';
+  UserProfile? ownerProfile;
 
   @override
   void initState() {
@@ -131,6 +151,22 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     currentFull = profile.preferredLocation;
   }
 
+  void _fillVerifiedContact(UserProfile profile) {
+    final email = profile.email.trim();
+    final mobile = profile.mobileNumber.trim();
+    final emailReady = profile.emailVerified && email.isNotEmpty;
+    final phoneReady = profile.mobileVerified && mobile.isNotEmpty;
+    needsEmail = !(emailReady && !phoneReady);
+    emailContact.text = emailReady ? email : emailContact.text;
+    emailVerified = emailReady;
+    if (phoneReady) {
+      phoneContact.text = mobile;
+      phoneVerified = true;
+      final code = profile.countryCode.replaceAll(RegExp(r'\D'), '');
+      if (code.isNotEmpty) dialCode = '+$code';
+    }
+  }
+
   Future<void> _load() async {
     try {
       final row = await _service.publicDetail(widget.marathonId);
@@ -140,11 +176,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         final profile = await ProfileService().fetchUserProfile();
         await _refreshBookings();
         if (profile != null) {
+          ownerProfile = profile;
           _fill(profile);
+          _fillVerifiedContact(profile);
           _rememberFee(profile, row);
-          needsEmail = profile.email.trim().isEmpty;
-          emailVerified = !needsEmail;
         }
+        relatedPeople = await _service.relatedProfiles();
         // Always collect birth details + required customer query before pay.
         next = 2;
       }
@@ -176,9 +213,27 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     for (final slot in slots) {
       final id = slot['id'];
       final parsed = id is int ? id : int.tryParse('$id');
-      if (parsed == widget.slotId) return slot;
+      if (parsed == slotId) return slot;
     }
     return null;
+  }
+
+  /// Same session fields the normal login screen stores, so home stays signed in as a customer.
+  Future<void> _rememberLogin(Map<String, dynamic> result) async {
+    final rawType = '${result['user_type'] ?? ''}'.trim().toLowerCase();
+    final isCustomer = rawType.isEmpty || rawType == 'customer';
+    final rawId = result['userId'];
+    final userId = rawId is int ? rawId : int.tryParse('$rawId');
+    if (userId != null) {
+      await saveUserId(userId);
+      await InstallAttributionService.instance.onLoginSuccess(userId: '$userId');
+    }
+    await saveUserName('${result['name'] ?? ''}');
+    await saveLastName('${result['lastName'] ?? ''}');
+    await saveUserType(isCustomer);
+    if (result['premiumUser'] is bool) {
+      await savePremiumUser(result['premiumUser'] as bool);
+    }
   }
 
   Future<void> _refreshBookings() async {
@@ -235,13 +290,15 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       setState(() => error = 'That code is incorrect or has expired. Try again.'.tr);
       return;
     }
+    await _rememberLogin(result);
     final profile = await ProfileService().fetchUserProfile();
     if (profile != null) {
+      ownerProfile = profile;
       _fill(profile);
+      _fillVerifiedContact(profile);
       if (event != null) _rememberFee(profile, event!);
-      needsEmail = profile.email.trim().isEmpty;
-      emailVerified = !needsEmail;
     }
+    relatedPeople = await _service.relatedProfiles();
     await _refreshBookings();
     if (!mounted) return;
     // Always collect birth details / query / language on step 2 before pay.
@@ -262,14 +319,116 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     return label.tr;
   }
 
+  static const _relatedProfileLimit = 3;
+  static const _relationships = <String, String>{
+    'spouse': 'Spouse',
+    'brother': 'Brother',
+    'sister': 'Sister',
+    'father': 'Father',
+    'mother': 'Mother',
+    'son': 'Son',
+    'daughter': 'Daughter',
+    'friend': 'Friend',
+    'other': 'Others',
+  };
+
+  bool get _showBirth => true;
+
+  bool get _profileReady {
+    final profile = ownerProfile;
+    if (profile == null) return false;
+    return profile.firstName.trim().isNotEmpty &&
+        profile.dateOfBirth.trim().isNotEmpty &&
+        profile.timeOfBirth.trim().isNotEmpty &&
+        profile.birthLocation.trim().isNotEmpty;
+  }
+
+  String _relatedFingerprint() {
+    return '${first.text}|${last.text}|${dob.text}|${tob.text}|$birthFull|$currentFull|$relationship';
+  }
+
+  Map<String, dynamic> _relatedBody() {
+    final clock = tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim();
+    return {
+      'first_name': first.text.trim(),
+      'last_name': last.text.trim(),
+      'date_of_birth': dob.text.trim(),
+      'time_of_birth': clock,
+      'place_of_birth': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
+      'preferred_location': currentFull.trim().isNotEmpty ? currentFull.trim() : current.text.trim(),
+      'relationship': relationship,
+    };
+  }
+
+  void _clearBirth() {
+    first.clear();
+    last.clear();
+    dob.clear();
+    tob.clear();
+    birth.clear();
+    current.clear();
+    birthFull = '';
+    currentFull = '';
+    relationship = '';
+    relatedBaseline = '';
+  }
+
+  void _applyRelated(Map<String, dynamic> person) {
+    final place = '${person['place_of_birth'] ?? ''}';
+    final where = '${person['preferred_location'] ?? ''}';
+    final clock = '${person['time_of_birth'] ?? ''}';
+    selectedRelatedId = person['id'] is int ? person['id'] as int : int.tryParse('${person['id']}');
+    addingRelated = false;
+    first.text = '${person['first_name'] ?? ''}';
+    last.text = '${person['last_name'] ?? ''}';
+    dob.text = '${person['date_of_birth'] ?? ''}'.split('T').first;
+    tob.text = clock.length >= 5 ? clock.substring(0, 5) : clock;
+    birth.text = place;
+    current.text = where;
+    birthFull = place;
+    currentFull = where;
+    relationship = '${person['relationship'] ?? ''}';
+    relatedBaseline = _relatedFingerprint();
+  }
+
+  void _chooseSelf() {
+    setState(() {
+      forOthers = false;
+      selectedRelatedId = null;
+      addingRelated = false;
+      relationship = '';
+      relationshipError = '';
+      error = '';
+      if (ownerProfile != null) _fill(ownerProfile!);
+    });
+  }
+
+  void _chooseOthers() {
+    setState(() {
+      forOthers = true;
+      selectedRelatedId = null;
+      addingRelated = relatedPeople.isEmpty;
+      relationshipError = '';
+      error = '';
+      _clearBirth();
+    });
+  }
+
   Future<void> _saveProfile() async {
     setState(() {
       error = '';
       queryError = '';
       languageError = '';
+      relationshipError = '';
     });
     if (first.text.trim().isEmpty || last.text.trim().isEmpty || dob.text.trim().isEmpty || tob.text.trim().isEmpty || birth.text.trim().isEmpty || current.text.trim().isEmpty) {
-      setState(() => error = 'Add your name, date of birth, time of birth, and place of birth to continue.'.tr);
+      setState(() => error = forOthers
+          ? 'Add their birth details to continue.'.tr
+          : 'Add your name, date of birth, time of birth, and place of birth to continue.'.tr);
+      return;
+    }
+    if (forOthers && relationship.trim().isEmpty) {
+      setState(() => relationshipError = 'Select a relationship.'.tr);
       return;
     }
     if (needsEmail && !emailVerified) {
@@ -285,29 +444,54 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       setState(() => queryError = 'Enter your question before payment.'.tr);
       return;
     }
-    final saved = await ProfileService().updateProfile({
-      'first_name': first.text.trim(),
-      'last_name': last.text.trim(),
-      'date_of_birth': dob.text.trim(),
-      'time_of_birth': tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim(),
-      'birth_location': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
-      'preferred_location': currentFull.trim().isNotEmpty
-          ? currentFull.trim()
-          : (current.text.trim().isEmpty
-              ? (birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim())
-              : current.text.trim()),
-    });
-    if (!mounted) return;
-    if (saved['success'] != true) {
-      setState(() => error = '${saved['error'] ?? ''}');
-      return;
-    }
-    final profile = await ProfileService().fetchUserProfile();
-    if (profile != null && event != null) _rememberFee(profile, event!);
-    // Profile save updates API timezone from Current Location — refresh display zone.
-    final tzFromSave = saved['data'] is Map ? saved['data']['timezone']?.toString() : null;
-    if (tzFromSave != null && tzFromSave.trim().isNotEmpty) {
-      await saveTimezone(tzFromSave.trim());
+    if (!forOthers || !_profileReady) {
+      final saved = await ProfileService().updateProfile({
+        'first_name': first.text.trim(),
+        'last_name': last.text.trim(),
+        'date_of_birth': dob.text.trim(),
+        'time_of_birth': tob.text.trim().length == 5 ? '${tob.text.trim()}:00' : tob.text.trim(),
+        'birth_location': birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim(),
+        'preferred_location': currentFull.trim().isNotEmpty
+            ? currentFull.trim()
+            : (current.text.trim().isEmpty
+                ? (birthFull.trim().isNotEmpty ? birthFull.trim() : birth.text.trim())
+                : current.text.trim()),
+      });
+      if (!mounted) return;
+      if (saved['success'] != true) {
+        setState(() => error = '${saved['error'] ?? ''}');
+        return;
+      }
+      final profile = await ProfileService().fetchUserProfile();
+      if (profile != null) {
+        ownerProfile = profile;
+        if (event != null) _rememberFee(profile, event!);
+      }
+      final tzFromSave = saved['data'] is Map ? saved['data']['timezone']?.toString() : null;
+      if (tzFromSave != null && tzFromSave.trim().isNotEmpty) {
+        await saveTimezone(tzFromSave.trim());
+      }
+      selectedRelatedId = null;
+    } else {
+      try {
+        final body = _relatedBody();
+        if (selectedRelatedId == null) {
+          if (relatedPeople.length >= _relatedProfileLimit) {
+            setState(() => error = 'You can add only 3 people.'.tr);
+            return;
+          }
+          final created = await _service.createRelated(body);
+          selectedRelatedId = created['id'] is int ? created['id'] as int : int.tryParse('${created['id']}');
+        } else if (_relatedFingerprint() != relatedBaseline) {
+          await _service.updateRelated(selectedRelatedId!, body);
+        }
+        relatedPeople = await _service.relatedProfiles();
+        relatedBaseline = _relatedFingerprint();
+      } catch (err) {
+        if (!mounted) return;
+        setState(() => error = err.toString().replaceFirst('Exception: ', ''));
+        return;
+      }
     }
     final zone = await loadViewerTimezone();
     await _refreshBookings();
@@ -345,10 +529,11 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       final profile = await ProfileService().fetchUserProfile();
       final currency = ProfileCurrency.fromProfile(profile);
       final order = await _service.checkout(
-        widget.slotId,
+        slotId,
         currency: currency,
         customerQuery: customerQuery.trim(),
         preferredLanguage: preferredLanguage.trim(),
+        relatedProfileId: forOthers ? selectedRelatedId : null,
       );
       CustomLoader.hide();
       _razorpay.open({
@@ -393,9 +578,6 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
-    final slot = _slot;
-    final start = marathonWallParts(slot?['starts_at']?.toString(), zone: viewerZone);
-    final end = marathonWallParts(slot?['ends_at']?.toString(), zone: viewerZone);
     Map<String, dynamic>? clash;
     for (final row in mine) {
       if (_overlaps(row)) {
@@ -403,137 +585,350 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         break;
       }
     }
+    final ended = event?['admin_ended'] == true;
+    final blocks = <Widget>[
+      if (event == null && error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
+      if (ended)
+        MarathonCard(
+          child: Text('Event ended by admin'.tr, style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.6))),
+        ),
+      if (event != null && !ended) ..._stepBlocks(util, clash),
+    ];
     return Scaffold(
-      backgroundColor: const Color(0xffF4FBF3),
-      appBar: AppBar(
-        backgroundColor: const Color(0xffF4FBF3),
-        elevation: 0,
-        leading: IconButton(
-          icon: SvgPicture.asset(appBackButton, colorFilter: const ColorFilter.mode(blackColor, BlendMode.srcIn)),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          'Go back'.tr,
-          style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize16, color: blackColor),
-        ),
+      backgroundColor: marathonPageBg,
+      body: Column(
+        children: [
+          MarathonFlowBar(
+            title: event == null ? 'Teksage Expert Hours'.tr : marathonDisplayName(event?['name']?.toString()).tr,
+            onBack: () => Get.back(),
+            steps: ['Login'.tr, 'Time Slot & Birth Details'.tr, 'Payment'.tr],
+            step: step,
+            onStep: (number) {
+              // From Payment only, allow opening Birth details — never Login again.
+              if (number != 2 || step != 3) return;
+              setState(() {
+                step = 2;
+                if (customerQuery.isNotEmpty) query.text = customerQuery;
+              });
+            },
+          ),
+          Expanded(
+            child: loading
+                ? const Center(child: CircularProgressIndicator(color: mainColor))
+                : ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    itemCount: blocks.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    itemBuilder: (_, index) => blocks[index],
+                  ),
+          ),
+        ],
       ),
-      body: loading
-          ? const Center(child: CircularProgressIndicator(color: mainColor))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+    );
+  }
+
+  List<Widget> _stepBlocks(MyUtility util, Map<String, dynamic>? clash) {
+    if (step == 1) {
+      return [MarathonCard(child: _login(util))];
+    }
+    if (step == 2) {
+      return [_timeCard(util), MarathonCard(child: _profile(util)), _aside(util, clash)];
+    }
+    return [..._review(util), _aside(util, clash)];
+  }
+
+  int _slotMinutes(Map<String, dynamic>? slot) {
+    final start = DateTime.tryParse('${slot?['starts_at'] ?? ''}');
+    final end = DateTime.tryParse('${slot?['ends_at'] ?? ''}');
+    if (start == null || end == null) return 0;
+    final minutes = end.difference(start).inMinutes;
+    return minutes > 0 ? minutes : 0;
+  }
+
+  String _titleMonth(String month) {
+    if (month.isEmpty) return month;
+    return '${month[0]}${month.substring(1).toLowerCase()}';
+  }
+
+  /// Time card on step 2: pick or change the slot before paying.
+  Widget _timeCard(MyUtility util) {
+    final slots = List<Map<String, dynamic>>.from(event?['slots'] ?? []);
+    final current = _slot ?? (slots.isEmpty ? null : slots.first);
+    final when = marathonWallDetail('${current?['starts_at'] ?? event?['starts_at'] ?? ''}', zone: viewerZone)?.shortDay ?? '';
+    final booked = marathonBookedSlotIds(event, mine);
+    final shut = event?['booking_open'] != true || event?['admin_ended'] == true;
+    return MarathonCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Choose a time – @when'.trParams({'when': when}), style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.3)),
+          const SizedBox(height: 4),
+          Text(
+            'Each one-to-one slot is @minutes.'.trParams({'minutes': '15 minutes'.tr}),
+            style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.5)),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final item in slots)
+                () {
+                  final id = marathonInt(item['id']);
+                  final left = marathonInt(item['seats_left']);
+                  final mineBooked = booked.contains(id);
+                  final full = left == 0;
+                  final taken = mineBooked || full;
+                  final open = !taken && !shut;
+                  final selected = slotId == id && open;
+                  final low = open && !selected && left <= marathonLowSeats;
+                  final label = mineBooked || full
+                      ? 'Booked'.tr
+                      : shut
+                          ? 'Closed'.tr
+                          : '@count seats'.trParams({'count': '$left'});
+                  final time = marathonWallParts('${item['starts_at']}', zone: viewerZone)?.time ?? '';
+                  return MarathonSlotPill(
+                    time: time.replaceAll('AM', 'am').replaceAll('PM', 'pm'),
+                    label: label,
+                    selected: selected,
+                    low: low,
+                    booked: taken,
+                    open: open,
+                    onTap: () => setState(() => slotId = id),
+                  );
+                }(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Booking summary on step 2, payment summary on step 3.
+  Widget _aside(MyUtility util, Map<String, dynamic>? clash) {
+    final slot = _slot;
+    final start = marathonWallDetail(slot?['starts_at']?.toString(), zone: viewerZone);
+    final end = marathonWallDetail(slot?['ends_at']?.toString(), zone: viewerZone);
+    final minutes = _slotMinutes(slot);
+    final minutesLabel = minutes > 0 ? '@count min'.trParams({'count': '$minutes'}) : '15 minutes'.tr;
+    final parts = marathonFeeAdded(payBase ?? double.tryParse('${event?['fee']}') ?? 0, payCurrency);
+    final name = marathonDisplayName(event?['name']?.toString()).tr;
+    final range = start != null && end != null ? marathonTimeRange(start.time, end.time) : '';
+    final dateLine = start == null ? '' : '${start.weekday}, ${start.day} ${_titleMonth(start.month)}';
+    if (step != 3) {
+      return MarathonSummaryCard(
+        kicker: 'Booking summary'.tr,
+        rows: [
+          MarathonSummaryRow('Session'.tr, name),
+          MarathonSummaryRow('Date'.tr, dateLine),
+          MarathonSummaryRow('Time slot'.tr, range, accent: true),
+          MarathonSummaryRow('Duration'.tr, minutesLabel),
+        ],
+        totalLabel: 'Total incl. GST'.tr,
+        total: _fmt(parts.total),
+        children: [
+          MarathonNote(icon: Icons.verified_user_outlined, text: 'Your details are private and shared only with your assigned astrologer.'.tr),
+        ],
+      );
+    }
+    final rawId = clash?['id'];
+    final bookingId = rawId is int ? rawId : int.tryParse('$rawId') ?? 0;
+    return MarathonSummaryCard(
+      kicker: 'Payment summary'.tr,
+      lead: start == null
+          ? null
+          : Row(
               children: [
-                // Match website mobile: event + selected slot first, then steps card.
-                if (event != null) MarathonEventBanner(event: event!, linked: false, onTap: () {}),
-                if (start != null && end != null) ...[
-                  _slotSummaryCard(util, start.time, end.time),
-                  const SizedBox(height: 16),
-                ],
-                if (step == 3 && (preferredLanguage.trim().isNotEmpty || customerQuery.trim().isNotEmpty)) ...[
-                  _checkoutAsideCard(util),
-                  const SizedBox(height: 16),
-                ],
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      border: Border.all(color: blackColor.withValues(alpha: 0.08)),
-                      boxShadow: [BoxShadow(color: blackColor.withValues(alpha: 0.05), blurRadius: 24, offset: const Offset(0, 8))],
-                    ),
-                    child: Column(
-                      children: [
-                        _stepper(util),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
-                          child: event?['admin_ended'] == true
-                              ? Text('Event ended by admin'.tr, style: TextStyle(color: blackColor.withValues(alpha: 0.6)))
-                              : _body(util, clash),
-                        ),
-                      ],
-                    ),
+                MarathonDateTile(day: start.day, month: start.month),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, style: marathonText(util, FontType.bold)),
+                      Text('$range · $minutesLabel', style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.5))),
+                    ],
                   ),
                 ),
               ],
             ),
+      rows: [
+        MarathonSummaryRow('Session fee'.tr, _fmt(parts.base)),
+        if (parts.taxed) MarathonSummaryRow('${'CGST'.tr} ${parts.cgstPct}%', _fmt(parts.cgst)),
+        if (parts.taxed) MarathonSummaryRow('${'SGST'.tr} ${parts.sgstPct}%', _fmt(parts.sgst)),
+      ],
+      totalLabel: 'Total'.tr,
+      total: _fmt(parts.total),
+      children: [
+        if (clash != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text(
+              'You already have a consultation at this time.'.tr,
+              style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.55)),
+            ),
+          ),
+        if (error.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 12), child: Text(error, style: const TextStyle(color: Colors.red))),
+        MarathonPlainNote(text: "You'll be taken to our secure payment partner · UPI, cards, net banking".tr),
+        MarathonNote(icon: Icons.chat_bubble_outline_rounded, text: 'Questions after paying? Message us on WhatsApp right away.'.tr),
+        const SizedBox(height: 16),
+        MarathonPrimaryButton(
+          wide: true,
+          label: clash != null ? 'View booking'.tr : 'Pay & Book Session'.tr,
+          onTap: clash != null ? () => Get.off(() => MarathonSummaryPage(bookingId: bookingId)) : _pay,
+        ),
+      ],
     );
   }
 
-  Widget _stepper(MyUtility util) {
-    const titles = ['Step 1', 'Step 2', 'Step 3'];
-    const captions = ['Login', 'Birth details', 'Pay'];
-    return Container(
-      width: double.infinity,
-      color: const Color(0xffE7F6E3),
-      padding: const EdgeInsets.fromLTRB(8, 16, 8, 14),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(3, (index) {
-          final number = index + 1;
-          final done = number < step;
-          final active = number == step;
-          final on = active || done;
-          // From Pay only, allow opening Birth details — never Login again.
-          final canOpen = number == 2 && step == 3;
-          Color line(bool show, bool lit) {
-            if (!show) return const Color(0x00000000);
-            return lit ? mainColor : blackColor.withValues(alpha: 0.1);
-          }
+  /// Born line on the review: "Jun 19, 1970, 11:54 AM · Dindigul".
+  String _bornLine() {
+    final locale = Get.locale?.toString() ?? 'en_US';
+    var date = '';
+    final parsed = DateTime.tryParse(dob.text.trim().split('T').first);
+    if (parsed != null) {
+      try {
+        date = DateFormat('MMM d, y', locale).format(parsed);
+      } catch (_) {
+        date = DateFormat('MMM d, y').format(parsed);
+      }
+    }
+    var time = '';
+    final match = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(tob.text.trim());
+    if (match != null) {
+      final hour = int.parse(match.group(1)!);
+      final h12 = hour % 12 == 0 ? 12 : hour % 12;
+      time = '$h12:${match.group(2)} ${hour >= 12 ? 'PM' : 'AM'}';
+    }
+    final when = [date, time].where((part) => part.isNotEmpty).join(', ');
+    final place = (birthFull.trim().isNotEmpty ? birthFull : birth.text).trim();
+    return [when, place].where((part) => part.isNotEmpty).join(' · ');
+  }
 
-          return Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: canOpen
-                  ? () => setState(() {
-                        step = 2;
-                        if (customerQuery.isNotEmpty) query.text = customerQuery;
-                      })
-                  : null,
-              child: Column(
-                children: [
-                  Row(
+  Widget _reviewItem(MyUtility util, String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.4))),
+        const SizedBox(height: 2),
+        Text(value, style: marathonText(util, FontType.bold)),
+      ],
+    );
+  }
+
+  /// Step 3 cards: review of the booking and what happens after paying.
+  List<Widget> _review(MyUtility util) {
+    final name = '${first.text.trim()} ${last.text.trim()}'.trim();
+    final relation = forOthers && relationship.isNotEmpty ? (_relationships[relationship] ?? relationship).tr : '';
+    final readingFor = [name, relation].where((part) => part.isNotEmpty).join(' · ');
+    final email = emailContact.text.trim().isNotEmpty ? emailContact.text.trim() : (ownerProfile?.email ?? '').trim();
+    final steps = [
+      ('Payment confirmed'.tr, 'You get an email for payment confirmation.'.tr),
+      ('Astrologer assigned'.tr, 'Within 1 hour, based on your question and language.'.tr),
+      ('Meeting link shared'.tr, 'Sent to your email about the invitation once astrologer assigned and also you can join through our app'.tr),
+    ];
+    final bubble = Color.alphaBlend(mainColor.withValues(alpha: 0.14), whiteColor);
+    return [
+      MarathonCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(child: Text('Review your booking'.tr, style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.3))),
+                InkWell(
+                  onTap: () => setState(() {
+                    step = 2;
+                    if (customerQuery.isNotEmpty) query.text = customerQuery;
+                  }),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(child: Container(height: 2, color: line(index > 0, step > index))),
-                      Container(
-                        width: 28,
-                        height: 28,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: on ? mainColor : whiteColor,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: on ? mainColor : blackColor.withValues(alpha: 0.15), width: 2),
-                          boxShadow: on ? [BoxShadow(color: mainColor.withValues(alpha: 0.28), blurRadius: 12, offset: const Offset(0, 4))] : null,
-                        ),
-                        child: Text(
-                          done ? '✓' : '$number',
-                          style: TextStyle(color: on ? whiteColor : blackColor.withValues(alpha: 0.4), fontFamily: AppFont.get(FontType.bold), fontSize: 13),
-                        ),
-                      ),
-                      Expanded(child: Container(height: 2, color: line(index < 2, step > index + 1))),
+                      const Icon(Icons.edit_outlined, size: 14, color: mainColor),
+                      const SizedBox(width: 4),
+                      Text('Edit'.tr, style: marathonText(util, FontType.semiBold, color: mainColor)),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(titles[index].tr, style: TextStyle(fontSize: util.fontSize11, color: on ? mainColor : blackColor.withValues(alpha: 0.4), fontFamily: AppFont.get(FontType.semiBold))),
-                  Text(captions[index].tr, style: TextStyle(fontSize: util.fontSize10, color: blackColor.withValues(alpha: 0.55))),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: marathonRowGray, borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _reviewItem(util, 'Reading for'.tr, readingFor),
+                  const SizedBox(height: 16),
+                  _reviewItem(util, 'Born'.tr, _bornLine()),
+                  const SizedBox(height: 16),
+                  _reviewItem(util, 'Language'.tr, _languageDisplay(preferredLanguage) ?? preferredLanguage),
+                  const SizedBox(height: 16),
+                  _reviewItem(util, 'Meeting link to'.tr, email),
                 ],
               ),
             ),
-          );
-        }),
+            const SizedBox(height: 20),
+            Text('Your question'.tr, style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.4))),
+            const SizedBox(height: 2),
+            Text(customerQuery.trim(), style: marathonText(util, FontType.bold)),
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _body(MyUtility util, Map<String, dynamic>? clash) {
-    if (step == 1) return _login(util);
-    if (step == 2) return _profile(util);
-    return _payment(util, clash);
+      MarathonCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('What happens next'.tr, style: marathonText(util, FontType.bold)),
+            const SizedBox(height: 20),
+            Stack(
+              children: [
+                Positioned(left: 11.5, top: 12, bottom: 12, width: 1, child: ColoredBox(color: blackColor.withValues(alpha: 0.1))),
+                Column(
+                  children: [
+                    for (var index = 0; index < steps.length; index++)
+                      Padding(
+                        padding: EdgeInsets.only(top: index == 0 ? 0 : 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: bubble),
+                              child: Text('${index + 1}', style: marathonText(util, FontType.semiBold, size: util.fontSize12, color: mainColor, height: 1)),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(steps[index].$1, style: marathonText(util, FontType.bold)),
+                                  Text(steps[index].$2, style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.55))),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 
   Widget _login(MyUtility util) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Login'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize18)),
+        Text('Login'.tr, style: marathonText(util, FontType.bold)),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(4),
@@ -576,7 +971,11 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         if (otpSent) ...[
           const SizedBox(height: 16),
           Text(
-            'We have sent OTP to @contact'.trParams({'contact': emailTab ? contact.text.trim() : '$dialCode ${contact.text.trim()}'}),
+            'We have sent OTP to @contact'.trParams({
+              'contact': emailTab
+                  ? maskEmailForOtpDisplay(contact.text.trim())
+                  : '$dialCode ${maskMobileForOtpDisplay(contact.text.trim())}',
+            }),
             textAlign: TextAlign.center,
             style: TextStyle(color: blackColor.withValues(alpha: 0.6)),
           ),
@@ -593,29 +992,138 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   }
 
   Widget _profile(MyUtility util) {
-    final labelStyle = TextStyle(
-      fontFamily: AppFont.get(FontType.semiBold),
-      fontSize: util.fontSize12,
-      color: blackColor.withValues(alpha: 0.55),
-    );
-    final hintStyle = TextStyle(
-      fontFamily: AppFont.get(FontType.semiBold),
-      fontSize: util.fontSize13,
-      color: blackColor.withValues(alpha: 0.6),
-      height: 1.35,
-    );
+    // Field titles are bold. Typed answers are semibold, same as chat text.
+    final labelStyle = marathonText(util, FontType.bold);
+    final hintStyle = marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.55));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Birth details'.tr,
-          style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize18, color: blackColor),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Add your name, date of birth, time of birth, and place of birth to continue.'.tr,
-          style: hintStyle,
-        ),
+        Text('Who is this reading for?'.tr, style: labelStyle),
+        const SizedBox(height: 4),
+        Text('The astrologer reads your chart from these details.'.tr, style: hintStyle),
+        if (_profileReady) ...[
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(color: marathonRowGray, borderRadius: BorderRadius.circular(16)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Booking for someone else'.tr, style: marathonText(util, FontType.bold)),
+                      Text("Turn on to enter a family member's or friend's details.".tr, style: hintStyle),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Switch(
+                  value: forOthers,
+                  onChanged: (on) => on ? _chooseOthers() : _chooseSelf(),
+                  activeThumbColor: whiteColor,
+                  activeTrackColor: mainColor,
+                  inactiveThumbColor: whiteColor,
+                  inactiveTrackColor: blackColor.withValues(alpha: 0.15),
+                  trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                ),
+              ],
+            ),
+          ),
+        ],
+        if (forOthers) ...[
+          const SizedBox(height: 12),
+          Text('People you\'ve added before'.tr, style: labelStyle),
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 176,
+                child: InputDecorator(
+                  decoration: _outline().copyWith(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      key: ValueKey(addingRelated ? 'new' : selectedRelatedId),
+                      value: addingRelated ? null : selectedRelatedId,
+                      isExpanded: true,
+                      isDense: true,
+                      menuWidth: MediaQuery.sizeOf(context).width - 32,
+                      style: marathonText(util, FontType.semiBold),
+                      hint: Text(
+                        'Select'.tr,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: marathonText(util, FontType.semiBold, color: blackColor.withValues(alpha: 0.55)),
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      selectedItemBuilder: (context) => [
+                        for (final person in relatedPeople)
+                          if (person['id'] is int || int.tryParse('${person['id']}') != null)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                '${person['display_name']} (${(_relationships['${person['relationship']}'] ?? '${person['relationship']}').tr})',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: marathonText(util, FontType.semiBold),
+                              ),
+                            ),
+                      ],
+                      items: [
+                        for (final person in relatedPeople)
+                          if (person['id'] is int || int.tryParse('${person['id']}') != null)
+                            DropdownMenuItem<int>(
+                              value: person['id'] is int ? person['id'] as int : int.parse('${person['id']}'),
+                              child: Text(
+                                '${person['display_name']} (${(_relationships['${person['relationship']}'] ?? '${person['relationship']}').tr})',
+                              ),
+                            ),
+                      ],
+                      onChanged: (id) {
+                        Map<String, dynamic>? match;
+                        for (final row in relatedPeople) {
+                          final rowId = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}');
+                          if (rowId == id) match = row;
+                        }
+                        if (match == null) return;
+                        setState(() => _applyRelated(match!));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: () {
+                  if (relatedPeople.length >= _relatedProfileLimit) {
+                    setState(() => error = 'You can add only 3 people.'.tr);
+                    return;
+                  }
+                  setState(() {
+                    error = '';
+                    addingRelated = true;
+                    selectedRelatedId = null;
+                    _clearBirth();
+                  });
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: addingRelated ? mainColor : blackColor.withValues(alpha: 0.7),
+                  backgroundColor: addingRelated ? mainColor.withValues(alpha: 0.12) : whiteColor,
+                  side: BorderSide(color: addingRelated ? mainColor : blackColor.withValues(alpha: 0.1)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  minimumSize: const Size(0, 48),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text('Add new'.tr, style: marathonText(util, FontType.semiBold, color: addingRelated ? mainColor : blackColor.withValues(alpha: 0.7))),
+              ),
+            ],
+          ),
+        ],
+        if (_showBirth) ...[
         const SizedBox(height: 16),
         _pairRow(
           _labeledInput(
@@ -662,6 +1170,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
             child: _locationField(
               util,
               birth,
+              'City, e.g. Chennai'.tr,
               () => _pickLocation(
                 title: 'Place of Birth'.tr,
                 hint: 'Enter place of birth'.tr,
@@ -681,6 +1190,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
             child: _locationField(
               util,
               current,
+              'City you live in'.tr,
               () => _pickLocation(
                 title: 'Current Location'.tr,
                 hint: 'Enter Current location'.tr,
@@ -695,14 +1205,29 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
             ),
           ),
         ),
+        if (forOthers) ...[
+          const SizedBox(height: 12),
+          UserLanguageDropDown(
+            title: 'Relationship to you'.tr,
+            isMandatory: true,
+            neutral: true,
+            options: _relationships.values.map((label) => label.tr).toList(),
+            selectedValue: relationship.isEmpty ? null : _relationships[relationship]?.tr,
+            errorFlag: relationshipError.isNotEmpty,
+            errorText: relationshipError.isEmpty ? null : relationshipError,
+            onChanged: (label) {
+              final code = _relationships.entries
+                  .firstWhere((entry) => entry.value.tr == label || entry.value == label, orElse: () => const MapEntry('', ''))
+                  .key;
+              setState(() {
+                relationship = code;
+                relationshipError = '';
+              });
+            },
+          ),
+        ],
+        ],
         const SizedBox(height: 12),
-        Text(
-          needsEmail
-              ? 'Verify your email. Your meeting link is sent there.'.tr
-              : 'Phone is optional. Your meeting link is sent to your email.'.tr,
-          style: hintStyle,
-        ),
-        const SizedBox(height: 8),
         if (needsEmail) ..._emailVerify(util, labelStyle) else ..._phoneVerify(util, labelStyle),
         const SizedBox(height: 12),
         UserLanguageDropDown(
@@ -736,12 +1261,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
             if (queryError.isNotEmpty) setState(() => queryError = '');
           },
           decoration: _outline(
-            hint: 'Tell us what you want to ask. Your assigned astrologer will see this.'.tr,
+            hint: 'e.g. Is 2027 a good year to switch jobs?'.tr,
           ),
         ),
         if (error.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text(error, style: const TextStyle(color: Colors.red))),
         const SizedBox(height: 16),
-        _green('Continue'.tr, _saveProfile),
+        MarathonPrimaryButton(label: 'Continue'.tr, onTap: _saveProfile),
       ],
     );
   }
@@ -772,13 +1297,14 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     );
   }
 
-  Widget _locationField(MyUtility util, TextEditingController controller, VoidCallback onTap) {
+  Widget _locationField(MyUtility util, TextEditingController controller, String hint, VoidCallback onTap) {
     return TextField(
       controller: controller,
       readOnly: true,
       onTap: onTap,
       style: _inputStyle(util),
       decoration: _outline(
+        hint: hint,
         suffix: Icon(Icons.place_outlined, size: 18, color: blackColor.withValues(alpha: 0.45)),
       ),
     );
@@ -917,159 +1443,8 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   TextStyle _inputStyle(MyUtility util) {
     return TextStyle(
       fontFamily: AppFont.get(FontType.semiBold),
-      fontSize: util.fontSize13,
+      fontSize: util.fontSize14,
       color: blackColor,
-    );
-  }
-
-  List<Widget> _feeSummary(MyUtility util) {
-    final parts = marathonFeeAdded(payBase ?? 0, payCurrency);
-    Widget line(String label, String value, {bool bold = false}) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Row(
-          children: [
-            Expanded(child: Text(label, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13))),
-            Text(
-              value,
-              style: TextStyle(
-                fontFamily: AppFont.get(bold ? FontType.bold : FontType.semiBold),
-                fontSize: bold ? util.fontSize16 : util.fontSize13,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return [
-      Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Payment summary'.tr,
-            textAlign: TextAlign.left,
-            style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize14, color: blackColor),
-          ),
-        ),
-      ),
-      line('Consultation fee'.tr, _fmt(parts.base)),
-      if (parts.taxed) line('${'CGST'.tr} (${parts.cgstPct}%)', _fmt(parts.cgst)),
-      if (parts.taxed) line('${'SGST'.tr} (${parts.sgstPct}%)', _fmt(parts.sgst)),
-      line('Total'.tr, _fmt(parts.total), bold: true),
-    ];
-  }
-
-  Widget _slotSummaryCard(MyUtility util, String startTime, String endTime) {
-    return Container(
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: blackColor.withValues(alpha: 0.08)),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(23),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(width: 4, color: mainColor),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Select a time slot'.tr,
-                        style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize16),
-                      ),
-                      Text(
-                        '10 minutes'.tr,
-                        style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize12),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        marathonTimeRange(startTime, endTime),
-                        style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _checkoutAsideCard(MyUtility util) {
-    final labelStyle = TextStyle(
-      fontFamily: AppFont.get(FontType.semiBold),
-      fontSize: util.fontSize13,
-      color: blackColor.withValues(alpha: 0.55),
-    );
-    final valueStyle = TextStyle(fontSize: util.fontSize13, color: blackColor, height: 1.35);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: blackColor.withValues(alpha: 0.08)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (preferredLanguage.trim().isNotEmpty) ...[
-            Text('Preferred consultation language'.tr, style: labelStyle),
-            const SizedBox(height: 4),
-            Text(_languageDisplay(preferredLanguage) ?? preferredLanguage, style: valueStyle),
-          ],
-          if (preferredLanguage.trim().isNotEmpty && customerQuery.trim().isNotEmpty) const SizedBox(height: 12),
-          if (customerQuery.trim().isNotEmpty) ...[
-            Text('Your question'.tr, style: labelStyle),
-            const SizedBox(height: 4),
-            Text(customerQuery.trim(), style: valueStyle),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _payment(MyUtility util, Map<String, dynamic>? clash) {
-    final rawId = clash?['id'];
-    final bookingId = rawId is int ? rawId : int.tryParse('$rawId') ?? 0;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Pay'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize18)),
-        const SizedBox(height: 6),
-        Text(event?['name']?.toString() ?? '', style: TextStyle(color: blackColor.withValues(alpha: 0.6))),
-        if (payBase != null) ..._feeSummary(util),
-        const SizedBox(height: 8),
-        Text(
-          clash != null
-              ? 'You already have a consultation at this time.'.tr
-              : 'Your astrologer will be assigned and the meeting link will be shared within 1 hour.'.tr,
-          style: TextStyle(color: blackColor.withValues(alpha: 0.6)),
-        ),
-        if (clash == null)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              'You can also contact us immediately for inquiries through WhatsApp after payment.'.tr,
-              style: TextStyle(color: blackColor.withValues(alpha: 0.6)),
-            ),
-          ),
-        if (error.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text(error, style: const TextStyle(color: Colors.red))),
-        const SizedBox(height: 16),
-        clash != null
-            ? _green('View booking'.tr, () => Get.off(() => MarathonSummaryPage(bookingId: bookingId)))
-            : _green('Pay & Book Session'.tr, _pay),
-      ],
     );
   }
 
@@ -1097,7 +1472,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
 
   List<Widget> _emailVerify(MyUtility util, TextStyle labelStyle) {
     return [
-      Text('Email'.tr, style: labelStyle),
+      Text(
+        forOthers && _profileReady
+            ? 'Registered user email (not relationship email)'.tr
+            : 'Email'.tr,
+        style: labelStyle,
+      ),
       const SizedBox(height: 6),
       Row(
         children: [
@@ -1110,15 +1490,25 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
               decoration: _outline(),
             ),
           ),
-          if (!emailVerified) ...[
+          if (emailVerified)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgPicture.asset(verified, width: 28, height: 28),
+            )
+          else ...[
             const SizedBox(width: 8),
             _verifyChip(emailOtpSent ? 'Confirm'.tr : 'Verify'.tr, emailOtpSent ? _confirmEmail : _sendEmail),
           ],
         ],
       ),
+      const SizedBox(height: 6),
+      Text(
+        'Your meeting link is sent here.'.tr,
+        style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize12, color: blackColor.withValues(alpha: 0.55), height: 1.35),
+      ),
       if (emailOtpSent && !emailVerified) ...[
         const SizedBox(height: 8),
-        Text('We have sent OTP to @contact'.trParams({'contact': emailContact.text.trim()}), textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
+        Text('We have sent OTP to @contact'.trParams({'contact': maskEmailForOtpDisplay(emailContact.text.trim())}), textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
         Text('OTP is valid for 5 Minutes.'.tr, textAlign: TextAlign.center, style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13)),
         const SizedBox(height: 8),
         TextField(
@@ -1169,7 +1559,12 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   List<Widget> _phoneVerify(MyUtility util, TextStyle labelStyle) {
     final code = dialCode.replaceAll(RegExp(r'\D'), '');
     return [
-      Text('Phone Number'.tr, style: labelStyle),
+      Text(
+        forOthers && _profileReady
+            ? 'Registered user contact number (not relationship contact)'.tr
+            : 'Phone Number'.tr,
+        style: labelStyle,
+      ),
       const SizedBox(height: 6),
       Row(
         children: [
@@ -1184,16 +1579,26 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
               decoration: _outline(),
             ),
           ),
-          if (!phoneVerified) ...[
+          if (phoneVerified)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgPicture.asset(verified, width: 28, height: 28),
+            )
+          else ...[
             const SizedBox(width: 8),
             _verifyChip(phoneOtpSent ? 'Confirm'.tr : 'Verify'.tr, phoneOtpSent ? _confirmPhone : _sendPhone),
           ],
         ],
       ),
+      const SizedBox(height: 6),
+      Text(
+        'Phone is optional. Your meeting link is sent to your email.'.tr,
+        style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize12, color: blackColor.withValues(alpha: 0.55), height: 1.35),
+      ),
       if (phoneOtpSent && !phoneVerified) ...[
         const SizedBox(height: 8),
         Text(
-          'We have sent OTP to @contact'.trParams({'contact': '+$code ${phoneContact.text.trim()}'}),
+          'We have sent OTP to @contact'.trParams({'contact': '+$code ${maskMobileForOtpDisplay(phoneContact.text)}'}),
           textAlign: TextAlign.center,
           style: TextStyle(color: blackColor.withValues(alpha: 0.6), fontSize: util.fontSize13),
         ),
@@ -1426,7 +1831,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     );
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: blackColor.withValues(alpha: 0.4), fontSize: 13),
+      hintStyle: TextStyle(fontFamily: AppFont.get(FontType.semiBold), color: blackColor.withValues(alpha: 0.35), fontSize: 14),
       filled: true,
       fillColor: whiteColor,
       isDense: true,
@@ -1441,15 +1846,6 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
   }
 
   Widget _green(String label, VoidCallback tap) {
-    return FilledButton(
-      onPressed: tap,
-      style: FilledButton.styleFrom(
-        backgroundColor: mainColor,
-        foregroundColor: whiteColor,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        shape: const StadiumBorder(),
-      ),
-      child: Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.bold))),
-    );
+    return MarathonPrimaryButton(label: label, onTap: tap, wide: true);
   }
 }

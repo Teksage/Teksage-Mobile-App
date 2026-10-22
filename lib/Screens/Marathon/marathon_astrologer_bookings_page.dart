@@ -1,3 +1,4 @@
+import 'package:astro_prompt/Components/Marathon/marathon_flow_widgets.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_portal_card.dart';
 import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
@@ -114,101 +115,72 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
+    final subtitle = ['View bookings'.tr, participants].where((part) => part.isNotEmpty).join(' · ');
     return Scaffold(
-      backgroundColor: const Color(0xffF4FBF3),
-      appBar: AppBar(
-        backgroundColor: const Color(0xffF4FBF3),
-        elevation: 0,
-        title: Text(title, style: TextStyle(fontFamily: AppFont.get(FontType.bold), fontSize: util.fontSize16, color: blackColor)),
+      backgroundColor: marathonPageBg,
+      body: Column(
+        children: [
+          MarathonPortalHeader(title: title, subtitle: subtitle, onBack: () => Get.back()),
+          Expanded(
+            child: loading
+                ? const Center(child: CircularProgressIndicator(color: mainColor))
+                : ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    children: [
+                      if (rows.isEmpty)
+                        Text('No bookings for this event yet.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
+                      ...rows.map((row) {
+                        final id = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}') ?? 0;
+                        final eventId = row['event_id'] is int ? row['event_id'] as int : int.tryParse('${row['event_id']}');
+                        final status = '${row['status'] ?? ''}';
+                        final link = '${row['meeting_link'] ?? ''}'.trim();
+                        final label = _label(status);
+                        final ended = row['admin_ended'] == true && status != 'completed';
+                        final query = '${row['customer_query'] ?? ''}'.trim();
+                        final languageId = '${row['preferred_language'] ?? ''}'.trim();
+                        final language = languageId.isEmpty ? '' : AskAstrologerLanguages.labelFor(languageId).tr;
+                        final canComplete = (status == 'accepted' || status == 'assigned') && _slotEnded('${row['ends_at'] ?? ''}');
+                        final member = '${row['member_display_name'] ?? ''}'.trim();
+                        final relation = _relatedLabel('${row['relationship'] ?? ''}'.trim());
+                        final lines = <String>[
+                          if (member.isNotEmpty) 'For: @name (@relationship)'.trParams({'name': member, 'relationship': relation}),
+                          if (language.isNotEmpty) '${'Preferred consultation language'.tr}: $language',
+                          if (query.isNotEmpty) '${'Customer question'.tr}: $query',
+                        ];
+                        return MarathonPortalCard(
+                          startsAt: '${row['starts_at'] ?? ''}',
+                          endsAt: '${row['ends_at'] ?? ''}',
+                          timezone: viewerZone,
+                          title: row['user_name']?.toString() ?? '',
+                          lines: lines,
+                          active: status != 'completed' && !ended,
+                          status: ended ? '$label · ${'Event ended by admin'.tr}' : label,
+                          actions: [
+                            if (eventId != null)
+                              MarathonPortalButton(
+                                soft: true,
+                                label: 'Full Horoscope'.tr,
+                                onTap: () => _horoscope(eventId, name: member.isEmpty ? '${row['user_name'] ?? ''}' : '$member ($relation)'),
+                              ),
+                            if (link.isNotEmpty)
+                              MarathonPortalButton(
+                                soft: true,
+                                label: 'Join Meeting'.tr,
+                                onTap: () => launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication),
+                              ),
+                            if (status != 'completed' && status != 'paid')
+                              MarathonPortalButton(
+                                label: canComplete ? 'Mark completed'.tr : 'Consultation time has not ended yet.'.tr,
+                                onTap: canComplete ? () => _complete(id) : null,
+                              ),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+          ),
+        ],
       ),
-      body: loading
-          ? Center(child: CircularProgressIndicator(color: mainColor))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-              children: [
-                MarathonPortalHero(title: title, subtitle: 'View bookings'.tr, hint: participants),
-                if (rows.isEmpty) Text('No bookings for this event yet.'.tr, style: TextStyle(color: blackColor.withValues(alpha: 0.6))),
-                ...rows.map((row) {
-                  final id = row['id'] is int ? row['id'] as int : int.tryParse('${row['id']}') ?? 0;
-                  final eventId = row['event_id'] is int ? row['event_id'] as int : int.tryParse('${row['event_id']}');
-                  final status = '${row['status'] ?? ''}';
-                  final link = '${row['meeting_link'] ?? ''}'.trim();
-                  final label = _label(status);
-                  final ended = row['admin_ended'] == true && status != 'completed';
-                  final query = '${row['customer_query'] ?? ''}'.trim();
-                  final languageId = '${row['preferred_language'] ?? ''}'.trim();
-                  final language = languageId.isEmpty
-                      ? ''
-                      : AskAstrologerLanguages.labelFor(languageId).tr;
-                  final canComplete = (status == 'accepted' || status == 'assigned') && _slotEnded('${row['ends_at'] ?? ''}');
-                  final member = '${row['member_display_name'] ?? ''}'.trim();
-                  final relationCode = '${row['relationship'] ?? ''}'.trim();
-                  final relation = _relatedLabel(relationCode);
-                  final lines = <String>[
-                    if (member.isNotEmpty) 'For: @name (@relationship)'.trParams({'name': member, 'relationship': relation}),
-                    if (language.isNotEmpty) '${'Preferred consultation language'.tr}: $language',
-                    if (query.isNotEmpty) '${'Customer question'.tr}: $query',
-                  ];
-                  return MarathonPortalCard(
-                    startsAt: '${row['starts_at'] ?? ''}',
-                    timezone: viewerZone,
-                    title: row['user_name']?.toString() ?? '',
-                    lines: lines,
-                    status: ended ? '$label · ${'Event ended by admin'.tr}' : label,
-                    footer: Wrap(
-                      alignment: WrapAlignment.end,
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        if (eventId != null) _outline(util, 'Full Horoscope'.tr, () => _horoscope(eventId, name: member.isEmpty ? '${row['user_name'] ?? ''}' : '$member ($relation)')),
-                        if (link.isNotEmpty) _outline(util, 'Join Meeting'.tr, () => launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication)),
-                        if (status == 'completed')
-                          Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.bold), color: mainColor, fontSize: util.fontSize13))
-                        else if (status == 'paid')
-                          Text('Waiting for admin assignment'.tr, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), color: blackColor.withValues(alpha: 0.65), fontSize: util.fontSize13))
-                        else
-                          _filled(
-                            util,
-                            canComplete ? 'Mark completed'.tr : 'Consultation time has not ended yet.'.tr,
-                            canComplete ? () => _complete(id) : null,
-                          ),
-                      ],
-                    ),
-                  );
-                }),
-              ],
-            ),
-    );
-  }
-
-  Widget _outline(MyUtility util, String label, VoidCallback onTap) {
-    return OutlinedButton(
-      onPressed: onTap,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: mainColor,
-        side: const BorderSide(color: mainColor),
-        shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      child: Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13)),
-    );
-  }
-
-  Widget _filled(MyUtility util, String label, VoidCallback? onTap) {
-    return FilledButton(
-      onPressed: onTap,
-      style: FilledButton.styleFrom(
-        backgroundColor: mainColor,
-        disabledBackgroundColor: mainColor.withValues(alpha: 0.35),
-        foregroundColor: whiteColor,
-        shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      child: Text(label, style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize13)),
     );
   }
 }

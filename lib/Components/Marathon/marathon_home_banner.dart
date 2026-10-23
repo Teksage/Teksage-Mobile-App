@@ -69,13 +69,12 @@ class _MarathonHomeBannerState extends State<MarathonHomeBanner> {
   Widget build(BuildContext context) {
     final util = MyUtility(context);
     final event = _event;
-    if (event == null) return const SizedBox.shrink();
-    final closesAt = event['booking_closes_at']?.toString();
+    final closesAt = event?['booking_closes_at']?.toString();
     final when = marathonWallParts(
-      event['starts_at']?.toString(),
+      event?['starts_at']?.toString(),
       zone: _viewerZone,
     );
-    final name = marathonDisplayName(event['name']?.toString());
+    final name = marathonDisplayName(event?['name']?.toString());
     final eventLine = (when != null && name.isNotEmpty)
         ? '$name · ${_monthLabel(when.month)} ${when.day}, ${marathonTimeWithIst(when.time)}'
         : null;

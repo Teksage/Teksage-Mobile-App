@@ -26,6 +26,23 @@ class AskAstrologerLanguages {
     {'id': 'santali', 'label': 'Santali', 'native': 'ᱥᱟᱱᱛᱟᱲᱤ'},
   ];
 
+  /// Languages a customer can request. Same set as the app language page.
+  static const List<String> choiceIds = [
+    'english',
+    'tamil',
+    'hindi',
+    'telugu',
+    'kannada',
+    'malayalam',
+    'marathi',
+  ];
+
+  static List<Map<String, String>> get choices {
+    return choiceIds
+        .map((id) => options.firstWhere((option) => option['id'] == id))
+        .toList();
+  }
+
   static String labelFor(String id) {
     return options.firstWhere(
       (o) => o['id'] == id,

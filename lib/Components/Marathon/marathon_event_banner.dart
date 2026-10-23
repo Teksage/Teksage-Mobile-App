@@ -151,11 +151,11 @@ class _BookingsButton extends StatelessWidget {
   }
 }
 
-/// Open slot count, same rule as the website card.
+/// Seats still open across every time, same rule as the website card.
 int marathonOpenSlotCount(Map<String, dynamic> event) {
   if (event['booking_open'] != true || event['admin_ended'] == true) return 0;
   final slots = List<Map<String, dynamic>>.from(event['slots'] ?? []);
-  return slots.where((slot) => _toInt(slot['seats_left']) > 0).length;
+  return slots.fold<int>(0, (sum, slot) => sum + _toInt(slot['seats_left']));
 }
 
 int _toInt(dynamic value) => value is int ? value : int.tryParse('$value') ?? 0;

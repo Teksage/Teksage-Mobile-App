@@ -50,7 +50,7 @@ class _MarathonAstrologerBookingsPageState extends State<MarathonAstrologerBooki
       for (final row in drafts) {
         if (row['id'] == widget.marathonId) event = row;
       }
-      final fallback = next.isEmpty ? 'Teksage Expert Hours'.tr : '${next.first['event_name'] ?? ''}';
+      final fallback = next.isEmpty ? 'AstroConnect Pro'.tr : '${next.first['event_name'] ?? ''}';
       final count = event?['participant_count'];
       final total = count is int ? count : int.tryParse('$count') ?? next.length;
       final end = DateTime.tryParse('${event?['ends_at'] ?? ''}');

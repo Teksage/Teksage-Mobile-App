@@ -102,7 +102,7 @@ class _MarathonSummaryPageState extends State<MarathonSummaryPage> {
       body: !loaded
           ? const Center(child: CircularProgressIndicator(color: mainColor))
           : row == null
-              ? Center(child: Text('No Expert Hours event is open right now.'.tr))
+              ? Center(child: Text('No AstroConnect Pro event is open right now.'.tr))
               : ListView(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   children: [

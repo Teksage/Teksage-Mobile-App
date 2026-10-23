@@ -120,7 +120,7 @@ class _MarathonAstrologerPageState extends State<MarathonAstrologerPage> {
       body: Column(
         children: [
           MarathonPortalHeader(
-            title: 'Teksage Expert Hours'.tr,
+            title: 'AstroConnect Pro'.tr,
             subtitle: 'Confirm you will take part. Admin publishes after astrologers confirm.'.tr,
             onBack: () => Get.back(),
           ),
@@ -139,7 +139,7 @@ class _MarathonAstrologerPageState extends State<MarathonAstrologerPage> {
                       ),
                       const SizedBox(height: 16),
                       if (visible.isEmpty)
-                        Text('No Expert Hours event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
+                        Text('No AstroConnect Pro event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
                       ...visible.map((row) {
                         final id = _id(row);
                         final completed = _completed(id);

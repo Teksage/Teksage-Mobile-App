@@ -36,7 +36,7 @@ class _AskAstrologerLanguagePageState extends State<AskAstrologerLanguagePage>
   String selectedLanguage = '';
   bool showError = false;
   MuhurthaResult? _eventPlan;
-  final languages = AskAstrologerLanguages.options
+  final languages = AskAstrologerLanguages.choices
       .map((o) => o['label']!.tr)
       .toList();
 

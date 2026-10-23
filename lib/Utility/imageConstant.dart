@@ -8,6 +8,7 @@ const iosOnBoard1 = 'assets/images/iosOnBoard1.png';
 const iosOnBoard2 = 'assets/images/iosOnBoard2.png';
 const iosOnBoard3 = 'assets/images/iosOnBoard3.png';
 const bottomBannerBg = 'assets/images/bottomBanner.png';
+const astroConnectPopupBanner = 'assets/images/popup_banner.png';
 const chatBg = 'assets/images/chatBG.png';
 const homeBanDeco = 'assets/images/homeBannerDeco.png';
 const weeklyBg = 'assets/images/weeklyBg.png';

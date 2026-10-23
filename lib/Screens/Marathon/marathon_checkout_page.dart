@@ -774,7 +774,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
           ),
         if (error.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 12), child: Text(error, style: const TextStyle(color: Colors.red))),
         MarathonPlainNote(text: "You'll be taken to our secure payment partner · UPI, cards, net banking".tr),
-        MarathonNote(icon: Icons.chat_bubble_outline_rounded, text: 'Questions after paying? Message us on WhatsApp right away.'.tr),
+        MarathonNote(icon: Icons.chat_bubble_outline_rounded, text: 'Need help after booking? Contact us on WhatsApp anytime.'.tr),
         const SizedBox(height: 16),
         MarathonPrimaryButton(
           wide: true,

@@ -12,7 +12,9 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class MarathonListPage extends StatefulWidget {
-  const MarathonListPage({super.key});
+  const MarathonListPage({super.key, this.focusId});
+
+  final int? focusId;
 
   @override
   State<MarathonListPage> createState() => _MarathonListPageState();
@@ -42,9 +44,20 @@ class _MarathonListPageState extends State<MarathonListPage> {
       final token = await getAccessToken();
       final past = token.isEmpty ? <Map<String, dynamic>>[] : await _service.mine();
       if (!mounted) return;
+      final focusId = widget.focusId;
+      var openUpcoming = true;
+      if (focusId != null) {
+        for (final event in rows) {
+          if (marathonInt(event['id']) == focusId) {
+            openUpcoming = _upcoming(event);
+            break;
+          }
+        }
+      }
       setState(() {
         events = rows;
         mine = past;
+        showUpcoming = openUpcoming;
         loading = false;
       });
     } catch (err) {
@@ -84,7 +97,17 @@ class _MarathonListPageState extends State<MarathonListPage> {
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
-    final visible = events.where((event) => _upcoming(event) == showUpcoming).toList();
+    final focusId = widget.focusId;
+    final visible = <Map<String, dynamic>>[];
+    Map<String, dynamic>? pinned;
+    for (final event in events.where((event) => _upcoming(event) == showUpcoming)) {
+      if (focusId != null && pinned == null && marathonInt(event['id']) == focusId) {
+        pinned = event;
+      } else {
+        visible.add(event);
+      }
+    }
+    if (pinned != null) visible.insert(0, pinned);
     final pages = (visible.length / marathonPageSize).ceil().clamp(1, 1 << 20);
     final current = page.clamp(0, pages - 1);
     final slice = visible.skip(current * marathonPageSize).take(marathonPageSize).toList();
@@ -120,11 +143,11 @@ class _MarathonListPageState extends State<MarathonListPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('AstroConnect Pro'.tr, style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.3)),
+                          Text('AstroConnect Pro'.tr, style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.15)),
                           const SizedBox(height: 2),
                           Text(
-                            'Better guidance · Brighter tomorrows'.tr,
-                            style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5)),
+                            'Better guidance · Brighter tomorrow'.tr,
+                            style: marathonText(util, FontType.medium, size: util.fontSize13, color: blackColor.withValues(alpha: 0.5), height: 1.2),
                           ),
                         ],
                       ),

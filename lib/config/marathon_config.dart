@@ -5,13 +5,13 @@ class MarathonConfig {
       'https://play.google.com/store/apps/details?id=com.venzo.astroPrompt';
 
   static String websiteListUrl() =>
-      '${EventPlannerConfig.shareSiteOrigin}/experthours';
+      '${EventPlannerConfig.shareSiteOrigin}/astroconnect';
 
   static String websiteDetailUrl(Object idOrSlug) =>
-      '${EventPlannerConfig.shareSiteOrigin}/experthours/$idOrSlug';
+      '${EventPlannerConfig.shareSiteOrigin}/astroconnect/$idOrSlug';
 
   static String websiteBookingUrl(int id) =>
-      '${EventPlannerConfig.shareSiteOrigin}/experthours/booking/$id';
+      '${EventPlannerConfig.shareSiteOrigin}/astroconnect/booking/$id';
 
   static String supportWhatsAppUrl() {
     const text =

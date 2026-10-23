@@ -120,7 +120,7 @@ class _MarathonListPageState extends State<MarathonListPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Teksage Expert Hours'.tr, style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.3)),
+                          Text('AstroConnect Pro'.tr, style: marathonText(util, FontType.bold, size: util.fontSize18, height: 1.3)),
                           const SizedBox(height: 2),
                           Text(
                             'Better guidance · Brighter tomorrows'.tr,
@@ -156,7 +156,7 @@ class _MarathonListPageState extends State<MarathonListPage> {
                       const SizedBox(height: 16),
                       if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
                       if (slice.isEmpty && error.isEmpty)
-                        Text('No Expert Hours event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
+                        Text('No AstroConnect Pro event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
                       ...slice.map((event) {
                         final rows = mine.where((row) => marathonInt(row['marathon_id']) == marathonInt(event['id'])).toList();
                         final slotId = marathonFirstOpenSlot(event, rows);

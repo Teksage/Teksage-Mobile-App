@@ -116,7 +116,7 @@ class _DashboardCardsState extends State<DashboardCards> {
               SizedBox(width: util.width20),
               Expanded(
                 child: _buildCard(
-                  title: 'Teksage Expert Hours',
+                  title: 'AstroConnect Pro',
                   subtitle: 'Paid seats you can accept',
                   imagePath: astroMarathon,
                   context: context,

@@ -542,7 +542,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
         'currency': order['currency'],
         'order_id': order['id'],
         'name': 'Teksage',
-        'description': event?['name']?.toString() ?? 'Teksage Expert Hours',
+        'description': event?['name']?.toString() ?? 'AstroConnect Pro',
       });
     } catch (err) {
       CustomLoader.hide();
@@ -599,7 +599,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       body: Column(
         children: [
           MarathonFlowBar(
-            title: event == null ? 'Teksage Expert Hours'.tr : marathonDisplayName(event?['name']?.toString()).tr,
+            title: event == null ? 'AstroConnect Pro'.tr : marathonDisplayName(event?['name']?.toString()).tr,
             onBack: () => Get.back(),
             steps: ['Login'.tr, 'Time Slot & Birth Details'.tr, 'Payment'.tr],
             step: step,

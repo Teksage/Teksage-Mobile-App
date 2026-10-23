@@ -122,7 +122,7 @@ class _MarathonHomeBannerState extends State<MarathonHomeBanner> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Teksage Expert Hours'.tr,
+                                'AstroConnect Pro'.tr,
                                 style: TextStyle(
                                   fontFamily: AppFont.get(FontType.bold),
                                   fontSize: util.fontSize16,

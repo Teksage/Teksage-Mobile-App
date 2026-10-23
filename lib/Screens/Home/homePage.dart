@@ -15,6 +15,7 @@ import 'package:astro_prompt/Screens/Chat/chat.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Components/EventPlanner/event_planner_home_banner.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_home_banner.dart';
+import 'package:astro_prompt/Services/AstroConnect/astroconnect_popup_prompt.dart';
 import 'package:astro_prompt/Components/Home/partnerDiscountBanner.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingDetails.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
@@ -214,6 +215,11 @@ class _HomePageState extends State<HomePage>
       if (id != null) userId = id;
       if (name.isNotEmpty) userName = name;
     });
+    if (signedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) AstroConnectPopupPrompt.maybeShow(context);
+      });
+    }
   }
 
   @override
@@ -1365,11 +1371,8 @@ class _HomePageState extends State<HomePage>
                     SizedBox(
                       height: util.responsiveHeight(0.0296),
                     ),
-                    const EventPlannerHomeBanner(),
-                    SizedBox(
-                      height: util.responsiveHeight(0.0296),
-                    ),
                     const MarathonHomeBanner(),
+                    const EventPlannerHomeBanner(),
                     SizedBox(
                       height: util.responsiveHeight(0.0296),
                     ),

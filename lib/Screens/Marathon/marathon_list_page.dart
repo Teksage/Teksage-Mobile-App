@@ -1,5 +1,6 @@
 import 'package:astro_prompt/Components/Marathon/marathon_event_banner.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_flow_widgets.dart';
+import 'package:astro_prompt/Components/Marathon/marathon_list_empty.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_checkout_page.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_slots.dart';
 import 'package:astro_prompt/Services/Marathon/marathon_service.dart';
@@ -178,8 +179,7 @@ class _MarathonListPageState extends State<MarathonListPage> {
                       ),
                       const SizedBox(height: 16),
                       if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
-                      if (slice.isEmpty && error.isEmpty)
-                        Text('No AstroConnect Pro event is open right now.'.tr, style: marathonText(util, FontType.medium, color: blackColor.withValues(alpha: 0.5))),
+                      if (slice.isEmpty && error.isEmpty) MarathonListEmpty(upcoming: showUpcoming),
                       ...slice.map((event) {
                         final rows = mine.where((row) => marathonInt(row['marathon_id']) == marathonInt(event['id'])).toList();
                         final slotId = marathonFirstOpenSlot(event, rows);

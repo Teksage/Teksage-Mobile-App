@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:astro_prompt/Components/Common/customCountryDropDown.dart';
 import 'package:astro_prompt/Components/Consultation-User/LanguageDropDown.dart';
 import 'package:astro_prompt/Components/Marathon/marathon_event_banner.dart';
@@ -31,6 +33,7 @@ import 'package:astro_prompt/config/LocallySavedData/userType.dart';
 import 'package:astro_prompt/config/ask_astrologer_config.dart';
 import 'package:astro_prompt/config/login_constants.dart';
 import 'package:astro_prompt/config/otp_contact_helpers.dart';
+import 'package:astro_prompt/config/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -172,19 +175,23 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       final row = await _service.publicDetail(widget.marathonId);
       final token = await getAccessToken();
       var next = 1;
+      UserProfile? profile;
       if (token.isNotEmpty) {
-        final profile = await ProfileService().fetchUserProfile();
-        await _refreshBookings();
-        if (profile != null) {
-          ownerProfile = profile;
-          _fill(profile);
-          _fillVerifiedContact(profile);
-          _rememberFee(profile, row);
-        }
-        relatedPeople = await _service.relatedProfiles();
-        // Always collect birth details + required customer query before pay.
         next = 2;
+        try {
+          profile = await ProfileService().fetchUserProfile();
+          await _refreshBookings();
+          if (profile != null) {
+            ownerProfile = profile;
+            _fill(profile);
+            _fillVerifiedContact(profile);
+          }
+          relatedPeople = await _service.relatedProfiles();
+        } catch (err) {
+          error = _readable(err);
+        }
       }
+      await _rememberFee(profile, row);
       if (!mounted) return;
       setState(() {
         event = row;
@@ -194,15 +201,33 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     } catch (err) {
       if (!mounted) return;
       setState(() {
-        error = err.toString().replaceFirst('Exception: ', '');
+        error = _readable(err);
         loading = false;
       });
     }
   }
 
-  void _rememberFee(UserProfile profile, Map<String, dynamic> row) {
-    payCurrency = ProfileCurrency.fromProfile(profile);
-    final raw = payCurrency == 'USD' && row['usd_fee'] != null ? row['usd_fee'] : row['fee'];
+  String _readable(Object err) {
+    final text = err.toString().replaceFirst('Exception: ', '').trim();
+    if (text.isEmpty || text == 'null' || text == 'Error: null') {
+      return 'Something went wrong. Try again.'.tr;
+    }
+    return text;
+  }
+
+  /// Android uses the same GPS country check as consultations. Otherwise the profile place.
+  Future<void> _rememberFee(UserProfile? profile, Map<String, dynamic> row) async {
+    var currency = ProfileCurrency.fromProfile(profile, timezone: viewerZone ?? await getTimezone());
+    if (Platform.isAndroid && mounted) {
+      try {
+        final granted = await CurrencyService().requestPermission(context);
+        if (granted && mounted) {
+          currency = await CurrencyService().getCurrency(context) ?? currency;
+        }
+      } catch (_) {}
+    }
+    final raw = currency == 'USD' && row['usd_fee'] != null ? row['usd_fee'] : row['fee'];
+    payCurrency = currency;
     payBase = double.tryParse('$raw');
   }
 
@@ -291,15 +316,19 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       return;
     }
     await _rememberLogin(result);
-    final profile = await ProfileService().fetchUserProfile();
-    if (profile != null) {
-      ownerProfile = profile;
-      _fill(profile);
-      _fillVerifiedContact(profile);
-      if (event != null) _rememberFee(profile, event!);
+    try {
+      final profile = await ProfileService().fetchUserProfile();
+      if (profile != null) {
+        ownerProfile = profile;
+        _fill(profile);
+        _fillVerifiedContact(profile);
+        if (event != null) await _rememberFee(profile, event!);
+      }
+      relatedPeople = await _service.relatedProfiles();
+      await _refreshBookings();
+    } catch (err) {
+      if (mounted) setState(() => error = _readable(err));
     }
-    relatedPeople = await _service.relatedProfiles();
-    await _refreshBookings();
     if (!mounted) return;
     // Always collect birth details / query / language on step 2 before pay.
     setState(() => step = 2);
@@ -465,7 +494,7 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
       final profile = await ProfileService().fetchUserProfile();
       if (profile != null) {
         ownerProfile = profile;
-        if (event != null) _rememberFee(profile, event!);
+        if (event != null) await _rememberFee(profile, event!);
       }
       final tzFromSave = saved['data'] is Map ? saved['data']['timezone']?.toString() : null;
       if (tzFromSave != null && tzFromSave.trim().isNotEmpty) {
@@ -526,11 +555,9 @@ class _MarathonCheckoutPageState extends State<MarathonCheckoutPage> {
     }
     CustomLoader.show(context);
     try {
-      final profile = await ProfileService().fetchUserProfile();
-      final currency = ProfileCurrency.fromProfile(profile);
       final order = await _service.checkout(
         slotId,
-        currency: currency,
+        currency: payCurrency,
         customerQuery: customerQuery.trim(),
         preferredLanguage: preferredLanguage.trim(),
         relatedProfileId: forOthers ? selectedRelatedId : null,

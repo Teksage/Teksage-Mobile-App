@@ -2,29 +2,61 @@ import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Services/ProfileService/profileService.dart';
 import 'package:astro_prompt/config/LocallySavedData/timezone.dart';
 
-/// INR only for India. Any other preferred location is USD.
-/// Mirrors web `consultationCurrencyForLocation`.
+/// Same order as the website `consultationCurrencyForLocation`.
+/// India text, +91, or an India timezone is INR. A named foreign place is USD.
+/// Any other saved place stays INR.
 class ProfileCurrency {
-  static const _indiaTimezones = ['Asia/Kolkata', 'Asia/Calcutta'];
+  static const _indiaTimezones = ['Asia/Kolkata', 'Asia/Calcutta', 'IST'];
   static const _indiaDial = '91';
+  static const _foreignHints = [
+    'usa',
+    'united states',
+    'uk',
+    'united kingdom',
+    'canada',
+    'australia',
+    'uae',
+    'dubai',
+    'abu dhabi',
+    'singapore',
+    'malaysia',
+    'germany',
+    'france',
+    'europe',
+    'qatar',
+    'saudi',
+    'kuwait',
+    'oman',
+    'bahrain',
+    'new zealand',
+    'japan',
+    'london',
+    'new york',
+    'california',
+    'texas',
+    'toronto',
+    'sydney',
+    'melbourne',
+  ];
 
   static String fromProfile(
     UserProfile? profile, {
     String? timezone,
   }) {
-    final loc = (profile?.preferredLocation ?? '').trim();
+    final loc = (profile?.preferredLocation ?? '').trim().toLowerCase();
     if (loc.isNotEmpty) {
-      return _isIndiaLocation(loc) ? 'INR' : 'USD';
-    }
-
-    final tz = (timezone ?? '').trim();
-    if (tz.isNotEmpty && tz.toUpperCase() != 'UTC') {
-      return _indiaTimezones.contains(tz) ? 'INR' : 'USD';
+      if (_containsAny(loc, _foreignHints)) return 'USD';
+      if (_isIndiaLocation(loc)) return 'INR';
     }
 
     final code = (profile?.countryCode ?? '').replaceAll(RegExp(r'\D'), '');
     if (code == _indiaDial) return 'INR';
     if (code.isNotEmpty) return 'USD';
+
+    final tz = (timezone ?? '').trim();
+    if (_indiaTimezones.contains(tz)) return 'INR';
+    if (loc.isNotEmpty) return 'INR';
+    if (tz.isNotEmpty && tz.toUpperCase() != 'UTC') return 'USD';
     return 'INR';
   }
 
@@ -35,8 +67,16 @@ class ProfileCurrency {
   }
 
   static bool _isIndiaLocation(String location) {
-    final loc = location.toLowerCase();
-    if (loc == 'india' || loc == 'in') return true;
-    return loc.contains('india');
+    if (location == 'india' || location == 'in' || location == 'ind') return true;
+    return location.contains('india') ||
+        location.contains('bharat') ||
+        location.contains('hindustan');
+  }
+
+  static bool _containsAny(String value, List<String> hints) {
+    for (final hint in hints) {
+      if (value.contains(hint)) return true;
+    }
+    return false;
   }
 }

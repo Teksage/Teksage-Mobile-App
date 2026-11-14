@@ -151,7 +151,9 @@ class _MarathonAstrologerPageState extends State<MarathonAstrologerPage> {
                           endsAt: '${row['ends_at'] ?? ''}',
                           timezone: viewerZone,
                           title: row['name']?.toString() ?? '',
-                          category: categories.isEmpty ? '' : categories.first.tr,
+                          category: categories.isEmpty
+                              ? ''
+                              : categories.map((item) => item.tr).join(', '),
                           active: status == null,
                           status: status,
                           closesAt: status == null ? row['booking_closes_at']?.toString() : null,

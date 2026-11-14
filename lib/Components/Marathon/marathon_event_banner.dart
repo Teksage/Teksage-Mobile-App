@@ -1,4 +1,5 @@
 import 'package:astro_prompt/Components/Marathon/marathon_flow_widgets.dart';
+import 'package:astro_prompt/Components/Marathon/marathon_lead_capture.dart';
 import 'package:astro_prompt/Screens/Marathon/marathon_summary_page.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -42,8 +43,13 @@ class _MarathonEventBannerState extends State<MarathonEventBanner> {
   Widget build(BuildContext context) {
     final event = widget.event;
     final util = MyUtility(context);
-    final categories = (event['categories'] as List?)?.map((item) => item.toString()).toList() ?? [];
-    final category = categories.isEmpty ? 'Session'.tr : categories.first.tr;
+    final categories = (event['categories'] as List?)
+            ?.map((item) => item.toString().trim())
+            .where((item) => item.isNotEmpty)
+            .toList() ??
+        <String>[];
+    final category =
+        categories.isEmpty ? 'Session'.tr : categories.map((item) => item.tr).join(', ');
     final description = event['description']?.toString() ?? '';
     final ended = event['admin_ended'] == true;
     final open = event['booking_open'] == true && !ended;
@@ -55,7 +61,6 @@ class _MarathonEventBannerState extends State<MarathonEventBanner> {
     final start = marathonWallDetail(event['starts_at']?.toString(), zone: _viewerZone);
     final end = marathonWallDetail(event['ends_at']?.toString(), zone: _viewerZone);
     final slots = '@count Slots Available'.trParams({'count': '${marathonOpenSlotCount(event)}'});
-    final hasActions = widget.onBook != null || widget.bookings.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -90,18 +95,13 @@ class _MarathonEventBannerState extends State<MarathonEventBanner> {
                 slots: slots,
               ),
             ],
-            if (hasActions) ...[
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 8,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  if (widget.onBook != null) MarathonSoftButton(label: 'Book a Slot'.tr, onTap: widget.onBook!),
-                  if (widget.bookings.isNotEmpty) _BookingsButton(bookings: widget.bookings, zone: _viewerZone),
-                ],
-              ),
-            ],
+            const SizedBox(height: 16),
+            _EventActions(
+              onBook: widget.onBook,
+              event: event,
+              bookings: widget.bookings,
+              zone: _viewerZone,
+            ),
           ],
         ),
       ),
@@ -109,11 +109,64 @@ class _MarathonEventBannerState extends State<MarathonEventBanner> {
   }
 }
 
+/// Keeps Notify / View notification and View bookings on one row when both show.
+class _EventActions extends StatelessWidget {
+  const _EventActions({
+    required this.event,
+    required this.bookings,
+    required this.zone,
+    this.onBook,
+  });
+
+  final Map<String, dynamic> event;
+  final List<Map<String, dynamic>> bookings;
+  final String? zone;
+  final VoidCallback? onBook;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasBook = onBook != null;
+    final hasBookings = bookings.isNotEmpty;
+    final shareRow = !hasBook && hasBookings;
+
+    if (shareRow) {
+      return Row(
+        children: [
+          Expanded(child: MarathonLeadCapture(event: event, expanded: true)),
+          const SizedBox(width: 8),
+          Expanded(child: _BookingsButton(bookings: bookings, zone: zone, expanded: true)),
+        ],
+      );
+    }
+
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        if (hasBook)
+          MarathonActionButton(
+            label: 'Book a Slot'.tr,
+            showArrow: true,
+            onTap: onBook!,
+          ),
+        MarathonLeadCapture(event: event),
+        if (hasBookings) _BookingsButton(bookings: bookings, zone: zone),
+      ],
+    );
+  }
+}
+
 class _BookingsButton extends StatelessWidget {
-  const _BookingsButton({required this.bookings, required this.zone});
+  const _BookingsButton({
+    required this.bookings,
+    required this.zone,
+    this.expanded = false,
+  });
 
   final List<Map<String, dynamic>> bookings;
   final String? zone;
+  final bool expanded;
 
   int _id(Map<String, dynamic> row) {
     final raw = row['id'];
@@ -130,11 +183,21 @@ class _BookingsButton extends StatelessWidget {
     final single = bookings.length == 1;
     final label = Text(
       single ? '${'View bookings'.tr} →' : '${'View bookings'.tr} ▾',
-      style: TextStyle(fontFamily: AppFont.get(FontType.semiBold), fontSize: util.fontSize14, color: whiteColor, height: 1.2),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontFamily: AppFont.get(FontType.semiBold),
+        fontSize: util.fontSize14,
+        color: whiteColor,
+        height: 1.2,
+      ),
     );
     final pill = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      width: expanded ? double.infinity : null,
+      padding: EdgeInsets.symmetric(horizontal: expanded ? 12 : 16, vertical: 10),
       decoration: BoxDecoration(color: mainColor, borderRadius: BorderRadius.circular(24)),
+      alignment: expanded ? Alignment.center : null,
       child: label,
     );
     if (single) {

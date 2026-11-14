@@ -71,6 +71,8 @@ class ApiEndpoint {
   static const String marathonPublic = '$marathon/public';
   static const String marathonPopup = '$marathon/popup';
   static const String marathonPopupDismiss = '$marathon/popup/dismiss';
+  static const String marathonLeads = '$marathon/leads';
+  static const String marathonLeadsLookup = '$marathon/leads/lookup';
 
   //Horoscope
   static const String horoscope = '$profile/horoscope';

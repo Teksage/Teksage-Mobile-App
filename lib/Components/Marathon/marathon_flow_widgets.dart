@@ -504,6 +504,66 @@ class MarathonPrimaryButton extends StatelessWidget {
   }
 }
 
+/// Compact list/card pill — solid or soft, matches website actionSolid / actionSoft.
+class MarathonActionButton extends StatelessWidget {
+  const MarathonActionButton({
+    super.key,
+    required this.label,
+    required this.onTap,
+    this.soft = false,
+    this.showArrow = false,
+    this.expanded = false,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+  final bool soft;
+  final bool showArrow;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    final util = MyUtility(context);
+    final fg = soft ? mainColor : whiteColor;
+    final child = Material(
+      color: soft ? mainColor.withValues(alpha: 0.14) : mainColor,
+      shape: StadiumBorder(
+        side: soft
+            ? BorderSide(color: mainColor.withValues(alpha: 0.28))
+            : BorderSide.none,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: expanded ? 12 : 20, vertical: 10),
+          child: Row(
+            mainAxisSize: expanded ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: marathonText(util, FontType.semiBold, color: fg, height: 1.2),
+                ),
+              ),
+              if (showArrow) ...[
+                const SizedBox(width: 4),
+                Text('→', style: marathonText(util, FontType.semiBold, color: fg, height: 1.2)),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+    if (expanded) return SizedBox(width: double.infinity, child: child);
+    return child;
+  }
+}
+
 /// Transparent green action, used for Book a Slot.
 class MarathonSoftButton extends StatelessWidget {
   const MarathonSoftButton({super.key, required this.label, required this.onTap});

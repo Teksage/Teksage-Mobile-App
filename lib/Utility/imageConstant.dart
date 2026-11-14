@@ -198,4 +198,6 @@ const welcomeCheckBox = 'assets/svg/welcomeCheckBox.svg';
 const waBenefitPlanet = 'assets/svg/whatsapp-benefit-planet.svg';
 const waBenefitCalendar = 'assets/svg/whatsapp-benefit-calendar.svg';
 const waCtaWhatsapp = 'assets/svg/sidebar-whatsapp.svg';
+const whatsappBrand = 'assets/svg/whatsapp-brand.svg';
+const instagramBrand = 'assets/svg/instagram-brand.svg';
 const marathonHeroWheel = 'assets/images/marathon_hero_wheel.jpg';

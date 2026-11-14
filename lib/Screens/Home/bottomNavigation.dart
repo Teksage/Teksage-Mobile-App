@@ -1,4 +1,5 @@
 import 'package:astro_prompt/Components/Common/app_floating_bottom_nav.dart';
+import 'package:astro_prompt/Services/AstroConnect/astroconnect_popup_prompt.dart';
 import 'package:astro_prompt/Screens/Home/bottonNavController.dart';
 import 'package:astro_prompt/Screens/Home/homePage.dart';
 import 'package:astro_prompt/Screens/Horoscope/horoscopePage.dart';
@@ -36,6 +37,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
     controller.currentIndex.listen((index) {
       _stackController.switchTo(index, pages.length);
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) AstroConnectPopupPrompt.maybeShow(context);
     });
   }
 

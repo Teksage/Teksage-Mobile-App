@@ -63,8 +63,7 @@ class _UserConsultationDetailsHomeState
             eventGetData.where((e) => e.status == 'completed').toList();
         upcomingMeetings =
             eventGetData.where((e) => e.status == 'confirmed').toList();
-        completedCount =
-            completedMeetings.where((e) => e.queriesAnswered != null).length;
+        completedCount = completedMeetings.length;
       });
 
       print('upcomingMeetings: ${upcomingMeetings.length}');
@@ -84,6 +83,20 @@ class _UserConsultationDetailsHomeState
         });
       },
     );
+  }
+
+  /// Short label under the list rating — same meaning as Booking Details review card.
+  String? _reviewStatusShortLabel(String? reviewStatus) {
+    switch (reviewStatus) {
+      case 'approved':
+        return 'Review published'.tr;
+      case 'rejected':
+        return 'Review not published'.tr;
+      case 'pending':
+        return 'Review pending approval'.tr;
+      default:
+        return null;
+    }
   }
 
   Future<void> navigateToAstrologerDetail({
@@ -398,7 +411,7 @@ class _UserConsultationDetailsHomeState
                                     ],
                                   ),
                                   SizedBox(height: 13),
-                                  (!isUpcoming && event.queriesAnswered != null)
+                                  (!isUpcoming && event.queriesAnswered == true)
                                       ? Column(
                                           children: [
                                             Container(
@@ -553,106 +566,172 @@ class _UserConsultationDetailsHomeState
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  event.rating != null
-                                                      ? Text(
-                                                          '${event.rating}.0',
-                                                          style: TextStyle(
+                                              event.rating != null
+                                                  ? Flexible(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 4),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                Text(
+                                                                  '${event.rating}.0',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'FontSemiBold',
+                                                                    fontSize: util
+                                                                        .fontSize16,
+                                                                    color: const Color(
+                                                                        0xff87AE0E),
+                                                                    height: 1.0,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 2),
+                                                                SvgPicture.asset(
+                                                                    ratingSelect),
+                                                              ],
+                                                            ),
+                                                            if (_reviewStatusShortLabel(
+                                                                    event
+                                                                        .reviewStatus) !=
+                                                                null) ...[
+                                                              const SizedBox(
+                                                                  height: 3),
+                                                              Text(
+                                                                _reviewStatusShortLabel(
+                                                                    event
+                                                                        .reviewStatus)!,
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      AppFont.get(
+                                                                          FontType
+                                                                              .regular),
+                                                                  fontSize: util
+                                                                      .fontSize10,
+                                                                  height: 1.15,
+                                                                  color: blackColor
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              0.55),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : GestureDetector(
+                                                      onTap: () async {
+                                                        final shouldRefresh =
+                                                            await showGeneralDialog<
+                                                                bool>(
+                                                          context: context,
+                                                          barrierLabel:
+                                                              "RatingDialog",
+                                                          barrierDismissible:
+                                                              true,
+                                                          barrierColor: Colors
+                                                              .black
+                                                              .withValues(
+                                                                  alpha: 0.4),
+                                                          transitionDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      200),
+                                                          pageBuilder: (context,
+                                                              animation1,
+                                                              animation2) {
+                                                            return BackdropFilter(
+                                                              filter: ImageFilter
+                                                                  .blur(
+                                                                      sigmaX:
+                                                                          4,
+                                                                      sigmaY:
+                                                                          4),
+                                                              child: Center(
+                                                                child:
+                                                                    RatingDialog(
+                                                                  meetingId:
+                                                                      event.id,
+                                                                  onSubmit:
+                                                                      (newRating,
+                                                                          feedback) {
+                                                                    setState(
+                                                                        () {
+                                                                      final list =
+                                                                          isUpcoming
+                                                                              ? upcomingMeetings
+                                                                              : completedMeetings;
+                                                                      final index = list
+                                                                          .indexWhere((e) =>
+                                                                              e.id ==
+                                                                              event.id);
+                                                                      if (index !=
+                                                                          -1) {
+                                                                        list[index] =
+                                                                            list[index].copyWith(
+                                                                          rating:
+                                                                              newRating,
+                                                                          feedback:
+                                                                              feedback,
+                                                                          reviewStatus:
+                                                                              'pending',
+                                                                        );
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        );
+                                                        if (shouldRefresh ==
+                                                            true) {
+                                                          await fetchAstroUserEventService();
+                                                        }
+                                                      },
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Text(
+                                                            'Rate'.tr,
+                                                            style: TextStyle(
                                                               fontFamily:
                                                                   'FontSemiBold',
                                                               fontSize: util
-                                                                  .fontSize16,
-                                                              color: Color(
+                                                                  .fontSize14,
+                                                              height: 1.0,
+                                                              color: const Color(
                                                                   0xff87AE0E),
-                                                              height: 1.0),
-                                                        )
-                                                      : GestureDetector(
-                                                          onTap: () async {
-                                                            final shouldRefresh =
-                                                                await showGeneralDialog<
-                                                                    bool>(
-                                                              context: context,
-                                                              barrierLabel:
-                                                                  "RatingDialog",
-                                                              barrierDismissible:
-                                                                  true,
-                                                              barrierColor: Colors
-                                                                  .black
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.4), // semi-transparent dark blur
-                                                              transitionDuration:
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          200),
-                                                              pageBuilder: (context,
-                                                                  animation1,
-                                                                  animation2) {
-                                                                return BackdropFilter(
-                                                                  filter: ImageFilter
-                                                                      .blur(
-                                                                          sigmaX:
-                                                                              4,
-                                                                          sigmaY:
-                                                                              4),
-                                                                  child: Center(
-                                                                    child:
-                                                                        RatingDialog(
-                                                                      meetingId:
-                                                                          event
-                                                                              .id,
-                                                                      onSubmit:
-                                                                          (newRating) {
-                                                                        setState(
-                                                                            () {
-                                                                          final list = isUpcoming
-                                                                              ? upcomingMeetings
-                                                                              : completedMeetings;
-                                                                          final index = list.indexWhere((e) =>
-                                                                              e.id ==
-                                                                              event.id);
-                                                                          if (index !=
-                                                                              -1) {
-                                                                            list[index] =
-                                                                                list[index].copyWith(rating: newRating);
-                                                                          }
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            );
-                                                            if (shouldRefresh ==
-                                                                true) {
-                                                              await fetchAstroUserEventService();
-                                                              // setState(() {
-                                                              //   completedMeetings = eventGetData.where((e) => e.status == 'completed').toList();
-                                                              //   upcomingMeetings = eventGetData.where((e) => e.status == 'confirmed').toList();
-                                                              //   completedCount = completedMeetings.where((e) => e.queriesAnswered != null).length;
-                                                              // });
-                                                            }
-                                                          },
-                                                          child: Text(
-                                                            'Rate'.tr,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'FontSemiBold',
-                                                                fontSize: util
-                                                                    .fontSize14,
-                                                                height: 1.0,
-                                                                color: Color(
-                                                                    0xff87AE0E)),
+                                                            ),
                                                           ),
-                                                        ),
-                                                  SizedBox(
-                                                    width: 0,
-                                                  ),
-                                                  SvgPicture.asset(
-                                                      ratingSelect),
-                                                ],
-                                              ),
+                                                          const SizedBox(
+                                                              width: 2),
+                                                          SvgPicture.asset(
+                                                              ratingSelect),
+                                                        ],
+                                                      ),
+                                                    ),
                                               Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 5),

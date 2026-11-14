@@ -77,4 +77,34 @@ class AstroUserEventService {
       return null;
     }
   }
+
+  /// Pending completed consultation awaiting the one-time answers-ready popup.
+  Future<Map<String, dynamic>?> fetchPendingAnswersPopup() async {
+    try {
+      final response = await APIRequest.getRequest(
+        ApiEndpoint.consultationPendingAnswersPopup,
+      );
+      if (response.statusCode != 200) return null;
+      final body = json.decode(response.body) as Map<String, dynamic>;
+      final event = body['event'];
+      if (event is Map<String, dynamic>) return event;
+      return null;
+    } catch (e) {
+      if (kDebugMode) print('fetchPendingAnswersPopup: $e');
+      return null;
+    }
+  }
+
+  Future<bool> acknowledgeAnswersReady(int eventId) async {
+    try {
+      final response = await APIRequest.postRequest(
+        '${ApiEndpoint.astroEvents}/$eventId/acknowledge-answers-ready',
+        {},
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      if (kDebugMode) print('acknowledgeAnswersReady: $e');
+      return false;
+    }
+  }
 }

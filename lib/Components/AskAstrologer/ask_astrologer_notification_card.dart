@@ -1,6 +1,6 @@
-import 'package:astro_prompt/Components/AskAstrologer/ask_astrologer_answer_dialog.dart';
 import 'package:astro_prompt/Components/Notification/notification_card_shell.dart';
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
+import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_summary_page.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -104,14 +104,13 @@ class AskAstrologerNotificationCard extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: NotificationActionPill(
-                      label: 'View Answer'.tr,
+                      label: 'View answers'.tr,
                       onTap: () async {
                         await AskAstrologerService()
                             .acknowledgeAnswerReady(request.id);
-                        if (context.mounted) {
-                          showAskAstrologerAnswerDialog(
-                              context, request.id);
-                        }
+                        Get.to(() => AskAstrologerSummaryPage(
+                              requestId: request.id,
+                            ));
                       },
                     ),
                   ),

@@ -406,6 +406,21 @@ class _AstrologerDetailPageState extends State<AstrologerDetailPage> {
                                               );
                                             }),
                                           ),
+                                          if ((user.feedback ?? '')
+                                              .trim()
+                                              .isNotEmpty) ...[
+                                            SizedBox(height: 6),
+                                            Text(
+                                              user.feedback!.trim(),
+                                              style: TextStyle(
+                                                fontFamily: AppFont.get(
+                                                    FontType.medium),
+                                                fontSize: util.fontSize13,
+                                                color: blackColor.withValues(
+                                                    alpha: 0.65),
+                                              ),
+                                            ),
+                                          ],
                                         ],
                                       ),
                                     ),

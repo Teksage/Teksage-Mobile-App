@@ -7,6 +7,7 @@ import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
 import 'package:astro_prompt/config/format12HrsTime.dart';
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -51,12 +52,16 @@ class _BookingPageState extends State<BookingPage> {
   bool showError = false;
   bool alreadySelected = false;
   String slotWarningMessage = '';
+  String? viewerZone;
 
   @override
   void initState() {
     super.initState();
     selectedDate = DateTime.now();
     slotFuture = fetchSlotsForSelectedDate(selectedDate!);
+    loadViewerTimezone().then((zone) {
+      if (mounted) setState(() => viewerZone = zone);
+    });
   }
 
   Future<List<SlotModel>> fetchSlotsForSelectedDate(
@@ -288,8 +293,8 @@ class _BookingPageState extends State<BookingPage> {
                   }
 
                   List<SlotModel> slots = snapshot.data!;
-                  slots.sort((a, b) => parseWithoutOffset(a.startTime)
-                      .compareTo(parseWithoutOffset(b.startTime)));
+                  slots.sort((a, b) => displayDateTimeFromIso(a.startTime, zone: viewerZone)
+                      .compareTo(displayDateTimeFromIso(b.startTime, zone: viewerZone)));
 
                   return Container(
                     width: util.width,
@@ -368,7 +373,7 @@ class _BookingPageState extends State<BookingPage> {
                                   children: slots
                                       .where((slot) {
                                         final slotDateTime =
-                                            parseWithoutOffset(slot.startTime);
+                                            displayDateTimeFromIso(slot.startTime, zone: viewerZone);
                                         return !slotDateTime
                                             .isBefore(DateTime.now());
                                       })
@@ -379,7 +384,7 @@ class _BookingPageState extends State<BookingPage> {
                                         final index = entry.key;
                                         final slot = entry.value;
                                         final slotDateTime =
-                                            parseWithoutOffset(slot.startTime);
+                                            displayDateTimeFromIso(slot.startTime, zone: viewerZone);
                                         final startTime =
                                             TimeOfDay.fromDateTime(
                                                 slotDateTime);

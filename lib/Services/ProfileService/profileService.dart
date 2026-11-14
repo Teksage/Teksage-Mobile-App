@@ -158,7 +158,12 @@ class ProfileService {
       if (data['detail'] == 'Profile not completed') {
         throw IncompleteProfileException(data['profile_data']);
       }
-      throw Exception('Error: ${data['detail']}');
+      final detail = data['detail'] ?? data['data'];
+      throw Exception(
+        detail == null || '$detail'.isEmpty || '$detail' == 'null'
+            ? 'Something went wrong. Try again.'
+            : '$detail',
+      );
     } else {
       throw Exception('Unexpected error: ${response.statusCode}');
     }

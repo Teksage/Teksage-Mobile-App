@@ -1072,7 +1072,6 @@ class _PanchangPageState extends State<PanchangPage> {
                                                 ],
                                               ),
                                             ),
-                                            const PanchangEventPlannerCta(),
                                             DashedLine(
                                               dashWidth: 3,
                                               color: blackColor.withValues(
@@ -1153,6 +1152,7 @@ class _PanchangPageState extends State<PanchangPage> {
                                                 ],
                                               ),
                                             ),
+                                            const PanchangEventPlannerCta(),
                                           ],
                                         ),
                                       ),

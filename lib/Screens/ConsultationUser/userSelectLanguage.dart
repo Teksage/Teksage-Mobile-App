@@ -35,27 +35,13 @@ class _UserSelectLanguageState extends State<UserSelectLanguage> {
   List<String> selectedLanguage = [];
 
   List<String> languages = [
-    'Tamil'.tr,
     'English'.tr,
-    'Telugu'.tr,
-    'Malayalam'.tr,
-    'Kannada'.tr,
+    'Tamil'.tr,
     'Hindi'.tr,
-    'Bengali'.tr,
+    'Telugu'.tr,
+    'Kannada'.tr,
+    'Malayalam'.tr,
     'Marathi'.tr,
-    'Urdu'.tr,
-    'Gujarati'.tr,
-    'Odia'.tr,
-    'Punjabi'.tr,
-    'Assamese'.tr,
-    'Bhojpuri'.tr,
-    'Kashmiri'.tr,
-    'Nepali'.tr,
-    'Sindhi'.tr,
-    'Sinhala'.tr,
-    'Maithili'.tr,
-    'Manipuri'.tr,
-    'Santali'.tr,
   ];
 
 

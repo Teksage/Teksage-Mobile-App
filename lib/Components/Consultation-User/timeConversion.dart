@@ -1,3 +1,4 @@
+import 'package:astro_prompt/config/Helper/display_timezone.dart';
 import 'package:intl/intl.dart';
 
 class TimeRange {
@@ -40,16 +41,15 @@ String convertDateToReadableFormat(String isoDateTime) {
   return outputFormat.format(dateTime);
 }
 
-String convertTimeRangeToReadable(String startTime, String endTime) {
+String convertTimeRangeToReadable(String startTime, String endTime, {String? zone}) {
   print('Start Time: $startTime, End Time: $endTime');
-  DateTime start = parseWithoutOffset(startTime);
-  DateTime end = parseWithoutOffset(endTime);
+  DateTime start = displayDateTimeFromIso(startTime, zone: zone);
+  DateTime end = displayDateTimeFromIso(endTime, zone: zone);
 
   DateFormat timeFormat = DateFormat('h:mm a');
   return '${timeFormat.format(start)} - ${timeFormat.format(end)}';
 }
 
 DateTime parseWithoutOffset(String dateTimeString) {
-  final cleaned = dateTimeString.replaceAll(RegExp(r'([+-]\d\d:\d\d|Z)$'), '');
-  return DateTime.parse(cleaned);
+  return parseWallClockIso(dateTimeString);
 }

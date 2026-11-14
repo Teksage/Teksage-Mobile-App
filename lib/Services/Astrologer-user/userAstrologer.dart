@@ -35,13 +35,15 @@ class AstrologerConsultationService {
   }
 
   Future<List<AllAstrologerConsultUserData>> fetchAllAstroConsult(List<int> astroIds) async {
-    final String astroIdsParam = astroIds.join(',');
+    final path = astroIds.isEmpty
+        ? ApiEndpoint.userConsultationFilter
+        : '${ApiEndpoint.userConsultationFilter}?astro_ids=${astroIds.join(',')}';
 
-    var response = await APIRequest.getRequest('${ApiEndpoint.userConsultationFilter}?astro_ids=$astroIdsParam');
+    var response = await APIRequest.getRequest(path);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
-      final List<dynamic> dataList = data['astrologers'];
+      final List<dynamic> dataList = data['astrologers'] ?? data['data'] ?? [];
       return dataList.map((json) => AllAstrologerConsultUserData.fromJson(json)).toList();
     } else {
       print("Error: ${response.reasonPhrase}");

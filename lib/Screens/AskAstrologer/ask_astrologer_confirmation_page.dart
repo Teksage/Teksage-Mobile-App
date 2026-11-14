@@ -123,10 +123,10 @@ class _AskAstrologerConfirmationPageState
               GestureDetector(
                 onTap: () async {
                   await clearAskAstrologerFlow();
-                  Get.off(() => const NotificationPage(selectedTab: 1));
+                  Get.off(() => const NotificationPage(selectedTab: 2));
                 },
                 child: Text(
-                  'Track in Notifications → Consultation'.tr,
+                  'Track in Notifications → Single-Query Consultation'.tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: util.fontSize13,

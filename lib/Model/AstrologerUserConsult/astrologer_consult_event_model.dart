@@ -10,6 +10,7 @@ class ConsultationEventModel {
   final String? eventLink;
   final String? feedback;
   final double? rating;
+  final String? reviewStatus;
   final double? consultationFee;
   final double? astrologerShare;
   final String? currency;
@@ -33,6 +34,7 @@ class ConsultationEventModel {
     required this.eventLink,
     required this.feedback,
     required this.rating,
+    this.reviewStatus,
     this.consultationFee,
     this.astrologerShare,
     this.currency,
@@ -58,6 +60,7 @@ class ConsultationEventModel {
       eventLink: json['event_link'],
       feedback: json['feedback'],
       rating: (json['rating'] != null) ? double.tryParse(json['rating'].toString()) : null,
+      reviewStatus: json['review_status']?.toString(),
       consultationFee: _parseDouble(json['consultation_fee']),
       astrologerShare: _parseDouble(json['astrologer_share']),
       currency: json['currency']?.toString(),

@@ -35,10 +35,8 @@ class _AstrologerHomePageState extends State<AstrologerHomePage> {
         backgroundColor: whiteColor,
         body: Stack(
           children: [
-            Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
+            Positioned.fill(
+                child: SingleChildScrollView(
                 child: Column(
                   children: [
                     SizedBox(
@@ -70,12 +68,13 @@ class _AstrologerHomePageState extends State<AstrologerHomePage> {
                       height: 40,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 32),
                       child: DashboardCards(
                         eventData: widget.eventData,
                       ),
                     )
                   ],
+                ),
                 )),
             Positioned(
               top: 0,

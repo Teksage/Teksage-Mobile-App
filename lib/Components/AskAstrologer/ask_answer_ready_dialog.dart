@@ -1,5 +1,5 @@
 import 'package:astro_prompt/Model/ask_astrologer_model.dart';
-import 'package:astro_prompt/Screens/Notification/notificationPage.dart';
+import 'package:astro_prompt/Screens/AskAstrologer/ask_astrologer_summary_page.dart';
 import 'package:astro_prompt/Services/AskAstrologerService/askAstrologerService.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/utility.dart';
@@ -115,9 +115,8 @@ Future<void> showAskAnswerReadyDialog(
                         dialogContext,
                         request.id,
                       );
-                      Get.to(() => NotificationPage(
-                            selectedTab: 1,
-                            openAskRequestId: request.id,
+                      Get.to(() => AskAstrologerSummaryPage(
+                            requestId: request.id,
                           ));
                     },
                     style: ElevatedButton.styleFrom(

@@ -5,11 +5,13 @@ class CustomAnimationAstrologerIcon extends StatefulWidget {
   final String imagePath;
   final double floatRange;
   final Duration duration;
+  final double? size;
 
   const CustomAnimationAstrologerIcon({
     required this.imagePath,
     this.floatRange = 10,
     this.duration = const Duration(seconds: 2),
+    this.size,
     super.key,
   });
 
@@ -51,7 +53,7 @@ class _CustomAnimationAstrologerIconState extends State<CustomAnimationAstrologe
           child: child,
         );
       },
-      child: SvgPicture.asset(widget.imagePath),
+      child: SvgPicture.asset(widget.imagePath, width: widget.size, height: widget.size),
     );
   }
 }

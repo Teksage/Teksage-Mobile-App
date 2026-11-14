@@ -18,6 +18,8 @@ class AstroConsultationEventModel {
   final String? astrologerFirstName;
   final String? astrologerLastName;
   final int? rating;
+  final String? feedback;
+  final String? reviewStatus;
   final String profileImage;
   final bool? queriesAnswered;
 
@@ -41,6 +43,8 @@ class AstroConsultationEventModel {
     this.astrologerFirstName,
     this.astrologerLastName,
     this.rating,
+    this.feedback,
+    this.reviewStatus,
     required this.profileImage,
     this.queriesAnswered,
   });
@@ -52,9 +56,6 @@ class AstroConsultationEventModel {
       customerId: json['customer_id'],
       consultationFee: (json['consultation_fee'] ?? 0).toDouble(),
       currency: json['currency'],
-      // consultationFee: json['local_consutation_fee'] != null
-      //     ? (json['local_consutation_fee'] as num).toDouble()
-      //     : 0.0,
       consultationDuration: json['consultation_duration'] ?? 0,
       status: json['status'] ?? '',
       eventLink: json['event_link'] ?? '',
@@ -67,6 +68,8 @@ class AstroConsultationEventModel {
       customerFirstName: json['customer_first_name'],
       customerLastName: json['customer_last_name'],
       rating: json['rating'],
+      feedback: json['feedback']?.toString(),
+      reviewStatus: json['review_status']?.toString(),
       profileImage: json['astrologer_picture'] ?? '',
       queriesAnswered: json['queries_answered'] ?? false,
       astrologerFirstName: json['astrologer_first_name'],
@@ -96,6 +99,8 @@ extension AstroConsultationEventModelCopy on AstroConsultationEventModel {
     String? astrologerFirstName,
     String? astrologerLastName,
     int? rating,
+    String? feedback,
+    String? reviewStatus,
     String? profileImage,
     bool? queriesAnswered,
   }) {
@@ -119,6 +124,8 @@ extension AstroConsultationEventModelCopy on AstroConsultationEventModel {
       astrologerFirstName: astrologerFirstName ?? this.astrologerFirstName,
       astrologerLastName: astrologerLastName ?? this.astrologerLastName,
       rating: rating ?? this.rating,
+      feedback: feedback ?? this.feedback,
+      reviewStatus: reviewStatus ?? this.reviewStatus,
       profileImage: profileImage ?? this.profileImage,
       queriesAnswered: queriesAnswered ?? this.queriesAnswered,
     );

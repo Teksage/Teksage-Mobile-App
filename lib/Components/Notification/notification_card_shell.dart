@@ -71,11 +71,13 @@ class NotificationCircleAvatar extends StatelessWidget {
 class NotificationActionPill extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final bool outlined;
 
   const NotificationActionPill({
     super.key,
     required this.label,
     required this.onTap,
+    this.outlined = false,
   });
 
   @override
@@ -86,7 +88,12 @@ class NotificationActionPill extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(util.width20),
-          color: astroUserConsultBG,
+          color: outlined ? whiteColor : astroUserConsultBG,
+          border: outlined
+              ? Border.all(
+                  color: astroUserConsultBG.withValues(alpha: 0.4),
+                )
+              : null,
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -100,7 +107,7 @@ class NotificationActionPill extends StatelessWidget {
               fontFamily: AppFont.get(FontType.semiBold),
               fontSize: util.fontSize12,
               height: 1.0,
-              color: whiteColor,
+              color: outlined ? astroUserConsultBG : whiteColor,
             ),
           ),
         ),

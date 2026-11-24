@@ -13,6 +13,7 @@ const chatBg = 'assets/images/chatBG.png';
 const homeBanDeco = 'assets/images/homeBannerDeco.png';
 const weeklyBg = 'assets/images/weeklyBg.png';
 const yearlyContainerDeco = 'assets/images/yearlyConDeco.png';
+const yearly2027ZodiacHd = 'assets/images/yearly-2027-zodiac-hd.png';
 const panchangBG = 'assets/images/panchangBG.png';
 const matchMakingBG = 'assets/images/matchMakingBG.png';
 const categoryAll = 'assets/images/categoryAll.png';

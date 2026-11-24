@@ -9,6 +9,7 @@ import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Services/Astrologer-user/eventsService.dart';
 import 'package:astro_prompt/Services/PredictionService/predictionService.dart';
+import 'package:astro_prompt/Services/Yearly2027Promo/yearly_2027_promo_prompt.dart';
 import 'package:astro_prompt/Utility/colorConstant.dart';
 import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/customToolTip.dart';
@@ -71,6 +72,7 @@ class _YearlyPredictionPageState extends State<YearlyPredictionPage> {
     super.initState();
     predictionData = widget.predictionData;
     fetchUserId();
+    Yearly2027PromoPrompt.dismissForToday();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });

@@ -1,16 +1,22 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> saveMakingMaking(String boyName, String girlName, String boyRasi,
-    String girlRasi, String boyNakshatram, String girlNakshatram) async {
+Future<void> saveMakingMaking(
+  String boyName,
+  String girlName,
+  String boyDob,
+  String girlDob,
+  String boyTob,
+  String girlTob,
+) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Map<String, String> names = {
     "boyName": boyName,
     "girlName": girlName,
-    "boyRasi": boyRasi,
-    "girlRasi": girlRasi,
-    "boyNakshatram": boyNakshatram,
-    "girlNakshatram": girlNakshatram,
+    "boyDob": boyDob,
+    "girlDob": girlDob,
+    "boyTob": boyTob,
+    "girlTob": girlTob,
   };
   await prefs.setString("MatchMaking", jsonEncode(names));
 }
@@ -18,30 +24,31 @@ Future<void> saveMakingMaking(String boyName, String girlName, String boyRasi,
 Future<Map<String, String>> getMakingMaking() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? jsonString = prefs.getString("MatchMaking");
-  if (jsonString == null)
+  if (jsonString == null) {
     return {
       "boyName": "",
       "girlName": "",
-      "boyRasi": "",
-      "girlRasi": "",
-      "boyNakshatram": "",
-      "girlNakshatram": ""
+      "boyDob": "",
+      "girlDob": "",
+      "boyTob": "",
+      "girlTob": "",
     };
+  }
 
   Map<String, dynamic> decoded = jsonDecode(jsonString);
   return {
     "boyName": decoded["boyName"] ?? "",
     "girlName": decoded["girlName"] ?? "",
-    "boyRasi": decoded["boyRasi"] ?? "",
-    "girlRasi": decoded["girlRasi"] ?? "",
-    "boyNakshatram": decoded["boyNakshatram"] ?? "",
-    "girlNakshatram": decoded["girlNakshatram"] ?? "",
+    "boyDob": decoded["boyDob"] ?? decoded["boyRasi"] ?? "",
+    "girlDob": decoded["girlDob"] ?? decoded["girlRasi"] ?? "",
+    "boyTob": decoded["boyTob"] ?? decoded["boyNakshatram"] ?? "",
+    "girlTob": decoded["girlTob"] ?? decoded["girlNakshatram"] ?? "",
   };
 }
 
 Future<void> clearMakingMaking() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove("MakingMaking");
+  await prefs.remove("MatchMaking");
 }
 
 /// Flag to indicate match making needs regeneration (e.g., after language change)

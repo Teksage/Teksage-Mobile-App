@@ -4,7 +4,6 @@ import 'package:astro_prompt/Components/Chat/successDialog.dart';
 import 'package:astro_prompt/Components/Common/dashedLine.dart';
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/match_making_model.dart';
-import 'package:astro_prompt/Model/rasi_model.dart';
 import 'package:astro_prompt/config/consultation_navigation.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingPage.dart';
@@ -16,7 +15,6 @@ import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
-import 'package:astro_prompt/config/LocallySavedData/matchMaking.dart';
 import 'package:astro_prompt/config/LocallySavedData/userId.dart';
 import 'package:astro_prompt/config/textConfig.dart';
 import 'package:file_saver/file_saver.dart';
@@ -48,7 +46,6 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
   late AnimationController controller;
   late Animation<double> opacityAnimation;
   late Animation<double> scaleAnimation;
-  List<RasiModel> rasiList = [];
   String boyName = '';
   String girlName = '';
   String boyRasi = '';
@@ -68,17 +65,6 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
 
   late AnimationController fabController;
   late Animation<Offset> fabOffsetAnimation;
-
-  Future<void> fetchRasiList() async {
-    try {
-      List<RasiModel> fetchedRashi = await MatchMakingService().getRashiList();
-      setState(() {
-        rasiList = fetchedRashi;
-      });
-    } catch (e) {
-      print("Error fetching Rashi list: $e");
-    }
-  }
 
   Future<void> fetchUserId() async {
     int? id = await getUserId();
@@ -104,16 +90,6 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
     }
   }
 
-  void loadMatchMakingData() async {
-    Map<String, String> matchData = await getMakingMaking();
-    boyName = matchData["boyName"] ?? "";
-    girlName = matchData["girlName"] ?? "";
-    boyRasi = matchData["boyRasi"] ?? "";
-    girlRasi = matchData["girlRasi"] ?? "";
-    boyNakshatram = matchData['boyNakshatram'] ?? "";
-    girlNakshatram = matchData['girlNakshatram'] ?? "";
-  }
-
   void setData() {
     if (widget.fromHomePage) {
       setState(() {
@@ -133,14 +109,19 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
         matchMakingID = widget.getMatchMakingModel!.matchMakingId;
       });
     } else {
-      loadMatchMakingData();
+      final fresh = widget.matchMakingData!;
       setState(() {
-        kutas = widget.matchMakingData!.compatibilityResult.kutas;
-        generalDetails =
-            widget.matchMakingData!.compatibilityResult.generalDetails;
-        gained = widget.matchMakingData!.compatibilityResult.gainedScore;
-        maxScore = widget.matchMakingData!.compatibilityResult.maxScore;
-        matchMakingID = widget.matchMakingData!.matchMakingId;
+        boyName = fresh.boyName;
+        girlName = fresh.girlName;
+        boyRasi = fresh.boyRashi;
+        girlRasi = fresh.girlRashi;
+        boyNakshatram = fresh.boyNakshatram;
+        girlNakshatram = fresh.girlNakshatram;
+        kutas = fresh.compatibilityResult.kutas;
+        generalDetails = fresh.compatibilityResult.generalDetails;
+        gained = fresh.compatibilityResult.gainedScore;
+        maxScore = fresh.compatibilityResult.maxScore;
+        matchMakingID = fresh.matchMakingId;
       });
     }
   }
@@ -166,9 +147,7 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
             label == 'Expert Consultation') {
           openBookConsultation(context);
         } else {
-          Get.to(() => MatchMakingPage(
-                rasiList: rasiList,
-              ));
+          Get.to(() => const MatchMakingPage());
         }
       },
       child: Row(
@@ -215,7 +194,6 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
     opacityAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(controller);
     scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(controller);
     fetchUserId();
-    fetchRasiList();
     setData();
   }
 
@@ -517,9 +495,6 @@ class _MatchMakingDetailsPageState extends State<MatchMakingDetailsPage>
                           width: util.width20, height: util.height20),
                       onPressed: () {
                         Get.to(() => BottomNavigationScreen());
-                        // Get.to(() => MatchMakingPage(
-                        //       rasiList: rasiList,
-                        //     ));
                       },
                     ),
                   ),

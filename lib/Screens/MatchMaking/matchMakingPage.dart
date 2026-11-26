@@ -1,8 +1,9 @@
-import 'package:astro_prompt/Components/MatchMaking/customMatchDropDown.dart';
+import 'package:astro_prompt/Components/Common/customDropDown.dart';
+import 'package:astro_prompt/Components/MatchMaking/customMatchBirthField.dart';
 import 'package:astro_prompt/Components/MatchMaking/customMatchTextfield.dart';
+import 'package:astro_prompt/Components/Profile/customDatePicker.dart';
+import 'package:astro_prompt/Model/location_selection_model.dart';
 import 'package:astro_prompt/Model/match_making_model.dart';
-import 'package:astro_prompt/Model/nakshatram_model.dart';
-import 'package:astro_prompt/Model/rasi_model.dart';
 import 'package:astro_prompt/Screens/Home/bottomNavigation.dart';
 import 'package:astro_prompt/Screens/MatchMaking/matchMakingDetails.dart';
 import 'package:astro_prompt/Services/MatchService/matchService.dart';
@@ -11,540 +12,467 @@ import 'package:astro_prompt/Utility/customLoader.dart';
 import 'package:astro_prompt/Utility/imageConstant.dart';
 import 'package:astro_prompt/Utility/snackBarHelper.dart';
 import 'package:astro_prompt/Utility/utility.dart';
+import 'package:astro_prompt/config/Helper/appFont.dart';
+import 'package:astro_prompt/config/LocallySavedData/appLanguage.dart';
 import 'package:astro_prompt/config/LocallySavedData/matchMaking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:astro_prompt/config/Helper/appFont.dart';
-import 'package:astro_prompt/config/LocallySavedData/appLanguage.dart';
+import 'package:intl/intl.dart';
 
 class MatchMakingPage extends StatefulWidget {
-  final List<RasiModel> rasiList;
-  const MatchMakingPage({super.key, required this.rasiList});
+  const MatchMakingPage({super.key});
 
   @override
   State<MatchMakingPage> createState() => _MatchMakingPageState();
 }
 
 class _MatchMakingPageState extends State<MatchMakingPage> {
-  TextEditingController boyName = TextEditingController();
-  TextEditingController girlName = TextEditingController();
+  final TextEditingController boyName = TextEditingController();
+  final TextEditingController girlName = TextEditingController();
+  final TextEditingController boyDob = TextEditingController();
+  final TextEditingController girlDob = TextEditingController();
+  final TextEditingController boyTob = TextEditingController();
+  final TextEditingController girlTob = TextEditingController();
+  final TextEditingController boyPob = TextEditingController();
+  final TextEditingController girlPob = TextEditingController();
 
-  String? selectedMaleRasi;
-  String? selectedFemaleRasi;
-  String? selectedMaleNakshatra;
-  String? selectedFemaleNakshatra;
-
-  int? selectedMaleRasiId;
+  DateTime? boyDobDate;
+  DateTime? girlDobDate;
+  TimeOfDay? boyTobTime;
+  TimeOfDay? girlTobTime;
+  String boyPobFull = '';
+  String girlPobFull = '';
 
   bool errorBoyName = false;
   bool errorGirlName = false;
-  bool errorMaleRasi = false;
-  bool errorFemaleRasi = false;
-  bool errorMaleNakshatra = false;
-  bool errorFemaleNakshatra = false;
-
-  List<NakshatraModel> nakshatraBoyList = [];
-  List<NakshatraModel> nakshatraGirlList = [];
-  bool isNakshatraMaleLoading = false;
-  String errorMessageMale = '';
-  String errorMessageFemale = '';
-
+  bool errorBoyDob = false;
+  bool errorGirlDob = false;
+  bool errorBoyTob = false;
+  bool errorGirlTob = false;
+  bool errorBoyPob = false;
+  bool errorGirlPob = false;
   bool isLoading = false;
 
-  Future<void> fetchNakshatraBoyList(int rasiId) async {
+  Future<void> _pickDob({required bool isBoy}) async {
+    final picked = await CustomDatePicker.show(
+      context: context,
+      currentDateText: isBoy ? boyDob.text : girlDob.text,
+      initialDate: isBoy ? boyDobDate : girlDobDate,
+    );
+    if (picked == null) return;
     setState(() {
-      isNakshatraMaleLoading = true;
+      if (isBoy) {
+        boyDobDate = picked;
+        boyDob.text = CustomDatePicker.formatDate(picked);
+        errorBoyDob = false;
+      } else {
+        girlDobDate = picked;
+        girlDob.text = CustomDatePicker.formatDate(picked);
+        errorGirlDob = false;
+      }
     });
-    try {
-      List<NakshatraModel> fetchedNakshatra =
-          await MatchMakingService().getNakshatraList(rasiId);
-      setState(() {
-        nakshatraBoyList = fetchedNakshatra;
-        isNakshatraMaleLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching Nakshatra list: $e");
-      setState(() {
-        isNakshatraMaleLoading = false;
-      });
-    }
   }
 
-  Future<void> fetchNakshatraGirlList(int rasiId) async {
+  Future<void> _pickTob({required bool isBoy}) async {
+    final initial = isBoy
+        ? (boyTobTime ?? const TimeOfDay(hour: 12, minute: 0))
+        : (girlTobTime ?? const TimeOfDay(hour: 12, minute: 0));
+    final picked = await showTimePicker(context: context, initialTime: initial);
+    if (picked == null) return;
+    final formatted = DateFormat('hh:mm a').format(
+      DateTime(2000, 1, 1, picked.hour, picked.minute),
+    );
     setState(() {
-      isNakshatraMaleLoading = true;
+      if (isBoy) {
+        boyTobTime = picked;
+        boyTob.text = formatted;
+        errorBoyTob = false;
+      } else {
+        girlTobTime = picked;
+        girlTob.text = formatted;
+        errorGirlTob = false;
+      }
     });
-    try {
-      List<NakshatraModel> fetchedNakshatra =
-          await MatchMakingService().getNakshatraList(rasiId);
-      setState(() {
-        nakshatraGirlList = fetchedNakshatra;
-        isNakshatraMaleLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching Nakshatra list: $e");
-      setState(() {
-        isNakshatraMaleLoading = false;
-      });
-    }
   }
 
-  void validateInput(BuildContext context) async {
+  String _apiDate(String display) {
+    final parsed = DateFormat('dd/MM/yyyy').parse(display);
+    return DateFormat('yyyy-MM-dd').format(parsed);
+  }
+
+  String _apiTime(String display) {
+    final parsed = DateFormat('hh:mm a').parse(display);
+    return DateFormat('HH:mm:ss').format(parsed);
+  }
+
+  Future<void> validateInput(BuildContext context) async {
     await clearMakingMaking();
     setState(() {
-      errorBoyName = boyName.text.isEmpty;
-      errorGirlName = girlName.text.isEmpty;
-      errorMaleRasi = selectedMaleRasi == null;
-      errorFemaleRasi = selectedFemaleRasi == null;
-      errorMaleNakshatra = selectedMaleNakshatra == null;
-      errorFemaleNakshatra = selectedFemaleNakshatra == null;
+      errorBoyName = boyName.text.trim().isEmpty;
+      errorGirlName = girlName.text.trim().isEmpty;
+      errorBoyDob = boyDob.text.trim().isEmpty;
+      errorGirlDob = girlDob.text.trim().isEmpty;
+      errorBoyTob = boyTob.text.trim().isEmpty;
+      errorGirlTob = girlTob.text.trim().isEmpty;
+      errorBoyPob = boyPob.text.trim().isEmpty;
+      errorGirlPob = girlPob.text.trim().isEmpty;
       isLoading = true;
     });
 
-    if (errorMaleNakshatra == true) {
-      setState(() {
-        errorMessageMale = "Please select Boy's Nakshatram";
-      });
-    }
-
-    if (errorFemaleNakshatra == true) {
-      setState(() {
-        errorMessageFemale = "Please select Girl's Nakshatram";
-      });
-    }
-
-    if (!errorBoyName &&
+    final valid = !errorBoyName &&
         !errorGirlName &&
-        !errorMaleRasi &&
-        !errorFemaleRasi &&
-        !errorMaleNakshatra &&
-        !errorFemaleNakshatra) {
-      try {
-        CustomLoader.show(context, loaderColor: matchTopGradient);
+        !errorBoyDob &&
+        !errorGirlDob &&
+        !errorBoyTob &&
+        !errorGirlTob &&
+        !errorBoyPob &&
+        !errorGirlPob;
 
-        GetNewMatchMakingModel? result =
-            await MatchMakingService().postMatchMaking(
-          boyName: boyName.text,
-          girlName: girlName.text,
-          boyRashi: selectedMaleRasi!,
-          boyNakshatra: selectedMaleNakshatra!,
-          girlRashi: selectedFemaleRasi!,
-          girlNakshatra: selectedFemaleNakshatra!,
-        );
-        print('MatchData: $result');
+    if (!valid) {
+      if (mounted) setState(() => isLoading = false);
+      return;
+    }
+
+    try {
+      CustomLoader.show(context, loaderColor: matchTopGradient);
+      final boyLoc =
+          boyPobFull.trim().isNotEmpty ? boyPobFull.trim() : boyPob.text.trim();
+      final girlLoc = girlPobFull.trim().isNotEmpty
+          ? girlPobFull.trim()
+          : girlPob.text.trim();
+
+      final result = await MatchMakingService().postMatchMaking(
+        boyName: boyName.text.trim(),
+        girlName: girlName.text.trim(),
+        boyDateOfBirth: _apiDate(boyDob.text),
+        boyTimeOfBirth: _apiTime(boyTob.text),
+        boyBirthLocation: boyLoc,
+        girlDateOfBirth: _apiDate(girlDob.text),
+        girlTimeOfBirth: _apiTime(girlTob.text),
+        girlBirthLocation: girlLoc,
+      );
+
+      CustomLoader.hide();
+      if (result != null) {
         await saveMakingMaking(
-            boyName.text,
-            girlName.text,
-            selectedMaleRasi!,
-            selectedFemaleRasi!,
-            selectedMaleNakshatra!,
-            selectedFemaleNakshatra!);
-
-        CustomLoader.hide();
-        if (result != null) {
-          // Clear the regeneration flag since user has generated new match making
-          await setMatchMakingNeedsRegeneration(false);
-          // Sync previousAppLanguage to current so home page doesn't re-trigger language change
-          String currentLang = await getAppLanguage();
-          if (currentLang.isNotEmpty) {
-            await savePreviousAppLanguage(currentLang);
-          }
-          Get.to(() => MatchMakingDetailsPage(
-                matchMakingData: result,
-                fromHomePage: false,
-              ));
-          print('Result: $result');
-        } else {
-          showErrorSnackBar(context, "Failed to fetch data. Please try again.");
+          boyName.text.trim(),
+          girlName.text.trim(),
+          boyDob.text,
+          girlDob.text,
+          boyTob.text,
+          girlTob.text,
+        );
+        await setMatchMakingNeedsRegeneration(false);
+        final currentLang = await getAppLanguage();
+        if (currentLang.isNotEmpty) {
+          await savePreviousAppLanguage(currentLang);
         }
-      } catch (e) {
-        showErrorSnackBar(context, "Error: $e");
+        Get.to(() => MatchMakingDetailsPage(
+              matchMakingData: result,
+              fromHomePage: false,
+            ));
+      } else {
+        showErrorSnackBar(context, "Failed to fetch data. Please try again.");
       }
+    } catch (e) {
+      CustomLoader.hide();
+      showErrorSnackBar(context, "Error: $e");
     }
-    if (mounted) {
-      setState(() {
-        isLoading = false; // Hide loader
-      });
-    }
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    boyName.text = '';
-    girlName.text = '';
+    if (mounted) setState(() => isLoading = false);
   }
 
   @override
   void dispose() {
     boyName.dispose();
     girlName.dispose();
+    boyDob.dispose();
+    girlDob.dispose();
+    boyTob.dispose();
+    girlTob.dispose();
+    boyPob.dispose();
+    girlPob.dispose();
     super.dispose();
+  }
+
+  Widget _partnerCard({
+    required bool isBoy,
+    required TextEditingController nameCtrl,
+    required TextEditingController dobCtrl,
+    required TextEditingController tobCtrl,
+    required TextEditingController pobCtrl,
+    required bool nameErr,
+    required bool dobErr,
+    required bool tobErr,
+    required bool pobErr,
+  }) {
+    final util = MyUtility(context);
+    return Column(
+      children: [
+        Container(
+          height: 48,
+          width: util.width,
+          decoration: BoxDecoration(
+            color: matchHeadColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(isBoy ? boy : girl),
+              SizedBox(width: util.width10),
+              Text(
+                (isBoy ? 'Boy Details' : 'Girl Details').tr,
+                style: TextStyle(
+                  fontFamily: AppFont.get(FontType.semiBold),
+                  fontSize: util.fontSize16,
+                  height: 1.0,
+                  color: blackColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: util.width,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+            ),
+          ),
+          child: Column(
+            children: [
+              CustomMatchTextField(
+                hintText: isBoy ? "Enter boy's name" : "Enter girl's name",
+                controller: nameCtrl,
+                errorFlag: nameErr,
+                errorText: isBoy
+                    ? "Please enter Boy's name"
+                    : "Please enter Girl's name",
+              ),
+              const SizedBox(height: 9),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: CustomMatchBirthField(
+                      title: 'Date of Birth',
+                      hintText: 'Select date of birth',
+                      controller: dobCtrl,
+                      errorFlag: dobErr,
+                      errorText: 'Please select Date of Birth',
+                      onTap: () => _pickDob(isBoy: isBoy),
+                    ),
+                  ),
+                  const SizedBox(width: 9),
+                  Expanded(
+                    child: CustomMatchBirthField(
+                      title: 'Time of Birth',
+                      hintText: 'Select time of birth',
+                      controller: tobCtrl,
+                      errorFlag: tobErr,
+                      errorText: 'Please select Time of Birth',
+                      onTap: () => _pickTob(isBoy: isBoy),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 9),
+              CustomDropDown(
+                title: 'Place of Birth'.tr,
+                textController: pobCtrl,
+                isMandatory: true,
+                enableEdit: true,
+                errorFlag: pobErr,
+                onLocationChanged: (LocationSelection location) {
+                  setState(() {
+                    pobCtrl.text = location.selectedText;
+                    if (isBoy) {
+                      boyPobFull = location.displayText;
+                      errorBoyPob = false;
+                    } else {
+                      girlPobFull = location.displayText;
+                      errorGirlPob = false;
+                    }
+                  });
+                },
+              ),
+              if (pobErr)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Please enter the Place of birth'.tr,
+                      style: TextStyle(
+                        fontFamily: AppFont.get(FontType.medium),
+                        fontSize: util.fontSize11,
+                        color: errorColor,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final util = MyUtility(context);
-    // print('Width: ${util.responsiveWidth(0.989)}');
-    // print('Height12: ${util.responsiveHeight(0.0321)}');
-    // print('FontSize: ${util.responsiveFontSize(0.0186)}');
 
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Future.microtask(() {
-            Get.back();
-          });
+          Future.microtask(() => Get.back());
         }
       },
       child: Scaffold(
         body: Hero(
-            tag: 'matchMakingHero',
-            child: Material(
-              child: Container(
-                width: util.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [matchTopGradient, matchBottomGradient],
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ///AppBar
-                      SizedBox(
-                        height: util.responsiveHeight(0.1232),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              child: AnimatedOpacity(
-                                duration: Duration(milliseconds: 300),
-                                opacity: 1.0,
-                                child: AppBar(
-                                  backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  title: Text("Marriage Match Making".tr,
-                                      style: TextStyle(
-                                          color: whiteColor,
-                                          fontSize: util.fontSize20,
-                                          fontFamily:
-                                              AppFont.get(FontType.bold),
-                                          height: 1.0)),
-                                  leading: SizedBox(
-                                    width: util.responsiveWidth(0.08),
-                                    height: util.responsiveHeight(0.037),
-                                    child: IconButton(
-                                      icon: SvgPicture.asset(appBackButton,
-                                          width: util.width20,
-                                          height: util.height20),
-                                      onPressed: () {
-                                        // Navigator.pop(context);
-                                        Get.to(() => BottomNavigationScreen());
-                                      },
-                                    ),
-                                  ),
-                                  centerTitle: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Check astrological compatibility for a perfect match'
-                                  .tr,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: AppFont.get(FontType.medium),
-                                  fontSize: util.fontSize14,
-                                  height: 1.0,
-                                  color: whiteColor),
-                            ),
-                            SizedBox(
-                              height: util.responsiveHeight(0.0321),
-                            ),
-
-                            ///Boy Data
-                            Column(
-                              children: [
-                                Container(
-                                  height: 48,
-                                  width: util.width,
-                                  decoration: BoxDecoration(
-                                      color: matchHeadColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12),
-                                          topRight: Radius.circular(12))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(boy),
-                                      SizedBox(
-                                        width: util.width10,
-                                      ),
-                                      Text(
-                                        'Boy Details'.tr,
-                                        style: TextStyle(
-                                            fontFamily:
-                                                AppFont.get(FontType.semiBold),
-                                            fontSize: util.fontSize16,
-                                            height: 1.0,
-                                            color: blackColor),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: util.width,
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(12),
-                                          bottomLeft: Radius.circular(12))),
-                                  child: Column(
-                                    children: [
-                                      CustomMatchTextField(
-                                        hintText: 'Enter boy\'s name',
-                                        controller: boyName,
-                                        errorFlag: errorBoyName,
-                                        errorText: "Please enter Boy's name",
-                                      ),
-                                      SizedBox(
-                                        height: 9,
-                                      ),
-                                      CustomMatchDropDown(
-                                        title: 'Rasi'.tr,
-                                        isMandatory: true,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedMaleRasi = value;
-                                            errorMaleRasi = false;
-                                            selectedMaleNakshatra = null;
-                                            nakshatraBoyList = [];
-                                            errorMaleNakshatra = false;
-                                            fetchNakshatraBoyList(widget
-                                                .rasiList
-                                                .firstWhere(
-                                                    (r) => r.name == value)
-                                                .id);
-                                          });
-                                        },
-                                        errorFlag: errorMaleRasi,
-                                        errorText: "Please select Boy's Rasi",
-                                        options: widget.rasiList
-                                            .map((rasi) => rasi.name)
-                                            .toList(),
-                                        isLoading: widget.rasiList.isEmpty,
-                                        selectedValue: selectedMaleRasi,
-                                      ),
-                                      SizedBox(
-                                        height: 9,
-                                      ),
-                                      CustomMatchDropDown(
-                                        title: 'Nakshatram'.tr,
-                                        isMandatory: true,
-                                        onChanged: (value) {
-                                          if (selectedMaleRasi == null) {
-                                            setState(() {
-                                              errorMaleNakshatra = true;
-                                              errorMessageMale =
-                                                  'Please Select Rasi';
-                                            });
-                                            return;
-                                          } else {
-                                            setState(() {
-                                              selectedMaleNakshatra = value;
-                                              errorMaleNakshatra = false;
-                                            });
-                                          }
-                                        },
-                                        errorFlag: errorMaleNakshatra,
-                                        errorText: errorMessageMale,
-                                        options: nakshatraBoyList
-                                            .map((nakshatra) => nakshatra.name)
-                                            .toList(),
-                                        isLoading: isNakshatraMaleLoading,
-                                        selectedValue: selectedMaleNakshatra,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-
-                            ///Girl Data
-                            Column(
-                              children: [
-                                Container(
-                                  height: 48,
-                                  width: util.width,
-                                  decoration: BoxDecoration(
-                                      color: matchHeadColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12),
-                                          topRight: Radius.circular(12))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(girl),
-                                      SizedBox(
-                                        width: util.width10,
-                                      ),
-                                      Text(
-                                        'Girl Details'.tr,
-                                        style: TextStyle(
-                                            fontFamily:
-                                                AppFont.get(FontType.semiBold),
-                                            fontSize: util.fontSize16,
-                                            height: 1.0,
-                                            color: blackColor),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: util.width,
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(12),
-                                          bottomLeft: Radius.circular(12))),
-                                  child: Column(
-                                    children: [
-                                      CustomMatchTextField(
-                                        hintText: 'Enter girl\'s name',
-                                        controller: girlName,
-                                        errorFlag: errorGirlName,
-                                        errorText: "Please enter Girl's name",
-                                      ),
-                                      SizedBox(
-                                        height: 9,
-                                      ),
-                                      CustomMatchDropDown(
-                                        title: 'Rasi'.tr,
-                                        isMandatory: true,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedFemaleRasi = value;
-                                            errorFemaleRasi = false;
-                                            selectedFemaleNakshatra = null;
-                                            nakshatraGirlList = [];
-                                            errorFemaleNakshatra = false;
-                                            fetchNakshatraGirlList(widget
-                                                .rasiList
-                                                .firstWhere(
-                                                    (r) => r.name == value)
-                                                .id);
-                                          });
-                                        },
-                                        errorFlag: errorFemaleRasi,
-                                        errorText: "Please select Girl's Rasi",
-                                        options: widget.rasiList
-                                            .map((rasi) => rasi.name)
-                                            .toList(),
-                                        isLoading: widget.rasiList.isEmpty,
-                                        selectedValue: selectedFemaleRasi,
-                                      ),
-                                      SizedBox(
-                                        height: 9,
-                                      ),
-                                      CustomMatchDropDown(
-                                        title: 'Nakshatram'.tr,
-                                        isMandatory: true,
-                                        onChanged: (value) {
-                                          if (selectedFemaleRasi == null) {
-                                            setState(() {
-                                              errorFemaleNakshatra = true;
-                                              errorMessageFemale =
-                                                  'Please Select Rasi';
-                                            });
-                                            return;
-                                          } else {
-                                            setState(() {
-                                              selectedFemaleNakshatra = value;
-                                              errorFemaleNakshatra = false;
-                                            });
-                                          }
-                                        },
-                                        errorFlag: errorFemaleNakshatra,
-                                        errorText: errorMessageFemale,
-                                        options: nakshatraGirlList
-                                            .map((nakshatra) => nakshatra.name)
-                                            .toList(),
-                                        isLoading: isNakshatraMaleLoading,
-                                        selectedValue: selectedFemaleNakshatra,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-
-                            ///Calculate Button
-                            GestureDetector(
-                              onTap: () {
-                                if (!isLoading) {
-                                  validateInput(context);
-                                }
-                              },
-                              child: Container(
-                                width: util.width,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: util.height10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: whiteColor),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Calculate Match'.tr,
-                                      style: TextStyle(
-                                          fontFamily:
-                                              AppFont.get(FontType.semiBold),
-                                          fontSize: util.fontSize18,
-                                          height: 1.0,
-                                          color: matchButtonText),
-                                    ),
-                                    SizedBox(
-                                      width: util.width10,
-                                    ),
-                                    SvgPicture.asset(ring)
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: util.height50,
-                      )
-                    ],
-                  ),
+          tag: 'matchMakingHero',
+          child: Material(
+            child: Container(
+              width: util.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [matchTopGradient, matchBottomGradient],
                 ),
               ),
-            )),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: util.responsiveHeight(0.1232),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: AppBar(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              title: Text(
+                                "Marriage Match Making".tr,
+                                style: TextStyle(
+                                  color: whiteColor,
+                                  fontSize: util.fontSize20,
+                                  fontFamily: AppFont.get(FontType.bold),
+                                  height: 1.0,
+                                ),
+                              ),
+                              leading: SizedBox(
+                                width: util.responsiveWidth(0.08),
+                                height: util.responsiveHeight(0.037),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    appBackButton,
+                                    width: util.width20,
+                                    height: util.height20,
+                                  ),
+                                  onPressed: () {
+                                    Get.to(() => BottomNavigationScreen());
+                                  },
+                                ),
+                              ),
+                              centerTitle: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Check astrological compatibility for a perfect match'
+                                .tr,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: AppFont.get(FontType.medium),
+                              fontSize: util.fontSize14,
+                              height: 1.0,
+                              color: whiteColor,
+                            ),
+                          ),
+                          SizedBox(height: util.responsiveHeight(0.0321)),
+                          _partnerCard(
+                            isBoy: true,
+                            nameCtrl: boyName,
+                            dobCtrl: boyDob,
+                            tobCtrl: boyTob,
+                            pobCtrl: boyPob,
+                            nameErr: errorBoyName,
+                            dobErr: errorBoyDob,
+                            tobErr: errorBoyTob,
+                            pobErr: errorBoyPob,
+                          ),
+                          const SizedBox(height: 15),
+                          _partnerCard(
+                            isBoy: false,
+                            nameCtrl: girlName,
+                            dobCtrl: girlDob,
+                            tobCtrl: girlTob,
+                            pobCtrl: girlPob,
+                            nameErr: errorGirlName,
+                            dobErr: errorGirlDob,
+                            tobErr: errorGirlTob,
+                            pobErr: errorGirlPob,
+                          ),
+                          const SizedBox(height: 15),
+                          GestureDetector(
+                            onTap: () {
+                              if (!isLoading) validateInput(context);
+                            },
+                            child: Container(
+                              width: util.width,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: util.height10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: whiteColor,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Calculate Match'.tr,
+                                    style: TextStyle(
+                                      fontFamily: AppFont.get(FontType.semiBold),
+                                      fontSize: util.fontSize18,
+                                      height: 1.0,
+                                      color: matchButtonText,
+                                    ),
+                                  ),
+                                  SizedBox(width: util.width10),
+                                  SvgPicture.asset(ring),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: util.height50),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

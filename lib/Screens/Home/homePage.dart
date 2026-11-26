@@ -7,7 +7,6 @@ import 'package:astro_prompt/Components/dailyPredictions/predictionHeaderAnimati
 import 'package:astro_prompt/Model/AstrologerUserConsult/astro_user_events_model.dart';
 import 'package:astro_prompt/Model/match_making_model.dart';
 import 'package:astro_prompt/Model/notification_model.dart';
-import 'package:astro_prompt/Model/rasi_model.dart';
 import 'package:astro_prompt/Model/user_model.dart';
 import 'package:astro_prompt/Model/weekly_prediction_model.dart';
 import 'package:astro_prompt/Screens/Astrologer/homePage.dart';
@@ -76,11 +75,9 @@ class _HomePageState extends State<HomePage>
   String userName = '';
   bool userType = true;
   int userId = 0;
-  List<RasiModel> rasiList = [];
   MatchMakingModel? matchMakingGetData;
   List<AstroConsultationEventModel> eventGetData = [];
   List<NotificationModel> generalNotifications = [];
-  List<String> nakshatraList = [];
   final PredictionService predictionService = PredictionService();
   String currency = '';
   bool isCurrencyDialogShown = false;
@@ -139,7 +136,6 @@ class _HomePageState extends State<HomePage>
 
       fetchAstroUserEventService();
       fetchGeneralNotifications();
-      fetchRasiList();
       fetchLatestMatchMaking();
     } catch (e) {
       if (kDebugMode) print('Error in fetchUserName: $e');
@@ -230,18 +226,6 @@ class _HomePageState extends State<HomePage>
     final route = ModalRoute.of(context);
     if (route?.isCurrent ?? false) {
       syncHomeSession();
-    }
-  }
-
-  Future<void> fetchRasiList() async {
-    try {
-      List<RasiModel> fetchedRashi = await MatchMakingService().getRashiList();
-      if (!mounted) return;
-      setState(() {
-        rasiList = fetchedRashi;
-      });
-    } catch (e) {
-      debugPrint("Error fetching Rashi list: $e");
     }
   }
 
@@ -884,10 +868,7 @@ class _HomePageState extends State<HomePage>
                                   if (tokenExist) {
                                     if (matchMakingGetData == null) {
                                       print('MatchMakingPageeeeeeeeeeee');
-                                      Get.to(() => MatchMakingPage(
-                                            rasiList: rasiList,
-                                            // nakshatraList: nakshatraList,
-                                          ));
+                                      Get.to(() => const MatchMakingPage());
                                     } else {
                                       Get.to(() => MatchMakingDetailsPage(
                                             getMatchMakingModel:

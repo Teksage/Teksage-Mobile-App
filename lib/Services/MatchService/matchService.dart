@@ -33,19 +33,23 @@ class MatchMakingService {
   Future<GetNewMatchMakingModel?> postMatchMaking({
     required String boyName,
     required String girlName,
-    required String boyRashi,
-    required String boyNakshatra,
-    required String girlRashi,
-    required String girlNakshatra,
+    required String boyDateOfBirth,
+    required String boyTimeOfBirth,
+    required String boyBirthLocation,
+    required String girlDateOfBirth,
+    required String girlTimeOfBirth,
+    required String girlBirthLocation,
   }) async {
     try {
       final body = {
         "boy_name": boyName,
         "girl_name": girlName,
-        "boy_rashi": boyRashi,
-        "boy_nakshatra": boyNakshatra,
-        "girl_rashi": girlRashi,
-        "girl_nakshatra": girlNakshatra,
+        "boy_date_of_birth": boyDateOfBirth,
+        "boy_time_of_birth": boyTimeOfBirth,
+        "boy_birth_location": boyBirthLocation,
+        "girl_date_of_birth": girlDateOfBirth,
+        "girl_time_of_birth": girlTimeOfBirth,
+        "girl_birth_location": girlBirthLocation,
       };
 
       var response = await APIRequest.postRequest(ApiEndpoint.matchMaking, body);

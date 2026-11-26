@@ -75,8 +75,10 @@ class Yearly2027PromoPrompt {
         isScrollControlled: true,
         backgroundColor: const Color(0xFFF7FCF4),
         barrierColor: Colors.black.withValues(alpha: 0.45),
+        // Stronger top curve than website 1.25rem for clearer sheet silhouette.
+        clipBehavior: Clip.antiAlias,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
         ),
         builder: (ctx) => Yearly2027PromoSheet(
           scores: status.scores,

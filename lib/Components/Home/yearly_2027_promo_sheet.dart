@@ -38,75 +38,82 @@ class Yearly2027PromoSheet extends StatelessWidget {
         : 'Unlock your full Yearly Prediction'.tr;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: util.height * 0.52),
-      child: ColoredBox(
-        color: _cream,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _Hero(onClose: onClose, util: util),
-            Transform.translate(
-              offset: const Offset(0, -6),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  util.width20,
-                  0,
-                  util.width20,
-                  6 + bottomInset,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your 2027 Yearly Journey Awaits'.tr,
-                      style: TextStyle(
-                        fontFamily: AppFont.get(FontType.bold),
-                        fontSize: util.fontSize14,
-                        color: _ink,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      generating && scores == null
-                          ? 'Preparing your 2027 scores…'.tr
-                          : 'A quick look at your year ahead:'.tr,
-                      style: TextStyle(
-                        fontFamily: AppFont.get(FontType.medium),
-                        fontSize: util.fontSize12,
-                        color: blackColor.withValues(alpha: 0.55),
-                      ),
-                    ),
-                    if (scores != null) ...[
-                      const SizedBox(height: 6),
-                      _ScoreList(scores: scores!, util: util),
-                    ],
-                    const SizedBox(height: 8),
-                    _PrimaryCta(label: primaryLabel, onTap: primary, util: util),
-                    Center(
-                      child: TextButton(
-                        onPressed: onClose,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    // Slightly stronger top curve than website for a clearer sheet edge.
+    const topRadius = BorderRadius.vertical(top: Radius.circular(32));
+
+    return ClipRRect(
+      borderRadius: topRadius,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: util.height * 0.52),
+        child: ColoredBox(
+          color: _cream,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _Hero(onClose: onClose, util: util),
+              Transform.translate(
+                offset: const Offset(0, -6),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    util.width20,
+                    0,
+                    util.width20,
+                    6 + bottomInset,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your 2027 Yearly Journey Awaits'.tr,
+                        style: TextStyle(
+                          fontFamily: AppFont.get(FontType.bold),
+                          fontSize: util.fontSize14,
+                          color: _ink,
+                          height: 1.2,
                         ),
-                        child: Text(
-                          'Not now'.tr,
-                          style: TextStyle(
-                            fontFamily: AppFont.get(FontType.medium),
-                            fontSize: util.fontSize12,
-                            color: blackColor.withValues(alpha: 0.55),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        generating && scores == null
+                            ? 'Preparing your 2027 scores…'.tr
+                            : 'A quick look at your year ahead:'.tr,
+                        style: TextStyle(
+                          fontFamily: AppFont.get(FontType.medium),
+                          fontSize: util.fontSize12,
+                          color: blackColor.withValues(alpha: 0.55),
+                        ),
+                      ),
+                      if (scores != null) ...[
+                        const SizedBox(height: 6),
+                        _ScoreList(scores: scores!, util: util),
+                      ],
+                      const SizedBox(height: 8),
+                      _PrimaryCta(
+                          label: primaryLabel, onTap: primary, util: util),
+                      Center(
+                        child: TextButton(
+                          onPressed: onClose,
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Not now'.tr,
+                            style: TextStyle(
+                              fontFamily: AppFont.get(FontType.medium),
+                              fontSize: util.fontSize12,
+                              color: blackColor.withValues(alpha: 0.55),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
